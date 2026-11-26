@@ -43,9 +43,6 @@ const HomePageEditorSection = lazy(() =>
 const TelegramSettingsCard = lazy(() =>
   import('../components/admin/TelegramSettingsCard').then((m) => ({ default: m.TelegramSettingsCard }))
 );
-const PlanFeaturesOrderEditor = lazy(() =>
-  import('../components/admin/PlanFeaturesOrderEditor').then((m) => ({ default: m.PlanFeaturesOrderEditor }))
-);
 import { cleanupUnusedImagesApi } from '../utils/adminApi';
 import {
   applyTheme,
@@ -196,7 +193,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
   const [editSite, setEditSite] = useState<SiteSettings>(site);
   const [editPlans, setEditPlans] = useState<PricingPlan[]>(plans);
   const [editTheme, setEditTheme] = useState<ThemeSettings>(() => theme || getTheme());
-  const [settingsPlanIdx, setSettingsPlanIdx] = useState<number>(0);
   const [unifiedSaving, setUnifiedSaving] = useState<boolean>(false);
 
   const siteAutoSaveTimerRef = useRef<number | null>(null);
@@ -1560,30 +1556,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                   </div>
                 </motion.div>
 
-              {/* Frame 5: Plan Features Customization & Top-to-Bottom Reordering */}
-              {(isSuperAdmin || Boolean(staffPerms.canManagePlans)) && editPlans.length > 0 && (
-                <motion.div
-                  id="adm-plan-features"
-                  className="mp-framed-wrap"
-                  {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
-                >
-                  <div className="mp-framed-title" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                    <span>ميزات الباقات</span>
-                  </div>
-                  <div className="mp-framed-box">
-                    <PlanFeaturesOrderEditor
-                      plans={editPlans}
-                      selectedPlanIdx={settingsPlanIdx}
-                      onSelectPlanIdx={setSettingsPlanIdx}
-                      onChangePlans={setEditPlans}
-                      showPlanTabs={true}
-                      showToast={showToast}
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Frame 6: Telegram Order Notification Bot Settings */}
+              {/* Frame 5: Telegram Order Notification Bot Settings */}
               <TelegramSettingsCard
                 canManageSettings={isSuperAdmin || Boolean(staffPerms.canManageSettings)}
                 showToast={showToast}
