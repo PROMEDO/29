@@ -1095,40 +1095,22 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
             setEditSite({ ...editSite, dashboardTabOrder: copy });
           };
 
-          const jumpTo = (id: string) => {
-            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          };
-
           const allowLabels = isSuperAdmin || Boolean(staffPerms.canEditTabLabels);
           const allowReorder = isSuperAdmin || Boolean(staffPerms.canReorderTabs);
           const allowThemePay = isSuperAdmin || Boolean(staffPerms.canManageThemeMode);
 
           return (
             <div>
-              {/* Quick Jump Strip */}
-              <div className="mp-jump-strip">
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-general')}>المظهر</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-payment')}>الدفع</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-admin')}>القوائم</button>
-                {(isSuperAdmin || Boolean(staffPerms.canManagePlans)) && (
-                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-plan-features')}>الباقات</button>
-                )}
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-telegram')}>تيليجرام</button>
-                {(isSuperAdmin || Boolean(staffPerms.canRunMaintenance || staffPerms.canManageSettings)) && (
-                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-storage-cleanup')}>الصور</button>
-                )}
-              </div>
-
-              <div className="mp-admin-settings-sections" style={{ gap: '20px', marginTop: '14px' }}>
-              {/* Row 1: Appearance + Payment Side-by-Side */}
+              <div className="mp-admin-settings-sections" style={{ gap: '20px', marginTop: '4px' }}>
+              {/* Frame 1: Appearance */}
               <motion.div
-                className="mp-tabs-dual-grid"
+                id="adm-general"
+                className="mp-framed-wrap"
                 {...dashSectionMotion(prefersReducedMotion, 0, true)}
               >
-                <div id="adm-general" className="mp-framed-wrap mp-tabs-col">
-                  <div className="mp-framed-title">
-                    <span>المظهر</span>
-                  </div>
+                <div className="mp-framed-title">
+                  <span>المظهر</span>
+                </div>
                   <div className="mp-framed-box" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {(() => {
                       const homeMode = editSite.homeThemeMode || 'light';
@@ -1335,9 +1317,14 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       );
                     })()}
                   </div>
-                </div>
+                </motion.div>
 
-                <div id="adm-payment" className="mp-framed-wrap mp-tabs-col">
+                {/* Frame 2: Payment & WhatsApp */}
+                <motion.div
+                  id="adm-payment"
+                  className="mp-framed-wrap"
+                  {...dashSectionMotion(prefersReducedMotion, 0.03, true)}
+                >
                   <div className="mp-framed-title">
                     <Wallet size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
                     <span>الدفع والواتساب</span>
@@ -1391,15 +1378,14 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       </label>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
 
-              {/* Frames 3 & 4: Side-by-Side Equal-Sized Menu Button Lists (Admin + Customer Tabs) */}
+              {/* Frame 3: Admin Tabs */}
               <motion.div
-                className="mp-tabs-dual-grid"
+                id="adm-tabs-admin"
+                className="mp-framed-wrap"
                 {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
               >
-                <div id="adm-tabs-admin" className="mp-framed-wrap mp-tabs-col">
                   <div className="mp-framed-title">
                     <span>قوائم الإدارة</span>
                   </div>
@@ -1478,9 +1464,14 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       })}
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <div id="adm-tabs-dash" className="mp-framed-wrap mp-tabs-col">
+              {/* Frame 4: Customer Dashboard Tabs */}
+              <motion.div
+                id="adm-tabs-dash"
+                className="mp-framed-wrap"
+                {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
+              >
                   <div className="mp-framed-title">
                     <span>قوائم الزبون</span>
                   </div>
@@ -1567,8 +1558,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       })}
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
 
               {/* Frame 5: Plan Features Customization & Top-to-Bottom Reordering */}
               {(isSuperAdmin || Boolean(staffPerms.canManagePlans)) && editPlans.length > 0 && (
