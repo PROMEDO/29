@@ -6,7 +6,6 @@
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import {
-  FontTypographyConfig,
   HomeSettings,
   PricingPlan,
   ProblemReport,
@@ -17,7 +16,6 @@ import {
   ThemeSettings,
 } from '../types';
 import { AppLogo } from '../components/AppLogo';
-import { AppSelect } from '../components/AppSelect';
 import { buildPlanComparisonRows } from '../utils/plans';
 import { navigateToMainSite } from '../utils/businessDefaults';
 
@@ -50,21 +48,15 @@ const PlanFeaturesOrderEditor = lazy(() =>
 );
 import { cleanupUnusedImagesApi } from '../utils/adminApi';
 import {
-  DEFAULT_TYPOGRAPHY,
-  PLATFORM_FONT_CATALOG,
-  applyShellBackdrop,
   applyTheme,
   buildThemeForMode,
   flushPendingDbSync,
   getCollection,
   getDbRevision,
-  getSystemPrefersDark,
   getTheme,
   logActivity,
-  normalizePlatformFontKey,
   putItemAndSync,
   putManyAndSync,
-  resolveFontCssStack,
   syncFromServer,
 } from '../utils/storage';
 import {
@@ -88,8 +80,6 @@ import {
   ChevronDown,
   Wallet,
   LayoutTemplate,
-  Type,
-  Check,
   Sun,
   Moon,
   Monitor,
@@ -624,55 +614,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
     showToast('تم حفظ التغيرات');
   };
 
-  const handleSelectAdminBackdrop = async (nextBackdrop: 'grid' | 'liquid-image') => {
-    if (!isSuperAdmin && !staffPerms.canManageThemeMode && !staffPerms.canManageSettings) {
-      showToast('ليست لديك صلاحية تغيير المظهر');
-      return;
-    }
-    if (siteAutoSaveTimerRef.current !== null) {
-      window.clearTimeout(siteAutoSaveTimerRef.current);
-      siteAutoSaveTimerRef.current = null;
-    }
-    const nextSite: SiteSettings = {
-      ...site,
-      ...editSite,
-      adminBackdrop: nextBackdrop,
-      ...(editSite.dashboardBackdrop === 'liquid-image' && nextBackdrop === 'grid'
-        ? { dashboardBackdrop: 'grid' }
-        : {}),
-    };
-    hydratedSiteSigRef.current = JSON.stringify(nextSite);
-    setEditSite(nextSite);
-    applyShellBackdrop(nextBackdrop);
-    await putItemAndSync('settings/site', nextSite);
-    onRefresh();
-    showToast('تم حفظ التغيرات');
-  };
-
-  const handleToggleDashboardBackdrop = async (applyToCustomers: boolean) => {
-    if (!isSuperAdmin && !staffPerms.canManageThemeMode && !staffPerms.canManageSettings) {
-      showToast('ليست لديك صلاحية تغيير المظهر');
-      return;
-    }
-    if (siteAutoSaveTimerRef.current !== null) {
-      window.clearTimeout(siteAutoSaveTimerRef.current);
-      siteAutoSaveTimerRef.current = null;
-    }
-    const nextDashBackdrop: 'grid' | 'liquid-image' = applyToCustomers
-      ? (editSite.adminBackdrop === 'liquid-image' ? 'liquid-image' : 'grid')
-      : 'grid';
-    const nextSite: SiteSettings = {
-      ...site,
-      ...editSite,
-      dashboardBackdrop: nextDashBackdrop,
-    };
-    hydratedSiteSigRef.current = JSON.stringify(nextSite);
-    setEditSite(nextSite);
-    await putItemAndSync('settings/site', nextSite);
-    onRefresh();
-    showToast('تم حفظ التغيرات');
-  };
-
   const handleApplyDashboardThemeToAllStores = async (nextMode: 'light' | 'dark' | 'auto') => {
     if (!isSuperAdmin && !staffPerms.canManageThemeMode && !staffPerms.canManageSettings) {
       showToast('ليست لديك صلاحية تغيير المظهر');
@@ -703,69 +644,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
     await putManyAndSync(batchEntries);
     onRefresh();
     showToast('تم حفظ التغيرات');
-  };
-
-  const snapWeightToCatalog = (desired: number, available: number[]): number => {
-    if (!available.length) return desired;
-    if (available.includes(desired)) return desired;
-    return available.reduce((best, w) => (Math.abs(w - desired) < Math.abs(best - desired) ? w : best), available[0]);
-  };
-
-  const handleUpdatePlatformTypography = async (
-    updates: {
-      fontKey?: 'tajawal' | 'firjar' | 'alexandria' | 'alan_sans';
-      typography?: Partial<FontTypographyConfig>;
-    },
-    toastMsg?: string
-  ) => {
-    if (!isSuperAdmin && !staffPerms.canManageThemeMode && !staffPerms.canManageSettings) {
-      showToast('ليست لديك صلاحية تعديل الخطوط');
-      return;
-    }
-    const baseTheme = getTheme();
-    const rawPrevTypo = {
-      ...DEFAULT_TYPOGRAPHY,
-      ...(baseTheme.typography || {}),
-      ...(editTheme.typography || {}),
-    } as Record<string, any>;
-    delete rawPrevTypo.thmanyahFamily;
-    const prevTypo: FontTypographyConfig = rawPrevTypo;
-    const nextFontKey = updates.fontKey || normalizePlatformFontKey(prevTypo.fontKey || editTheme.font);
-    const meta = PLATFORM_FONT_CATALOG.find((f) => f.key === nextFontKey) || PLATFORM_FONT_CATALOG[0];
-    const nextTypoRaw: FontTypographyConfig = {
-      ...prevTypo,
-      ...(updates.typography || {}),
-      fontKey: nextFontKey,
-      separateHeadingFont: false,
-      headingFontKey: nextFontKey,
-      bodyFontKey: nextFontKey,
-    };
-    const nextHeadingW = snapWeightToCatalog(Number(nextTypoRaw.headingWeight || 800), meta.weights);
-    const nextSubW = snapWeightToCatalog(Math.min(nextHeadingW, Number(nextTypoRaw.subHeadingWeight || 700)), meta.weights);
-    const nextBodyW = snapWeightToCatalog(Number(nextTypoRaw.bodyWeight || 400), meta.weights);
-    const nextBodySize = Number(nextTypoRaw.bodySize || 15);
-    const nextDescSize = Number((nextBodySize - 1.5).toFixed(1));
-
-    const nextTheme: ThemeSettings = {
-      ...baseTheme,
-      ...editTheme,
-      font: nextFontKey,
-      typography: {
-        ...nextTypoRaw,
-        headingWeight: nextHeadingW,
-        subHeadingWeight: nextSubW,
-        bodyWeight: nextBodyW,
-        descWeight: nextBodyW,
-        bodySize: nextBodySize,
-        descSize: nextDescSize,
-      },
-    };
-    setEditTheme(nextTheme);
-    const activeAdminMode = editSite.adminThemeMode || site.adminThemeMode || 'light';
-    applyTheme(buildThemeForMode(activeAdminMode, nextTheme));
-    await putItemAndSync('settings/theme', nextTheme);
-    onRefresh();
-    if (toastMsg) showToast(toastMsg || 'تم تطبيق التغيرات');
   };
 
   const customAdminLabel = (id: string, fallback: string) => {
@@ -1227,22 +1105,9 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
 
           return (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
-                <div>
-                  <h1 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px', fontSize: 'clamp(18px, 3vw, 22px)' }}>
-                    <Settings size={20} style={{ color: 'var(--brand-ink, #34D399)' }} />
-                    <span>{customAdminLabel('settings', 'إعدادات لوحة الإدارة والنظام')}</span>
-                  </h1>
-                  <p className="muted" style={{ margin: '3px 0 0', fontSize: '12px' }}>
-                    مظهر لوحة الأدمن، بيانات الدفع والواتساب، ترتيب ومسميات القوائم، وبوت إرسال الطلبات عبر تيليجرام — يتم الحفظ تلقائياً.
-                  </p>
-                </div>
-              </div>
-
               {/* Quick Jump Strip */}
               <div className="mp-jump-strip">
                 <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-general')}>مظهر الأدمن</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-fonts')}>الخطوط</button>
                 <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-payment')}>الدفع والواتساب</button>
                 <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-admin')}>قوائم الإدارة</button>
                 <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-dash')}>قوائم الزبون</button>
@@ -1269,7 +1134,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                   {/* 0. Public Site Theme Mode (Home & Auth Pages) */}
                   {(() => {
                     const homeMode = editSite.homeThemeMode || 'light';
-                    const deviceIsDark = getSystemPrefersDark();
                     return (
                       <div
                         style={{
@@ -1287,27 +1151,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                           <div className="muted" style={{ fontSize: '12px', lineHeight: 1.6 }}>
                             يتحكم في مظهر الموقع العام والصفحة الرئيسية وصفحات الدخول والاشتراك للزوار.
                           </div>
-                          {homeMode === 'auto' && (
-                            <div style={{ marginTop: '8px' }}>
-                              <span
-                                style={{
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
-                                  gap: '5px',
-                                  fontSize: '11.5px',
-                                  fontWeight: 700,
-                                  color: 'var(--brand-ink, #34D399)',
-                                  background: 'var(--mp-glass-control)',
-                                  border: '1px solid var(--mp-glass-border)',
-                                  borderRadius: '999px',
-                                  padding: '4px 11px',
-                                }}
-                              >
-                                {deviceIsDark ? <Moon size={12} /> : <Sun size={12} />}
-                                <span>الوضع المكتشف على جهازك الآن: {deviceIsDark ? 'داكن' : 'فاتح'}</span>
-                              </span>
-                            </div>
-                          )}
                         </div>
 
                         <div
@@ -1426,7 +1269,6 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                   {/* 2. Customer Dashboard Theme (Default / Device-Matched) */}
                   {(() => {
                     const globalDashMode = editSite.dashboardThemeMode || 'light';
-                    const deviceIsDark = getSystemPrefersDark();
                     const overriddenCount = getCollection<Restaurant>('restaurants').filter(
                       (r) => r.dashboardThemeMode && r.dashboardThemeMode !== globalDashMode
                     ).length;
@@ -1449,7 +1291,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                             عند اختيار <b>حسب الجهاز</b> يتطابق مظهر لوحة التحكم تلقائياً مع وضع متصفح أو هاتف الزبون.
                           </div>
 
-                          {(globalDashMode === 'auto' || overriddenCount > 0) && (
+                          {overriddenCount > 0 && (
                             <div
                               style={{
                                 display: 'flex',
@@ -1459,37 +1301,15 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                                 marginTop: '8px',
                               }}
                             >
-                              {globalDashMode === 'auto' && (
-                                <span
-                                  style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '5px',
-                                    fontSize: '11.5px',
-                                    fontWeight: 700,
-                                    color: 'var(--brand-ink, #34D399)',
-                                    background: 'var(--mp-glass-control)',
-                                    border: '1px solid var(--mp-glass-border)',
-                                    borderRadius: '999px',
-                                    padding: '4px 11px',
-                                  }}
-                                >
-                                  {deviceIsDark ? <Moon size={12} /> : <Sun size={12} />}
-                                  <span>الوضع المكتشف على جهازك الآن: {deviceIsDark ? 'داكن' : 'فاتح'}</span>
-                                </span>
-                              )}
-
-                              {overriddenCount > 0 && (
-                                <button
-                                  type="button"
-                                  disabled={!allowThemePay}
-                                  className="btn s"
-                                  onClick={() => void handleApplyDashboardThemeToAllStores(globalDashMode)}
-                                  style={{ fontSize: '11.5px', fontWeight: 700, minHeight: '28px', padding: '3px 10px' }}
-                                >
-                                  تعميم على جميع الحسابات ({overriddenCount})
-                                </button>
-                              )}
+                              <button
+                                type="button"
+                                disabled={!allowThemePay}
+                                className="btn s"
+                                onClick={() => void handleApplyDashboardThemeToAllStores(globalDashMode)}
+                                style={{ fontSize: '11.5px', fontWeight: 700, minHeight: '28px', padding: '3px 10px' }}
+                              >
+                                تعميم على جميع الحسابات ({overriddenCount})
+                              </button>
                             </div>
                           )}
                         </div>
@@ -1539,385 +1359,8 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       </div>
                     );
                   })()}
-
-                  <div style={{ height: '1px', background: 'var(--line)' }} />
-
-                  {/* 3. Dashboard Background Style Switcher (Grid vs Liquid Glass Photo) */}
-                  {(() => {
-                    const activeBackdrop: 'grid' | 'liquid-image' =
-                      editSite.adminBackdrop === 'liquid-image' ? 'liquid-image' : 'grid';
-                    const applyToDash = editSite.dashboardBackdrop === 'liquid-image';
-                    return (
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            gap: '10px 16px',
-                          }}
-                        >
-                          <div style={{ fontSize: '15px', fontWeight: 900, color: 'var(--ink)' }}>
-                            خلفية لوحة التحكم
-                          </div>
-
-                          {activeBackdrop === 'liquid-image' && (
-                            <label
-                              style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '10px',
-                                cursor: allowThemePay ? 'pointer' : 'not-allowed',
-                                fontSize: '13.5px',
-                                fontWeight: 700,
-                                color: 'var(--ink)',
-                              }}
-                            >
-                              <span>تطبيق أيضاً على لوحة الزبائن</span>
-                              <button
-                                type="button"
-                                role="switch"
-                                aria-checked={applyToDash}
-                                disabled={!allowThemePay}
-                                className={`ios-switch sm ${applyToDash ? 'on' : 'off'}`}
-                                onClick={() => void handleToggleDashboardBackdrop(!applyToDash)}
-                              >
-                                <span className="ios-switch-thumb" />
-                              </button>
-                            </label>
-                          )}
-                        </div>
-
-                        <div
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-                            gap: '12px',
-                          }}
-                        >
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            onClick={() => void handleSelectAdminBackdrop('grid')}
-                            className={`mp-appearance-theme-card${activeBackdrop === 'grid' ? ' selected' : ''}`}
-                            style={{
-                              padding: '10px',
-                              borderRadius: '22px',
-                              textAlign: 'center',
-                              cursor: allowThemePay ? 'pointer' : 'not-allowed',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '8px',
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: '100%',
-                                height: '82px',
-                                borderRadius: '16px',
-                                border: '1px solid var(--mp-glass-border)',
-                                backgroundColor: 'var(--bg)',
-                                backgroundImage:
-                                  'linear-gradient(to right, var(--mp-grid-line, rgba(148,163,184,0.2)) 1px, transparent 1px), linear-gradient(to bottom, var(--mp-grid-line, rgba(148,163,184,0.2)) 1px, transparent 1px), radial-gradient(ellipse 120% 70% at 50% 0%, rgba(16, 185, 129, 0.20) 0%, transparent 78%)',
-                                backgroundSize: '12px 12px, 12px 12px, 100% 100%',
-                              }}
-                            />
-                            <span style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)' }}>
-                              خلفية المربعات
-                            </span>
-                          </button>
-
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            onClick={() => void handleSelectAdminBackdrop('liquid-image')}
-                            className={`mp-appearance-theme-card${activeBackdrop === 'liquid-image' ? ' selected' : ''}`}
-                            style={{
-                              padding: '10px',
-                              borderRadius: '22px',
-                              textAlign: 'center',
-                              cursor: allowThemePay ? 'pointer' : 'not-allowed',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '8px',
-                            }}
-                          >
-                            <div
-                              style={{
-                                width: '100%',
-                                height: '82px',
-                                borderRadius: '16px',
-                                border: '1px solid var(--mp-glass-border)',
-                                backgroundImage:
-                                  'url("/assets/aistudio/125b2ca9092c1fc178c556138a837115_7e71c0d4.jpg")',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
-                              }}
-                            />
-                            <span style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--ink)' }}>
-                              خلفية الزجاج السائل
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })()}
                 </div>
               </motion.div>
-
-              {/* Frame 1.5: Simple Site Font Switcher (Google Fonts) */}
-              {(() => {
-                const allowFontEdit =
-                  isSuperAdmin || Boolean(staffPerms.canManageThemeMode) || Boolean(staffPerms.canManageSettings);
-                const curTypo: FontTypographyConfig = {
-                  ...DEFAULT_TYPOGRAPHY,
-                  ...(editTheme.typography || {}),
-                };
-                const activeFontKey = normalizePlatformFontKey(curTypo.fontKey || editTheme.font);
-                const activeFontMeta =
-                  PLATFORM_FONT_CATALOG.find((f) => f.key === activeFontKey) || PLATFORM_FONT_CATALOG[0];
-                const weightNames: Record<number, string> = {
-                  100: '100 · رفيع جداً',
-                  200: '200 · رفيع',
-                  300: '300 · خفيف',
-                  400: '400 · عادي',
-                  500: '500 · متوسط',
-                  600: '600 · نصف عريض',
-                  700: '700 · عريض',
-                  800: '800 · ثقيل',
-                  900: '900 · أسود',
-                };
-                const curHeadingWeight = snapWeightToCatalog(Number(curTypo.headingWeight || 800), activeFontMeta.weights);
-                const curBodyWeight = snapWeightToCatalog(Number(curTypo.bodyWeight || 400), activeFontMeta.weights);
-                const curBodySize = Number(curTypo.bodySize || 15);
-                const curStretch = Number(curTypo.fontStretch || 100);
-                const curLineHeight = Number(curTypo.bodyLineHeight || 1.7);
-
-                return (
-                  <motion.div
-                    id="adm-fonts"
-                    className="mp-framed-wrap"
-                    {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
-                  >
-                    <div className="mp-framed-title" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
-                        <Type size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
-                        <span>خط المنصة والمنيوهات (Google Fonts)</span>
-                      </span>
-                      <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 700 }}>
-                        المفعّل على كامل المنصة: {activeFontMeta.label} ({activeFontMeta.englishName})
-                      </span>
-                    </div>
-                    <div className="mp-framed-box" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                      <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                          gap: '10px',
-                        }}
-                      >
-                        {PLATFORM_FONT_CATALOG.map((fontMeta) => {
-                          const selected = fontMeta.key === activeFontKey;
-                          const previewFamily = resolveFontCssStack(fontMeta.key, [], 'heading');
-                          return (
-                            <button
-                              key={fontMeta.key}
-                              type="button"
-                              disabled={!allowFontEdit}
-                              onClick={() =>
-                                void handleUpdatePlatformTypography(
-                                  { fontKey: fontMeta.key },
-                                  `تم التبديل إلى ${fontMeta.label} (${fontMeta.englishName}) في كل المنصة ✓`
-                                )
-                              }
-                              style={{
-                                textAlign: 'start',
-                                padding: '12px 14px',
-                                borderRadius: '18px',
-                                background: selected
-                                  ? 'linear-gradient(135deg, color-mix(in srgb, var(--brand) 16%, transparent) 0%, color-mix(in srgb, var(--brand) 5%, transparent) 100%)'
-                                  : 'var(--mp-glass-subsurface)',
-                                backdropFilter: 'none',
-                                WebkitBackdropFilter: 'none',
-                                border: selected ? '1.5px solid color-mix(in srgb, var(--brand) 55%, var(--mp-glass-border))' : '1px solid var(--mp-glass-divider)',
-                                boxShadow: selected
-                                  ? 'inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 20px color-mix(in srgb, var(--brand) 14%, transparent)'
-                                  : 'none',
-                                cursor: allowFontEdit ? 'pointer' : 'not-allowed',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '6px',
-                                transition: 'border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.32s cubic-bezier(0.22, 1, 0.36, 1), transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)',
-                              }}
-                            >
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                                <span style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--ink)' }}>
-                                  {fontMeta.label} · {fontMeta.englishName}
-                                </span>
-                                {selected && (
-                                  <span
-                                    style={{
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      gap: '3px',
-                                      fontSize: '11.5px',
-                                      fontWeight: 800,
-                                      color: 'var(--brand-ink, var(--brand))',
-                                      whiteSpace: 'nowrap',
-                                    }}
-                                  >
-                                    <Check size={13} />
-                                    مفعّل
-                                  </span>
-                                )}
-                              </div>
-                              <div
-                                style={{
-                                  fontFamily: previewFamily,
-                                  fontSize: '16px',
-                                  fontWeight: snapWeightToCatalog(700, fontMeta.weights),
-                                  color: 'var(--ink)',
-                                  lineHeight: 1.45,
-                                }}
-                              >
-                                أهلاً بكم في Menu Plus · 123
-                              </div>
-                              <div style={{ fontSize: '11.5px', color: 'var(--muted)' }}>
-                                {fontMeta.sourceLabel} · أوزان {fontMeta.weights[0]}–{fontMeta.weights[fontMeta.weights.length - 1]}
-                              </div>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-                          gap: '10px',
-                          paddingTop: '12px',
-                          borderTop: '1px solid var(--line)',
-                        }}
-                      >
-                        <div className="f" style={{ margin: 0 }}>
-                          <span style={{ fontSize: '12px', fontWeight: 700 }}>حجم النص الأساسي</span>
-                          <AppSelect
-                            title="حجم النص الأساسي"
-                            variant="compact"
-                            disabled={!allowFontEdit}
-                            value={String(curBodySize)}
-                            onChange={(val) =>
-                              void handleUpdatePlatformTypography(
-                                { typography: { bodySize: Number(val) } },
-                                'تم تحديث حجم الخط في كل المنصة ✓'
-                              )
-                            }
-                            options={[
-                              { value: '13', label: '13px · صغير' },
-                              { value: '14', label: '14px · مدمج' },
-                              { value: '15', label: '15px · قياسي' },
-                              { value: '16', label: '16px · مريح' },
-                              { value: '17', label: '17px · كبير' },
-                              { value: '18', label: '18px · ضخم' },
-                            ]}
-                          />
-                        </div>
-
-                        <div className="f" style={{ margin: 0 }}>
-                          <span style={{ fontSize: '12px', fontWeight: 700 }}>سُمك العناوين</span>
-                          <AppSelect
-                            title="سُمك العناوين"
-                            variant="compact"
-                            disabled={!allowFontEdit}
-                            value={String(curHeadingWeight)}
-                            onChange={(val) =>
-                              void handleUpdatePlatformTypography(
-                                {
-                                  typography: {
-                                    headingWeight: Number(val),
-                                    subHeadingWeight: Number(val),
-                                  },
-                                },
-                                'تم تحديث سُمك العناوين ✓'
-                              )
-                            }
-                            options={activeFontMeta.weights.map((w) => ({
-                              value: String(w),
-                              label: weightNames[w] || String(w),
-                            }))}
-                          />
-                        </div>
-
-                        <div className="f" style={{ margin: 0 }}>
-                          <span style={{ fontSize: '12px', fontWeight: 700 }}>سُمك النصوص</span>
-                          <AppSelect
-                            title="سُمك النصوص"
-                            variant="compact"
-                            disabled={!allowFontEdit}
-                            value={String(curBodyWeight)}
-                            onChange={(val) =>
-                              void handleUpdatePlatformTypography(
-                                { typography: { bodyWeight: Number(val) } },
-                                'تم تحديث سُمك النصوص ✓'
-                              )
-                            }
-                            options={activeFontMeta.weights.map((w) => ({
-                              value: String(w),
-                              label: weightNames[w] || String(w),
-                            }))}
-                          />
-                        </div>
-
-                        {activeFontKey === 'firjar' ? (
-                          <div className="f" style={{ margin: 0 }}>
-                            <span style={{ fontSize: '12px', fontWeight: 700 }}>عرض الحرف (Firjar Width)</span>
-                            <AppSelect
-                              title="عرض الحرف (Firjar Width)"
-                              variant="compact"
-                              disabled={!allowFontEdit}
-                              value={String(curStretch)}
-                              onChange={(val) =>
-                                void handleUpdatePlatformTypography(
-                                  { typography: { fontStretch: Number(val) } },
-                                  'تم تحديث عرض خط Firjar ✓'
-                                )
-                              }
-                              options={[
-                                { value: '85', label: '85% · مضغوط' },
-                                { value: '100', label: '100% · قياسي' },
-                                { value: '115', label: '115% · موسّع' },
-                                { value: '125', label: '125% · عريض' },
-                              ]}
-                            />
-                          </div>
-                        ) : (
-                          <div className="f" style={{ margin: 0 }}>
-                            <span style={{ fontSize: '12px', fontWeight: 700 }}>تباعد الأسطر</span>
-                            <AppSelect
-                              title="تباعد الأسطر"
-                              variant="compact"
-                              disabled={!allowFontEdit}
-                              value={String(curLineHeight)}
-                              onChange={(val) =>
-                                void handleUpdatePlatformTypography(
-                                  { typography: { bodyLineHeight: Number(val) } },
-                                  'تم تحديث تباعد الأسطر ✓'
-                                )
-                              }
-                              options={[
-                                { value: '1.5', label: '1.5 · مدمج' },
-                                { value: '1.7', label: '1.7 · قياسي' },
-                                { value: '1.9', label: '1.9 · مريح' },
-                              ]}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })()}
 
               {/* Frame 2: Compact Payment Numbers & Support WhatsApp */}
               <motion.div
