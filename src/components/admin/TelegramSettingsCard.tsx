@@ -318,68 +318,64 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
     <div id="adm-telegram" className="mp-framed-wrap">
       <div className="mp-framed-title">
         <Send size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
-        <span>إعدادات بوت تيليجرام لإرسال الطلبات لأصحاب المطاعم والمتاجر</span>
+        <span>بوت تيليجرام</span>
       </div>
 
       <div className="mp-framed-box">
         {loading && !config ? (
-          <div style={{ padding: '24px', textAlign: 'center' }} className="muted">
+          <div style={{ padding: '20px', textAlign: 'center' }} className="muted">
             <Loader2 size={20} className="animate-spin" style={{ margin: '0 auto 6px', color: 'var(--brand)' }} />
-            <div style={{ fontSize: '12.5px' }}>جاري تحميل إعدادات وحالة بوت تيليجرام...</div>
+            <div style={{ fontSize: '12.5px' }}>جاري التحميل...</div>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-            <p className="muted" style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.6 }}>
-              يُستخدم البوت لإرسال إشعارات الطلبات الجديدة مباشرة إلى حساب تيليجرام الخاص بصاحب المنيو أو المتجر بمجرد ربط رقمه من صفحة «إعداد التليجرام» في لوحة تحكمه.
-            </p>
-
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Runtime Health Strip */}
             <div className="mp-tg-health-grid">
               <div className="mp-tg-health-item">
-                <span className="muted">حالة البوت</span>
+                <span className="muted">الحالة</span>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 800 }}>
                   {runtime?.configured && runtime?.enabled && config?.botTokenValid !== false ? (
                     <>
                       <CheckCircle2 size={14} style={{ color: 'var(--ok, #10b981)' }} />
-                      <span>متصل ومفعّل</span>
+                      <span>مفعّل</span>
                     </>
                   ) : runtime?.configured && config?.botTokenValid === false ? (
                     <>
                       <XCircle size={14} style={{ color: 'var(--bad, #ef4444)' }} />
-                      <span>توكن مرفوض / غير صالح</span>
+                      <span>توكن غير صالح</span>
                     </>
                   ) : !runtime?.enabled ? (
                     <>
                       <XCircle size={14} style={{ color: 'var(--bad, #ef4444)' }} />
-                      <span>متوقف من الإعدادات</span>
+                      <span>متوقف</span>
                     </>
                   ) : (
                     <>
                       <AlertTriangle size={14} style={{ color: '#f59e0b' }} />
-                      <span>غير مهيأ (بدون توكن)</span>
+                      <span>غير مهيأ</span>
                     </>
                   )}
                 </div>
               </div>
 
               <div className="mp-tg-health-item">
-                <span className="muted">الاستقبال (Polling)</span>
+                <span className="muted">الاستقبال</span>
                 <div style={{ fontWeight: 800 }}>
-                  {runtime?.pollingActive ? 'نشط يستقبل الربط ✓' : 'متوقف'}
+                  {runtime?.pollingActive ? 'نشط' : 'متوقف'}
                 </div>
               </div>
 
               <div className="mp-tg-health-item">
-                <span className="muted">الأرقام المربوطة</span>
+                <span className="muted">الأرقام</span>
                 <div className="tabular-nums" style={{ fontWeight: 800 }}>
-                  {runtime?.boundUsersCount ?? 0} رقم
+                  {runtime?.boundUsersCount ?? 0}
                 </div>
               </div>
 
               <div className="mp-tg-health-item">
-                <span className="muted">المتاجر المفعّلة</span>
+                <span className="muted">المتاجر</span>
                 <div className="tabular-nums" style={{ fontWeight: 800 }}>
-                  {runtime?.linkedStoresCount ?? 0} متجر
+                  {runtime?.linkedStoresCount ?? 0}
                 </div>
               </div>
             </div>
@@ -444,14 +440,14 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                   checked={enabled}
                   onChange={(e) => setEnabled(e.target.checked)}
                 />
-                <span>{enabled ? 'إرسال الطلبات عبر بوت تيليجرام مفعّل ✓' : 'بوت إرسال الطلبات معطل ⏸'}</span>
+                <span>{enabled ? 'تفعيل البوت' : 'البوت متوقف'}</span>
               </label>
             </div>
 
             {/* Identity & Token */}
             <div className="g2" style={{ gap: '12px' }}>
               <label className="f" style={{ margin: 0 }}>
-                معرّف البوت (Username بدون @)
+                معرّف البوت
                 <input
                   dir="ltr"
                   disabled={!canManageSettings}
@@ -463,10 +459,10 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
 
               <label className="f" style={{ margin: 0 }}>
                 <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
-                  <span>توكن البوت المخصص (اختياري)</span>
+                  <span>التوكن</span>
                   {config?.maskedToken && (
                     <span className="muted" style={{ fontSize: '11px' }} dir="ltr">
-                      الحالي ({config.tokenSource === 'override' ? 'مخصص' : 'بيئة'}): {config.maskedToken}
+                      {config.maskedToken}
                     </span>
                   )}
                 </span>
@@ -481,7 +477,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                     }}
                     placeholder={
                       config?.hasEnvToken
-                        ? 'اتركه فارغاً لاستخدام متغير البيئة (TELEGRAM_BOT_TOKEN)'
+                        ? 'اتركه فارغاً للافتراضي'
                         : '123456:ABC-DEF...'
                     }
                     style={{ flex: 1 }}
@@ -490,7 +486,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                     type="button"
                     className="btn s"
                     onClick={() => setShowTokenDraft((v) => !v)}
-                    title={showTokenDraft ? 'إخفاء التوكن' : 'إظهار التوكن'}
+                    title={showTokenDraft ? 'إخفاء' : 'إظهار'}
                   >
                     {showTokenDraft ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
@@ -503,7 +499,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                       checked={clearTokenOverride}
                       onChange={(e) => setClearTokenOverride(e.target.checked)}
                     />
-                    <span>حذف التوكن المخصص والعودة لتوكن البيئة الافتراضي</span>
+                    <span>استخدام التوكن الافتراضي</span>
                   </label>
                 )}
               </label>
@@ -512,7 +508,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
             {/* Order Bot Message Templates */}
             <div className="g2" style={{ gap: '12px', paddingTop: '14px', borderTop: '1px solid var(--line)' }}>
               <label className="f" style={{ margin: 0 }}>
-                رسالة البوت عند /start وطلب مشاركة رقم صاحب المتجر
+                رسالة الترحيب
                 <textarea
                   rows={2}
                   disabled={!canManageSettings}
@@ -522,7 +518,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
               </label>
 
               <label className="f" style={{ margin: 0 }}>
-                رسالة التأكيد بعد مشاركة الرقم وربطه بالمتجر
+                رسالة التأكيد
                 <textarea
                   rows={2}
                   disabled={!canManageSettings}
@@ -532,7 +528,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
               </label>
 
               <label className="f" style={{ margin: 0 }}>
-                ترويسة رسالة الطلب الجديد الواصلة لصاحب المتجر
+                عنوان الطلب
                 <input
                   type="text"
                   disabled={!canManageSettings}
@@ -543,7 +539,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
               </label>
 
               <label className="f" style={{ margin: 0 }}>
-                تذييل رسالة الطلب الجديد (اختياري)
+                تذييل الطلب
                 <input
                   type="text"
                   disabled={!canManageSettings}
@@ -554,7 +550,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
               </label>
 
               <label className="f" style={{ margin: 0, gridColumn: '1 / -1' }}>
-                رابط بروكسي تيليجرام الافتراضي للوحة تحكم المتاجر (اختياري)
+                رابط البروكسي
                 <input
                   type="url"
                   dir="ltr"
@@ -592,7 +588,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                   onClick={() => void handleTestConnection()}
                 >
                   <Wifi size={14} />
-                  <span>{testing ? 'جاري فحص الاتصال...' : 'فحص اتصال البوت'}</span>
+                  <span>{testing ? 'جاري الفحص...' : 'فحص الاتصال'}</span>
                 </button>
                 <button
                   type="button"
@@ -601,14 +597,14 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                   onClick={() => void loadSettings(true)}
                 >
                   <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
-                  <span>تحديث الحالة</span>
+                  <span>تحديث</span>
                 </button>
               </div>
 
               {saving && (
                 <span className="muted" style={{ fontSize: '12px', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                   <Loader2 size={13} className="animate-spin" />
-                  <span>جاري الحفظ تلقائياً...</span>
+                  <span>جاري الحفظ...</span>
                 </span>
               )}
             </div>
@@ -621,7 +617,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
               }}
             >
               <div style={{ fontWeight: 800, fontSize: '12.5px', marginBottom: '8px' }}>
-                إرسال رسالة اختبار فورية لصاحب متجر عبر البوت
+                رسالة اختبار
               </div>
               <div className="mp-tg-test-row">
                 <input
@@ -629,14 +625,14 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                   dir="ltr"
                   value={testTarget}
                   onChange={(e) => setTestTarget(e.target.value)}
-                  placeholder="رقم هاتف مربوط (07...) أو Chat ID"
+                  placeholder="رقم الهاتف أو Chat ID"
                   style={{ flex: '1 1 180px' }}
                 />
                 <input
                   type="text"
                   value={testCustomMsg}
                   onChange={(e) => setTestCustomMsg(e.target.value)}
-                  placeholder="نص رسالة الاختبار (اختياري)"
+                  placeholder="نص الرسالة (اختياري)"
                   style={{ flex: '2 1 220px' }}
                 />
                 <button
@@ -646,7 +642,7 @@ export const TelegramSettingsCard: React.FC<TelegramSettingsCardProps> = ({
                   onClick={() => void handleSendTestMessage()}
                 >
                   <Send size={13} />
-                  <span>{sendingTest ? 'جاري الإرسال...' : 'إرسال اختبار'}</span>
+                  <span>{sendingTest ? 'جاري الإرسال...' : 'إرسال'}</span>
                 </button>
               </div>
               {testSendStatus && (

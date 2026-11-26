@@ -1107,200 +1107,219 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
             <div>
               {/* Quick Jump Strip */}
               <div className="mp-jump-strip">
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-general')}>مظهر الأدمن</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-payment')}>الدفع والواتساب</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-admin')}>قوائم الإدارة</button>
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-dash')}>قوائم الزبون</button>
+                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-general')}>المظهر</button>
+                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-payment')}>الدفع</button>
+                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-tabs-admin')}>القوائم</button>
                 {(isSuperAdmin || Boolean(staffPerms.canManagePlans)) && (
-                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-plan-features')}>ميزات الباقات</button>
+                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-plan-features')}>الباقات</button>
                 )}
-                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-telegram')}>تيليجرام الطلبات</button>
+                <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-telegram')}>تيليجرام</button>
                 {(isSuperAdmin || Boolean(staffPerms.canRunMaintenance || staffPerms.canManageSettings)) && (
-                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-storage-cleanup')}>الصور المخزنة</button>
+                  <button type="button" className="mp-jump-btn" onClick={() => jumpTo('adm-storage-cleanup')}>الصور</button>
                 )}
               </div>
 
-              <div className="mp-admin-settings-sections">
-              {/* Frame 1: Admin & Customer Dashboard Themes */}
+              <div className="mp-admin-settings-sections" style={{ gap: '20px', marginTop: '14px' }}>
+              {/* Row 1: Appearance + Payment Side-by-Side */}
               <motion.div
-                id="adm-general"
-                className="mp-framed-wrap"
+                className="mp-tabs-dual-grid"
                 {...dashSectionMotion(prefersReducedMotion, 0, true)}
               >
-                <div className="mp-framed-title">
-                  <span>مظهر الموقع العام ولوحات التحكم</span>
-                </div>
-                <div className="mp-framed-box" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                  {/* 0. Public Site Theme Mode (Home & Auth Pages) */}
-                  {(() => {
-                    const homeMode = editSite.homeThemeMode || 'light';
-                    return (
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '14px 20px',
-                        }}
-                      >
-                        <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-                          <div style={{ fontSize: '13.5px', fontWeight: 800, marginBottom: '4px' }}>
-                            مظهر الموقع العام (الصفحة الرئيسية وصفحات الدخول)
-                          </div>
-                          <div className="muted" style={{ fontSize: '12px', lineHeight: 1.6 }}>
-                            يتحكم في مظهر الموقع العام والصفحة الرئيسية وصفحات الدخول والاشتراك للزوار.
-                          </div>
-                        </div>
-
+                <div id="adm-general" className="mp-framed-wrap mp-tabs-col">
+                  <div className="mp-framed-title">
+                    <span>المظهر</span>
+                  </div>
+                  <div className="mp-framed-box" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {(() => {
+                      const homeMode = editSite.homeThemeMode || 'light';
+                      return (
                         <div
-                          className="mp-seg-group"
-                          role="group"
-                          aria-label="مظهر الموقع العام"
                           style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                            width: 'min(100%, 348px)',
-                            flexShrink: 0,
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '10px 14px',
                           }}
                         >
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${homeMode === 'light' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectHomeThemeMode('light')}
+                          <div style={{ fontSize: '13.5px', fontWeight: 800 }}>
+                            الموقع العام
+                          </div>
+
+                          <div
+                            className="mp-seg-group"
+                            role="group"
+                            aria-label="الموقع العام"
+                            style={{
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                              width: 'min(100%, 285px)',
+                              flexShrink: 0,
+                            }}
                           >
-                            <Sun size={14} />
-                            <span>فاتح</span>
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${homeMode === 'dark' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectHomeThemeMode('dark')}
-                          >
-                            <Moon size={14} />
-                            <span>داكن</span>
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${homeMode === 'auto' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectHomeThemeMode('auto')}
-                          >
-                            <Monitor size={14} />
-                            <span>حسب الجهاز</span>
-                          </button>
+                            <button
+                              type="button"
+                              disabled={!allowThemePay}
+                              className={`mp-seg-btn${homeMode === 'light' ? ' is-active' : ''}`}
+                              style={{ justifyContent: 'center', width: '100%' }}
+                              onClick={() => void handleSelectHomeThemeMode('light')}
+                            >
+                              <Sun size={14} />
+                              <span>فاتح</span>
+                            </button>
+                            <button
+                              type="button"
+                              disabled={!allowThemePay}
+                              className={`mp-seg-btn${homeMode === 'dark' ? ' is-active' : ''}`}
+                              style={{ justifyContent: 'center', width: '100%' }}
+                              onClick={() => void handleSelectHomeThemeMode('dark')}
+                            >
+                              <Moon size={14} />
+                              <span>داكن</span>
+                            </button>
+                            <button
+                              type="button"
+                              disabled={!allowThemePay}
+                              className={`mp-seg-btn${homeMode === 'auto' ? ' is-active' : ''}`}
+                              style={{ justifyContent: 'center', width: '100%' }}
+                              onClick={() => void handleSelectHomeThemeMode('auto')}
+                            >
+                              <Monitor size={14} />
+                              <span>حسب الجهاز</span>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })()}
+                      );
+                    })()}
 
-                  <div style={{ height: '1px', background: 'var(--line)' }} />
-
-                  {/* 1. Admin Dashboard Theme */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      gap: '14px 20px',
-                    }}
-                  >
-                    <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-                      <div style={{ fontSize: '13.5px', fontWeight: 800, marginBottom: '4px' }}>
-                        مظهر لوحة تحكم الأدمن
-                      </div>
-                      <div className="muted" style={{ fontSize: '12px', lineHeight: 1.6 }}>
-                        يغيّر مظهر لوحة الإدارة فقط دون التأثير على الصفحة الرئيسية أو لوحة الزبون.
-                      </div>
-                    </div>
+                    <div style={{ height: '1px', background: 'var(--line)' }} />
 
                     <div
-                      className="mp-seg-group"
-                      role="group"
-                      aria-label="مظهر لوحة تحكم الأدمن"
                       style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                        width: 'min(100%, 348px)',
-                        flexShrink: 0,
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '10px 14px',
                       }}
                     >
-                      <button
-                        type="button"
-                        disabled={!allowThemePay}
-                        className={`mp-seg-btn${(editSite.adminThemeMode || 'light') === 'light' ? ' is-active' : ''}`}
-                        style={{ justifyContent: 'center', width: '100%' }}
-                        onClick={() => void handleSelectAdminThemeMode('light')}
-                      >
-                        <Sun size={14} />
-                        <span>فاتح</span>
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!allowThemePay}
-                        className={`mp-seg-btn${editSite.adminThemeMode === 'dark' ? ' is-active' : ''}`}
-                        style={{ justifyContent: 'center', width: '100%' }}
-                        onClick={() => void handleSelectAdminThemeMode('dark')}
-                      >
-                        <Moon size={14} />
-                        <span>داكن</span>
-                      </button>
-                      <button
-                        type="button"
-                        disabled={!allowThemePay}
-                        className={`mp-seg-btn${editSite.adminThemeMode === 'auto' ? ' is-active' : ''}`}
-                        style={{ justifyContent: 'center', width: '100%' }}
-                        onClick={() => void handleSelectAdminThemeMode('auto')}
-                      >
-                        <Monitor size={14} />
-                        <span>حسب الجهاز</span>
-                      </button>
-                    </div>
-                  </div>
+                      <div style={{ fontSize: '13.5px', fontWeight: 800 }}>
+                        لوحة الأدمن
+                      </div>
 
-                  <div style={{ height: '1px', background: 'var(--line)' }} />
-
-                  {/* 2. Customer Dashboard Theme (Default / Device-Matched) */}
-                  {(() => {
-                    const globalDashMode = editSite.dashboardThemeMode || 'light';
-                    const overriddenCount = getCollection<Restaurant>('restaurants').filter(
-                      (r) => r.dashboardThemeMode && r.dashboardThemeMode !== globalDashMode
-                    ).length;
-
-                    return (
                       <div
+                        className="mp-seg-group"
+                        role="group"
+                        aria-label="لوحة الأدمن"
                         style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          gap: '14px 20px',
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                          width: 'min(100%, 285px)',
+                          flexShrink: 0,
                         }}
                       >
-                        <div style={{ flex: '1 1 280px', minWidth: 0 }}>
-                          <div style={{ fontSize: '13.5px', fontWeight: 800, marginBottom: '4px' }}>
-                            ثيم لوحة تحكم الزبائن (أصحاب المتاجر)
-                          </div>
-                          <div className="muted" style={{ fontSize: '12px', lineHeight: 1.6 }}>
-                            عند اختيار <b>حسب الجهاز</b> يتطابق مظهر لوحة التحكم تلقائياً مع وضع متصفح أو هاتف الزبون.
+                        <button
+                          type="button"
+                          disabled={!allowThemePay}
+                          className={`mp-seg-btn${(editSite.adminThemeMode || 'light') === 'light' ? ' is-active' : ''}`}
+                          style={{ justifyContent: 'center', width: '100%' }}
+                          onClick={() => void handleSelectAdminThemeMode('light')}
+                        >
+                          <Sun size={14} />
+                          <span>فاتح</span>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={!allowThemePay}
+                          className={`mp-seg-btn${editSite.adminThemeMode === 'dark' ? ' is-active' : ''}`}
+                          style={{ justifyContent: 'center', width: '100%' }}
+                          onClick={() => void handleSelectAdminThemeMode('dark')}
+                        >
+                          <Moon size={14} />
+                          <span>داكن</span>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={!allowThemePay}
+                          className={`mp-seg-btn${editSite.adminThemeMode === 'auto' ? ' is-active' : ''}`}
+                          style={{ justifyContent: 'center', width: '100%' }}
+                          onClick={() => void handleSelectAdminThemeMode('auto')}
+                        >
+                          <Monitor size={14} />
+                          <span>حسب الجهاز</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ height: '1px', background: 'var(--line)' }} />
+
+                    {(() => {
+                      const globalDashMode = editSite.dashboardThemeMode || 'light';
+                      const overriddenCount = getCollection<Restaurant>('restaurants').filter(
+                        (r) => r.dashboardThemeMode && r.dashboardThemeMode !== globalDashMode
+                      ).length;
+
+                      return (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              gap: '10px 14px',
+                            }}
+                          >
+                            <div style={{ fontSize: '13.5px', fontWeight: 800 }}>
+                              لوحة الزبائن
+                            </div>
+
+                            <div
+                              className="mp-seg-group"
+                              role="group"
+                              aria-label="لوحة الزبائن"
+                              style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                                width: 'min(100%, 285px)',
+                                flexShrink: 0,
+                              }}
+                            >
+                              <button
+                                type="button"
+                                disabled={!allowThemePay}
+                                className={`mp-seg-btn${globalDashMode === 'light' ? ' is-active' : ''}`}
+                                style={{ justifyContent: 'center', width: '100%' }}
+                                onClick={() => void handleSelectGlobalDashboardThemeMode('light')}
+                              >
+                                <Sun size={14} />
+                                <span>فاتح</span>
+                              </button>
+                              <button
+                                type="button"
+                                disabled={!allowThemePay}
+                                className={`mp-seg-btn${globalDashMode === 'dark' ? ' is-active' : ''}`}
+                                style={{ justifyContent: 'center', width: '100%' }}
+                                onClick={() => void handleSelectGlobalDashboardThemeMode('dark')}
+                              >
+                                <Moon size={14} />
+                                <span>داكن</span>
+                              </button>
+                              <button
+                                type="button"
+                                disabled={!allowThemePay}
+                                className={`mp-seg-btn${globalDashMode === 'auto' ? ' is-active' : ''}`}
+                                style={{ justifyContent: 'center', width: '100%' }}
+                                onClick={() => void handleSelectGlobalDashboardThemeMode('auto')}
+                              >
+                                <Monitor size={14} />
+                                <span>حسب الجهاز</span>
+                              </button>
+                            </div>
                           </div>
 
                           {overriddenCount > 0 && (
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                flexWrap: 'wrap',
-                                gap: '8px',
-                                marginTop: '8px',
-                              }}
-                            >
+                            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                               <button
                                 type="button"
                                 disabled={!allowThemePay}
@@ -1308,118 +1327,70 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                                 onClick={() => void handleApplyDashboardThemeToAllStores(globalDashMode)}
                                 style={{ fontSize: '11.5px', fontWeight: 700, minHeight: '28px', padding: '3px 10px' }}
                               >
-                                تعميم على جميع الحسابات ({overriddenCount})
+                                تعميم على الكل ({overriddenCount})
                               </button>
                             </div>
                           )}
                         </div>
-
-                        <div
-                          className="mp-seg-group"
-                          role="group"
-                          aria-label="ثيم لوحة تحكم الزبائن"
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-                            width: 'min(100%, 348px)',
-                            flexShrink: 0,
-                          }}
-                        >
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${globalDashMode === 'light' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectGlobalDashboardThemeMode('light')}
-                          >
-                            <Sun size={14} />
-                            <span>فاتح</span>
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${globalDashMode === 'dark' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectGlobalDashboardThemeMode('dark')}
-                          >
-                            <Moon size={14} />
-                            <span>داكن</span>
-                          </button>
-                          <button
-                            type="button"
-                            disabled={!allowThemePay}
-                            className={`mp-seg-btn${globalDashMode === 'auto' ? ' is-active' : ''}`}
-                            style={{ justifyContent: 'center', width: '100%' }}
-                            onClick={() => void handleSelectGlobalDashboardThemeMode('auto')}
-                          >
-                            <Monitor size={14} />
-                            <span>حسب الجهاز</span>
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })()}
-                </div>
-              </motion.div>
-
-              {/* Frame 2: Compact Payment Numbers & Support WhatsApp */}
-              <motion.div
-                id="adm-payment"
-                className="mp-framed-wrap"
-                {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
-              >
-                <div className="mp-framed-title">
-                  <Wallet size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
-                  <span>بيانات استلام الدفع للاشتراكات (زين كاش / كي كارد)</span>
-                </div>
-                <div className="mp-framed-box mp-compact-payment-box">
-                  <div className="mp-compact-payment-grid">
-                    <label className="f" style={{ margin: 0 }}>
-                      رقم محفظة زين كاش
-                      <input
-                        dir="ltr"
-                        disabled={!allowThemePay}
-                        value={editSite.zainCashNumber || ''}
-                        onChange={(e) => setEditSite({ ...editSite, zainCashNumber: e.target.value })}
-                        placeholder="078..."
-                      />
-                    </label>
-                    <label className="f" style={{ margin: 0 }}>
-                      رقم بطاقة ماستر / كي كارد
-                      <input
-                        dir="ltr"
-                        disabled={!allowThemePay}
-                        value={editSite.qiCardNumber || ''}
-                        onChange={(e) => setEditSite({ ...editSite, qiCardNumber: e.target.value })}
-                        placeholder="رقم البطاقة أو الآيبان..."
-                      />
-                    </label>
-                    <label className="f" style={{ margin: 0 }}>
-                      رقم الدعم الفني بواتساب
-                      <input
-                        dir="ltr"
-                        disabled={!allowThemePay}
-                        value={editSite.supportWhatsapp ?? editSite.wa ?? '07724799679'}
-                        onChange={(e) =>
-                          setEditSite({
-                            ...editSite,
-                            supportWhatsapp: e.target.value,
-                            wa: e.target.value,
-                          })
-                        }
-                        placeholder="07724799679"
-                      />
-                    </label>
+                      );
+                    })()}
                   </div>
-                  <label className="f" style={{ margin: 0 }}>
-                    ملاحظة تظهر للزبون عند الترقية (اختياري)
-                    <input
-                      disabled={!allowThemePay}
-                      value={editSite.paymentNote || ''}
-                      onChange={(e) => setEditSite({ ...editSite, paymentNote: e.target.value })}
-                      placeholder="مثال: أرسل صورة وصل التحويل على الواتساب لتفعيل الباقة فوراً."
-                    />
-                  </label>
+                </div>
+
+                <div id="adm-payment" className="mp-framed-wrap mp-tabs-col">
+                  <div className="mp-framed-title">
+                    <Wallet size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
+                    <span>الدفع والواتساب</span>
+                  </div>
+                  <div className="mp-framed-box mp-compact-payment-box">
+                    <div className="g2" style={{ gap: '10px' }}>
+                      <label className="f" style={{ margin: 0 }}>
+                        زين كاش
+                        <input
+                          dir="ltr"
+                          disabled={!allowThemePay}
+                          value={editSite.zainCashNumber || ''}
+                          onChange={(e) => setEditSite({ ...editSite, zainCashNumber: e.target.value })}
+                          placeholder="078..."
+                        />
+                      </label>
+                      <label className="f" style={{ margin: 0 }}>
+                        ماستر / كي كارد
+                        <input
+                          dir="ltr"
+                          disabled={!allowThemePay}
+                          value={editSite.qiCardNumber || ''}
+                          onChange={(e) => setEditSite({ ...editSite, qiCardNumber: e.target.value })}
+                          placeholder="رقم البطاقة..."
+                        />
+                      </label>
+                      <label className="f" style={{ margin: 0 }}>
+                        واتساب الدعم
+                        <input
+                          dir="ltr"
+                          disabled={!allowThemePay}
+                          value={editSite.supportWhatsapp ?? editSite.wa ?? '07724799679'}
+                          onChange={(e) =>
+                            setEditSite({
+                              ...editSite,
+                              supportWhatsapp: e.target.value,
+                              wa: e.target.value,
+                            })
+                          }
+                          placeholder="07724799679"
+                        />
+                      </label>
+                      <label className="f" style={{ margin: 0 }}>
+                        ملاحظة الدفع
+                        <input
+                          disabled={!allowThemePay}
+                          value={editSite.paymentNote || ''}
+                          onChange={(e) => setEditSite({ ...editSite, paymentNote: e.target.value })}
+                          placeholder="اختياري..."
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
 
@@ -1430,7 +1401,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
               >
                 <div id="adm-tabs-admin" className="mp-framed-wrap mp-tabs-col">
                   <div className="mp-framed-title">
-                    <span>أسماء وترتيب قوائم لوحة الإدارة</span>
+                    <span>قوائم الإدارة</span>
                   </div>
                   <div className="mp-framed-box mp-tabs-col-box">
                     <div className="mp-tab-order-list">
@@ -1511,7 +1482,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
 
                 <div id="adm-tabs-dash" className="mp-framed-wrap mp-tabs-col">
                   <div className="mp-framed-title">
-                    <span>أسماء وترتيب قوائم لوحة تحكم الزبون</span>
+                    <span>قوائم الزبون</span>
                   </div>
                   <div className="mp-framed-box mp-tabs-col-box">
                     <div className="mp-tab-order-list">
@@ -1607,7 +1578,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                   {...dashSectionMotion(prefersReducedMotion, 0.04, true)}
                 >
                   <div className="mp-framed-title" style={{ justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
-                    <span>تعديل وترتيب ميزات الباقات في الصفحة الرئيسية (من الأعلى للأسفل)</span>
+                    <span>ميزات الباقات</span>
                   </div>
                   <div className="mp-framed-box">
                     <PlanFeaturesOrderEditor
@@ -1637,16 +1608,11 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                 >
                   <div className="mp-framed-title">
                     <Trash2 size={15} style={{ color: 'var(--brand-ink, #34D399)' }} />
-                    <span>تنظيف الصور المخزنة</span>
+                    <span>الصور المخزنة</span>
                   </div>
                   <div className="mp-framed-box mp-cleanup-box">
-                    <div className="mp-cleanup-copy">
-                      <div style={{ fontSize: '14px', fontWeight: 800, marginBottom: '4px' }}>
-                        حذف الصور المخزنة غير المهمة
-                      </div>
-                      <div className="muted" style={{ fontSize: '12.5px', lineHeight: 1.6 }}>
-                        حذف الصور والملفات غير المستخدمة في المنيوهات أو الإعدادات لتقليل حجم التخزين.
-                      </div>
+                    <div style={{ fontSize: '14px', fontWeight: 800 }}>
+                      حذف الصور غير المستخدمة
                     </div>
                     <button
                       type="button"
@@ -1655,7 +1621,7 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       onClick={() => void handleCleanupUnusedImages()}
                     >
                       {cleaningImages ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
-                      <span>{cleaningImages ? 'جارٍ الحذف...' : 'حذف الصور المخزنة غير المهمة'}</span>
+                      <span>{cleaningImages ? 'جارٍ التنظيف...' : 'تنظيف الآن'}</span>
                     </button>
                     {cleanupSummary && (
                       <div className="mp-db-cleanup-result">

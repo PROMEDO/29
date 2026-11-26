@@ -225,14 +225,9 @@ export const PlanFeaturesOrderEditor: React.FC<PlanFeaturesOrderEditorProps> = (
       )}
 
       <div className="mp-he-group-head">
-        <div>
-          <h3 className="mp-he-group-title">
-            ميزات الباقة وترتيبها من الأعلى للأسفل ({items.length})
-          </h3>
-          <p className="muted" style={{ margin: '2px 0 0', fontSize: '11.5px' }}>
-            اسحب الميزة أو استخدم الأسهم لإعادة الترتيب، وعدّل النص أو حالة التفعيل مباشرة.
-          </p>
-        </div>
+        <h3 className="mp-he-group-title">
+          الميزات ({items.length})
+        </h3>
 
         <div className="mp-pf-toolbar">
           <button type="button" className="btn s p" onClick={handleAddFeature}>
