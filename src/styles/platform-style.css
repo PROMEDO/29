@@ -27602,3 +27602,54 @@ html.mp-low-perf .drawer-panel {
   }
 }
 
+/* Desktop / Computer Only (>= 768px): 40% wider menu column (430px -> 602px), mobile untouched */
+@media (min-width: 768px) {
+  .pm-page:not(.pm-estore-page) .pm-announcement-bar,
+  .pm-page:not(.pm-estore-page) .pm-owner-preview-bar,
+  .pm-page:not(.pm-estore-page) .pm-demo-bar,
+  .pm-page:not(.pm-estore-page) .pm-container,
+  .pm-page:not(.pm-estore-page) .pm-topbar,
+  .pm-page:not(.pm-estore-page) .pm-topbar-inner,
+  .pm-page:not(.pm-estore-page) .pm-toters-topbar,
+  .pm-page:not(.pm-estore-page) .pm-toters-topbar-inner,
+  .pm-page:not(.pm-estore-page) .pm-t1-header,
+  .pm-page:not(.pm-estore-page) .pm-t1-header-inner,
+  .pm-page:not(.pm-estore-page) .pm-t2-header,
+  .pm-page:not(.pm-estore-page) .pm-t2-header-inner,
+  .pm-page:not(.pm-estore-page) .pm-t2-hero-wrap,
+  .pm-page:not(.pm-estore-page) .pm-t4-header,
+  .pm-page:not(.pm-estore-page) .pm-t4-header-inner,
+  .pm-page:not(.pm-estore-page) .pm-t4-hero,
+  .pm-page:not(.pm-estore-page) .pm-t4-hero-inner,
+  .pm-page:not(.pm-estore-page) .pm-t6-hero-header,
+  .pm-page:not(.pm-estore-page) .pm-t6-hero-actions,
+  .pm-page:not(.pm-estore-page) .pm-t6-sticky-bar,
+  .pm-page:not(.pm-estore-page) .pm-t6-sticky-inner,
+  .pm-page:not(.pm-estore-page) .pm-t6-cat-wrap,
+  .pm-page:not(.pm-estore-page) .pm-t6-container,
+  .pm-page:not(.pm-estore-page) .pm-t6-search-top,
+  .pm-page:not(.pm-estore-page) .pm-t6-search-results,
+  .pm-page:not(.pm-estore-page) .pm-dock-inner,
+  .pm-page:not(.pm-estore-page) .pm-t6-search-screen,
+  .pm-page:not(.pm-estore-page) .pm-floating-dock,
+  .pm-page:not(.pm-estore-page) .pm-t1-mobile-tabs,
+  .pm-page:not(.pm-estore-page) .pm-sheet,
+  .pm-page:not(.pm-estore-page) .pm-t6-sheet,
+  .pm-page:not(.pm-estore-page) .mp-promo-sheet {
+    max-width: 602px !important;
+  }
+
+  .pm-page:not(.pm-estore-page) .pm-floating-actions {
+    inset-inline-end: max(16px, calc(50% - 285px));
+  }
+
+  .pm-page[data-shape='theme2'] .pm-t2-pill-dock-wrap {
+    max-width: min(574px, calc(100vw - 16px));
+  }
+
+  .pm-page[data-shape='theme1'] .pm-t1-brand-name,
+  .pm-page[data-shape='theme1'] .pm-t1-brand-sub {
+    max-width: 240px;
+  }
+}
+
