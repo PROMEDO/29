@@ -21,9 +21,9 @@ import {
   Shield,
 } from 'lucide-react';
 import { HomeSettings, PricingPlan, Restaurant, Session, SiteSettings, SupportedLanguage } from '../types';
-import { formatNumber, getItem, resolveEffectiveThemeMode, setSession, waLink, waNum } from '../utils/storage';
+import { formatNumber, getItem, getSlugForRestaurantId, resolveEffectiveThemeMode, setSession, waLink, waNum } from '../utils/storage';
 import { getSupportWhatsapp } from '../utils/businessDefaults';
-import { InfoPageId } from '../utils/router';
+import { getDashboardTabPath, InfoPageId, normalizeRouteTarget } from '../utils/router';
 import {
   buildPlanComparisonRows,
   calcDiscountedPlanPrice,
@@ -441,12 +441,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
     (ownRestaurant && ownRestaurant.done === 1)
   );
 
+  const isModifiedLinkEvent = (e: React.MouseEvent<HTMLAnchorElement>) =>
+    e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
+
+  const personalMenuSlug = personalMenuRid ? getSlugForRestaurantId(personalMenuRid) : undefined;
+  const personalDashboardHref = getDashboardTabPath('home', undefined, personalMenuSlug);
+  const heroCtaHref = /^https?:\/\//i.test(heroCtaLink)
+    ? heroCtaLink
+    : normalizeRouteTarget(heroCtaLink || '/login');
+
   const dashboardTarget = session
     ? session.admin
       ? '/admin/home'
       : session.rid
       ? isStoreComplete
-        ? '/dashboard/home'
+        ? personalDashboardHref
         : '/onboard'
       : '/login'
     : '/login';
@@ -475,10 +484,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
           menuLoggedOut: false,
         });
       }
-      onNavigate('/dashboard/home');
+      onNavigate(personalDashboardHref);
       return;
     }
-    onNavigate(isStoreComplete ? '/dashboard/home' : '/onboard');
+    onNavigate(isStoreComplete ? personalDashboardHref : '/onboard');
   };
 
   const handleEnterNow = () => {
@@ -537,11 +546,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {/* Dynamic navigation links synced with visible page sections */}
               <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {showHeroSection && (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('home')}
+                  <a
+                    href="/"
+                    onClick={(e) => {
+                      if (isModifiedLinkEvent(e)) return;
+                      e.preventDefault();
+                      scrollToSection('home');
+                    }}
                     className="profile-popover-item"
-                    style={{ borderRadius: '999px', fontWeight: 700 }}
+                    style={{ borderRadius: '999px', fontWeight: 700, textDecoration: 'none' }}
                   >
                     {isRtl ? (
                       <>
@@ -554,14 +567,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         <span style={{ flex: 1 }}>{navHomeText}</span>
                       </>
                     )}
-                  </button>
+                  </a>
                 )}
                 {showExploreSection && (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('explore')}
+                  <a
+                    href="/explore"
+                    onClick={(e) => {
+                      if (isModifiedLinkEvent(e)) return;
+                      e.preventDefault();
+                      scrollToSection('explore');
+                    }}
                     className="profile-popover-item"
-                    style={{ borderRadius: '999px' }}
+                    style={{ borderRadius: '999px', textDecoration: 'none' }}
                   >
                     {isRtl ? (
                       <>
@@ -574,14 +591,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         <span style={{ flex: 1 }}>{navExploreText}</span>
                       </>
                     )}
-                  </button>
+                  </a>
                 )}
                 {showServicesSection && (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('services')}
+                  <a
+                    href="/services"
+                    onClick={(e) => {
+                      if (isModifiedLinkEvent(e)) return;
+                      e.preventDefault();
+                      scrollToSection('services');
+                    }}
                     className="profile-popover-item"
-                    style={{ borderRadius: '999px' }}
+                    style={{ borderRadius: '999px', textDecoration: 'none' }}
                   >
                     {isRtl ? (
                       <>
@@ -594,14 +615,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         <span style={{ flex: 1 }}>{navFeaturesText}</span>
                       </>
                     )}
-                  </button>
+                  </a>
                 )}
                 {showFaqSection && (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('faq')}
+                  <a
+                    href="/faq"
+                    onClick={(e) => {
+                      if (isModifiedLinkEvent(e)) return;
+                      e.preventDefault();
+                      scrollToSection('faq');
+                    }}
                     className="profile-popover-item"
-                    style={{ borderRadius: '999px' }}
+                    style={{ borderRadius: '999px', textDecoration: 'none' }}
                   >
                     {isRtl ? (
                       <>
@@ -614,14 +639,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         <span style={{ flex: 1 }}>{navFaqText}</span>
                       </>
                     )}
-                  </button>
+                  </a>
                 )}
                 {showPricingSection && (
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('pricing')}
+                  <a
+                    href="/pricing"
+                    onClick={(e) => {
+                      if (isModifiedLinkEvent(e)) return;
+                      e.preventDefault();
+                      scrollToSection('pricing');
+                    }}
                     className="profile-popover-item"
-                    style={{ borderRadius: '999px' }}
+                    style={{ borderRadius: '999px', textDecoration: 'none' }}
                   >
                     {isRtl ? (
                       <>
@@ -634,7 +663,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         <span style={{ flex: 1 }}>{navPricingText}</span>
                       </>
                     )}
-                  </button>
+                  </a>
                 )}
               </nav>
             </div>
@@ -654,10 +683,18 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <>
                   {isAdminWithMenu ? (
                     <>
-                      <button
-                        type="button"
+                      <a
+                        href={personalDashboardHref}
                         className="btn p b"
-                        onClick={openPersonalDashboard}
+                        style={{ textDecoration: 'none' }}
+                        onClick={(e) => {
+                          if (isModifiedLinkEvent(e)) {
+                            setMobileMenuOpen(false);
+                            return;
+                          }
+                          e.preventDefault();
+                          openPersonalDashboard();
+                        }}
                       >
                         {isRtl ? (
                           <>
@@ -670,11 +707,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
                             <span>{navDashText}</span>
                           </>
                         )}
-                      </button>
-                      <button
-                        type="button"
+                      </a>
+                      <a
+                        href="/admin/home"
                         className="btn b"
-                        onClick={() => {
+                        style={{ textDecoration: 'none' }}
+                        onClick={(e) => {
+                          if (isModifiedLinkEvent(e)) {
+                            setMobileMenuOpen(false);
+                            return;
+                          }
+                          e.preventDefault();
                           setMobileMenuOpen(false);
                           onNavigate('/admin/home');
                         }}
@@ -690,13 +733,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
                             <span>{navAdminDashText}</span>
                           </>
                         )}
-                      </button>
+                      </a>
                     </>
                   ) : (
-                    <button
-                      type="button"
+                    <a
+                      href={dashboardTarget}
                       className="btn p b"
-                      onClick={() => {
+                      style={{ textDecoration: 'none' }}
+                      onClick={(e) => {
+                        if (isModifiedLinkEvent(e)) {
+                          setMobileMenuOpen(false);
+                          return;
+                        }
+                        e.preventDefault();
                         setMobileMenuOpen(false);
                         onNavigate(dashboardTarget);
                       }}
@@ -712,7 +761,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                           <span>{dashboardLabel}</span>
                         </>
                       )}
-                    </button>
+                    </a>
                   )}
                   <button
                     type="button"
@@ -740,20 +789,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   </button>
                 </>
               ) : (
-                <button
-                  type="button"
+                <a
+                  href="/login"
                   className="btn p b"
-                  onClick={handleEnterNow}
+                  onClick={(e) => {
+                    if (isModifiedLinkEvent(e)) {
+                      setMobileMenuOpen(false);
+                      return;
+                    }
+                    e.preventDefault();
+                    handleEnterNow();
+                  }}
                   style={{
                     borderRadius: '9999px',
                     fontWeight: 800,
                     fontSize: '14.5px',
                     padding: '12px 20px',
+                    textDecoration: 'none',
                   }}
                 >
                   <span>{navEnterNowText}</span>
                   {isRtl ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}
-                </button>
+                </a>
               )}
             </div>
           </aside>
@@ -784,6 +841,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               className="brand"
               href="/"
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate('/');
               }}
@@ -809,19 +867,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
             }}
           >
             {showHeroSection && (
-              <a href="/" onClick={(e) => { e.preventDefault(); scrollToSection('home'); }}>{navHomeText}</a>
+              <a href="/" onClick={(e) => { if (isModifiedLinkEvent(e)) return; e.preventDefault(); scrollToSection('home'); }}>{navHomeText}</a>
             )}
             {showExploreSection && (
-              <a href="/explore" onClick={(e) => { e.preventDefault(); scrollToSection('explore'); }}>{navExploreText}</a>
+              <a href="/explore" onClick={(e) => { if (isModifiedLinkEvent(e)) return; e.preventDefault(); scrollToSection('explore'); }}>{navExploreText}</a>
             )}
             {showServicesSection && (
-              <a href="/services" onClick={(e) => { e.preventDefault(); scrollToSection('services'); }}>{navFeaturesText}</a>
+              <a href="/services" onClick={(e) => { if (isModifiedLinkEvent(e)) return; e.preventDefault(); scrollToSection('services'); }}>{navFeaturesText}</a>
             )}
             {showFaqSection && (
-              <a href="/faq" onClick={(e) => { e.preventDefault(); scrollToSection('faq'); }}>{navFaqText}</a>
+              <a href="/faq" onClick={(e) => { if (isModifiedLinkEvent(e)) return; e.preventDefault(); scrollToSection('faq'); }}>{navFaqText}</a>
             )}
             {showPricingSection && (
-              <a href="/pricing" onClick={(e) => { e.preventDefault(); scrollToSection('pricing'); }}>{navPricingText}</a>
+              <a href="/pricing" onClick={(e) => { if (isModifiedLinkEvent(e)) return; e.preventDefault(); scrollToSection('pricing'); }}>{navPricingText}</a>
             )}
           </nav>
 
@@ -842,10 +900,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
             {isAdminWithMenu ? (
               <>
-                <button
-                  type="button"
+                <a
+                  href={personalDashboardHref}
                   className="btn p s"
-                  onClick={openPersonalDashboard}
+                  onClick={(e) => {
+                    if (isModifiedLinkEvent(e)) return;
+                    e.preventDefault();
+                    openPersonalDashboard();
+                  }}
                   style={{
                     fontSize: '13px',
                     fontWeight: 800,
@@ -855,6 +917,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
+                    textDecoration: 'none',
                   }}
                 >
                   {isRtl ? (
@@ -868,11 +931,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span>{navDashText}</span>
                     </>
                   )}
-                </button>
-                <button
-                  type="button"
+                </a>
+                <a
+                  href="/admin/home"
                   className="btn s"
-                  onClick={() => onNavigate('/admin/home')}
+                  onClick={(e) => {
+                    if (isModifiedLinkEvent(e)) return;
+                    e.preventDefault();
+                    onNavigate('/admin/home');
+                  }}
                   style={{
                     fontSize: '13px',
                     fontWeight: 800,
@@ -882,6 +949,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
+                    textDecoration: 'none',
                   }}
                 >
                   {isRtl ? (
@@ -895,13 +963,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span>{navAdminDashText}</span>
                     </>
                   )}
-                </button>
+                </a>
               </>
             ) : (
-              <button
-                type="button"
+              <a
+                href={session ? dashboardTarget : '/login'}
                 className={session?.admin ? 'btn s' : 'btn p s'}
-                onClick={handleEnterNow}
+                onClick={(e) => {
+                  if (isModifiedLinkEvent(e)) return;
+                  e.preventDefault();
+                  handleEnterNow();
+                }}
                 style={{
                   fontSize: session?.admin ? '13px' : '13.5px',
                   fontWeight: 800,
@@ -911,6 +983,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
+                  textDecoration: 'none',
                 }}
               >
                 {isRtl ? (
@@ -924,7 +997,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <span>{session ? dashboardLabel : navEnterNowText}</span>
                   </>
                 )}
-              </button>
+              </a>
             )}
 
             {session && (
@@ -1079,13 +1152,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   justifyContent: 'center',
                 }}
               >
-                <motion.button
-                  type="button"
+                <motion.a
+                  href={heroCtaHref}
                   className="mp-magic-create-btn hero-cta-btn"
                   whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.015 }}
                   whileTap={prefersReducedMotion ? undefined : { scale: 0.985 }}
                   transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => {
+                  onClick={(e) => {
+                    if (isModifiedLinkEvent(e)) return;
+                    e.preventDefault();
                     if (/^https?:\/\//i.test(heroCtaLink)) {
                       window.location.href = heroCtaLink;
                     } else {
@@ -1102,6 +1177,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     gap: '9px',
                     width: 'auto',
                     marginTop: 0,
+                    textDecoration: 'none',
                   }}
                 >
                   {isRtl ? (
@@ -1115,7 +1191,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       <span>{heroCtaText}</span>
                     </>
                   )}
-                </motion.button>
+                </motion.a>
               </motion.div>
             )}
           </motion.div>
@@ -2055,6 +2131,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <a
               href="/about"
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate('/about');
               }}
@@ -2066,6 +2143,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <a
               href="/contact"
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate('/contact');
               }}
@@ -2079,6 +2157,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <a
                   href="/faq"
                   onClick={(e) => {
+                    if (isModifiedLinkEvent(e)) return;
                     e.preventDefault();
                     scrollToSection('faq');
                   }}
@@ -2092,6 +2171,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <a
               href={demoMenuPath}
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate(demoMenuPath);
               }}
@@ -2103,6 +2183,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <a
               href="/terms"
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate('/terms');
               }}
@@ -2114,6 +2195,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <a
               href="/privacy"
               onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
                 e.preventDefault();
                 onNavigate('/privacy');
               }}

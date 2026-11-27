@@ -1719,13 +1719,16 @@ section.s h2 {
 }
 
 .sb nav button:not(.sb-footer-item),
-.drawer-panel nav button:not(.btn):not(.sb-footer-item) {
+.sb nav a:not(.sb-footer-item),
+.drawer-panel nav button:not(.btn):not(.sb-footer-item),
+.drawer-panel nav a:not(.btn):not(.sb-footer-item) {
   display: flex;
   align-items: center;
   gap: 10px;
   border: 1px solid transparent;
   background: transparent;
   text-align: start;
+  text-decoration: none;
   padding: 9.5px 11px;
   border-radius: 11px;
   cursor: pointer;
@@ -1737,14 +1740,18 @@ section.s h2 {
 }
 
 .sb nav button:not(.sb-footer-item) > svg,
-.drawer-panel nav button:not(.btn):not(.sb-footer-item) > svg {
+.sb nav a:not(.sb-footer-item) > svg,
+.drawer-panel nav button:not(.btn):not(.sb-footer-item) > svg,
+.drawer-panel nav a:not(.btn):not(.sb-footer-item) > svg {
   flex-shrink: 0;
   opacity: 0.78;
   transition: opacity 0.14s cubic-bezier(0.22, 1, 0.36, 1), color 0.14s cubic-bezier(0.22, 1, 0.36, 1), transform 0.14s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .sb nav button.on,
-.drawer-panel nav button:not(.btn).on {
+.sb nav a.on,
+.drawer-panel nav button:not(.btn).on,
+.drawer-panel nav a:not(.btn).on {
   background: color-mix(in srgb, var(--brand) 12%, transparent);
   border-color: color-mix(in srgb, var(--brand) 24%, transparent);
   font-weight: 700;
@@ -1752,20 +1759,26 @@ section.s h2 {
 }
 
 .sb nav button.on > svg,
-.drawer-panel nav button:not(.btn).on > svg {
+.sb nav a.on > svg,
+.drawer-panel nav button:not(.btn).on > svg,
+.drawer-panel nav a:not(.btn).on > svg {
   opacity: 1;
   color: var(--brand-ink, #0F766E);
 }
 
 .sb nav button:not(.sb-footer-item):not(.on):hover,
-.drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover {
+.sb nav a:not(.sb-footer-item):not(.on):hover,
+.drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover,
+.drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on):hover {
   background: var(--sel);
   color: var(--ink);
   transform: translateX(-2px);
 }
 
 .sb nav button:not(.sb-footer-item):not(.on):hover > svg,
-.drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover > svg {
+.sb nav a:not(.sb-footer-item):not(.on):hover > svg,
+.drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover > svg,
+.drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on):hover > svg {
   opacity: 1;
 }
 
@@ -5442,18 +5455,24 @@ html[data-theme="light"] .customer-shell .sb.desktop-only {
 }
 
 html[data-theme="light"] .sb nav button:not(.sb-footer-item):not(.on),
-html[data-theme="light"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on) {
+html[data-theme="light"] .sb nav a:not(.sb-footer-item):not(.on),
+html[data-theme="light"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on),
+html[data-theme="light"] .drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on) {
   color: #1E293B;
 }
 
 html[data-theme="light"] .sb nav button:not(.sb-footer-item):not(.on):hover,
-html[data-theme="light"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover {
+html[data-theme="light"] .sb nav a:not(.sb-footer-item):not(.on):hover,
+html[data-theme="light"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover,
+html[data-theme="light"] .drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on):hover {
   background: rgba(15, 23, 42, 0.05);
   color: #0F172A;
 }
 
 html[data-theme="light"] .sb nav button.on,
-html[data-theme="light"] .drawer-panel nav button:not(.btn).on {
+html[data-theme="light"] .sb nav a.on,
+html[data-theme="light"] .drawer-panel nav button:not(.btn).on,
+html[data-theme="light"] .drawer-panel nav a:not(.btn).on {
   background: rgba(15, 118, 110, 0.11) !important;
   border-color: rgba(15, 118, 110, 0.22) !important;
   color: #0F766E !important;
@@ -5461,7 +5480,9 @@ html[data-theme="light"] .drawer-panel nav button:not(.btn).on {
 }
 
 html[data-theme="light"] .sb nav button.on > svg,
-html[data-theme="light"] .drawer-panel nav button:not(.btn).on > svg {
+html[data-theme="light"] .sb nav a.on > svg,
+html[data-theme="light"] .drawer-panel nav button:not(.btn).on > svg,
+html[data-theme="light"] .drawer-panel nav a:not(.btn).on > svg {
   color: #0F766E !important;
   opacity: 1;
 }
@@ -5662,18 +5683,24 @@ html[data-theme="dark"] .ajax-box {
 }
 
 html[data-theme="dark"] .sb nav button:not(.sb-footer-item):not(.on),
-html[data-theme="dark"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on) {
+html[data-theme="dark"] .sb nav a:not(.sb-footer-item):not(.on),
+html[data-theme="dark"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on),
+html[data-theme="dark"] .drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on) {
   color: #E2E8F0;
 }
 
 html[data-theme="dark"] .sb nav button:not(.sb-footer-item):not(.on):hover,
-html[data-theme="dark"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover {
+html[data-theme="dark"] .sb nav a:not(.sb-footer-item):not(.on):hover,
+html[data-theme="dark"] .drawer-panel nav button:not(.btn):not(.sb-footer-item):not(.on):hover,
+html[data-theme="dark"] .drawer-panel nav a:not(.btn):not(.sb-footer-item):not(.on):hover {
   background: rgba(255, 255, 255, 0.07);
   color: #FFFFFF;
 }
 
 html[data-theme="dark"] .sb nav button.on,
-html[data-theme="dark"] .drawer-panel nav button:not(.btn).on {
+html[data-theme="dark"] .sb nav a.on,
+html[data-theme="dark"] .drawer-panel nav button:not(.btn).on,
+html[data-theme="dark"] .drawer-panel nav a:not(.btn).on {
   background: rgba(52, 211, 153, 0.15) !important;
   border-color: rgba(52, 211, 153, 0.28) !important;
   color: #34D399 !important;
@@ -5681,7 +5708,9 @@ html[data-theme="dark"] .drawer-panel nav button:not(.btn).on {
 }
 
 html[data-theme="dark"] .sb nav button.on > svg,
-html[data-theme="dark"] .drawer-panel nav button:not(.btn).on > svg {
+html[data-theme="dark"] .sb nav a.on > svg,
+html[data-theme="dark"] .drawer-panel nav button:not(.btn).on > svg,
+html[data-theme="dark"] .drawer-panel nav a:not(.btn).on > svg {
   color: #34D399 !important;
   opacity: 1;
 }
@@ -13517,7 +13546,9 @@ html[data-theme="light"] .mp-addon-endday-badge {
 }
 
 .sb nav button > svg,
+.sb nav a > svg,
 .drawer-panel nav button > svg,
+.drawer-panel nav a > svg,
 .sb-footer-item > svg {
   flex-shrink: 0;
 }
@@ -13532,7 +13563,9 @@ html[data-theme="light"] .mp-addon-endday-badge {
 [dir='ltr'] .btn > svg,
 [dir='ltr'] .profile-popover-item > svg,
 [dir='ltr'] .sb nav button > svg,
+[dir='ltr'] .sb nav a > svg,
 [dir='ltr'] .drawer-panel nav button > svg,
+[dir='ltr'] .drawer-panel nav a > svg,
 [dir='ltr'] .sb-footer-item > svg,
 [dir='ltr'] .mp-dash-topbar-btn > svg,
 [dir='ltr'] .mp-addon-btn-toggle > svg,
@@ -23853,14 +23886,18 @@ html[data-theme] .drawer-panel,
 
 /* Sidebar & Drawer Pill Navigation Buttons */
 .shell .sb nav button:not(.sb-footer-item),
+.shell .sb nav a:not(.sb-footer-item),
 .shell .drawer-panel nav button:not(.btn):not(.sb-footer-item),
+.shell .drawer-panel nav a:not(.btn):not(.sb-footer-item),
 .drawer-panel .profile-popover-item {
   border-radius: var(--mp-radius-pill) !important;
   padding: 10px 14px !important;
 }
 
 .shell .sb nav button.on,
-.shell .drawer-panel nav button:not(.btn).on {
+.shell .sb nav a.on,
+.shell .drawer-panel nav button:not(.btn).on,
+.shell .drawer-panel nav a:not(.btn).on {
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--brand) 20%, rgba(255, 255, 255, 0.05)) 0%,

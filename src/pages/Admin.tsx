@@ -17,7 +17,8 @@ import {
 } from '../types';
 import { AppLogo } from '../components/AppLogo';
 import { buildPlanComparisonRows } from '../utils/plans';
-import { navigateToMainSite } from '../utils/businessDefaults';
+import { getMainSiteUrl, navigateToMainSite } from '../utils/businessDefaults';
+import { getAdminTabPath } from '../utils/router';
 
 const StaffManagementSection = lazy(() =>
   import('../components/admin/StaffManagementSection').then((m) => ({ default: m.StaffManagementSection }))
@@ -751,17 +752,22 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
           <div className="drawer-backdrop" onClick={() => setMobileMenuOpen(false)} />
           <aside className="drawer-panel" style={{ zIndex: 9999 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 14px 12px', borderBottom: '1px solid var(--line)' }}>
-              <button
-                type="button"
-                onClick={() => {
+              <a
+                href={getMainSiteUrl('/', site)}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                    setMobileMenuOpen(false);
+                    return;
+                  }
+                  e.preventDefault();
                   setMobileMenuOpen(false);
                   navigateToMainSite('/', onNavigate, site);
                 }}
-                style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                 title="الصفحة الرئيسية للموقع"
               >
                 <AppLogo size={32} />
-              </button>
+              </a>
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
@@ -787,12 +793,18 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                 {adminTabs.map((tab) => {
                   const IconComp = tab.Icon;
                   const isActive = effectiveTab === tab.id;
+                  const tabHref = getAdminTabPath(tab.id);
                   return (
-                    <button
+                    <a
                       key={tab.id}
-                      type="button"
+                      href={tabHref}
                       className={isActive ? 'on' : ''}
-                      onClick={() => {
+                      onClick={(e) => {
+                        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                          setMobileMenuOpen(false);
+                          return;
+                        }
+                        e.preventDefault();
                         setActiveTab(tab.id);
                         setMobileMenuOpen(false);
                       }}
@@ -802,25 +814,30 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                       {tab.id === 'reports' && newReportsCount > 0 && (
                         <span className="bd">{newReportsCount}</span>
                       )}
-                    </button>
+                    </a>
                   );
                 })}
 
                 <div className="sb-nav-divider" />
 
                 <div className="sb-footer-inline">
-                  <button
-                    type="button"
+                  <a
+                    href={getMainSiteUrl('/', site)}
                     className="btn s"
-                    onClick={() => {
+                    onClick={(e) => {
+                      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+                        setMobileMenuOpen(false);
+                        return;
+                      }
+                      e.preventDefault();
                       setMobileMenuOpen(false);
                       navigateToMainSite('/', onNavigate, site);
                     }}
-                    style={{ width: '100%', justifyContent: 'center', gap: '6px' }}
+                    style={{ width: '100%', justifyContent: 'center', gap: '6px', textDecoration: 'none' }}
                   >
                     <Eye size={14} />
                     <span>الموقع العام</span>
-                  </button>
+                  </a>
                   <button
                     type="button"
                     className="btn s d"
@@ -840,47 +857,60 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
       {/* Fixed Sidebar for Desktop */}
       <aside className="sb desktop-only">
         <div className="lg">
-          <button
-            type="button"
-            onClick={() => navigateToMainSite('/', onNavigate, site)}
-            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          <a
+            href={getMainSiteUrl('/', site)}
+            onClick={(e) => {
+              if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+              e.preventDefault();
+              navigateToMainSite('/', onNavigate, site);
+            }}
+            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
             title="العودة للصفحة الرئيسية"
           >
             <AppLogo size={36} />
-          </button>
+          </a>
         </div>
 
         <nav>
           {adminTabs.map((tab) => {
             const IconComp = tab.Icon;
+            const tabHref = getAdminTabPath(tab.id);
             return (
-              <button
+              <a
                 key={tab.id}
-                type="button"
+                href={tabHref}
                 className={effectiveTab === tab.id ? 'on' : ''}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                  e.preventDefault();
+                  setActiveTab(tab.id);
+                }}
               >
                 <IconComp size={17} />
                 <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tab.label}</span>
                 {tab.id === 'reports' && newReportsCount > 0 && (
                   <span className="bd">{newReportsCount}</span>
                 )}
-              </button>
+              </a>
             );
           })}
 
           <div className="sb-nav-divider" />
 
           <div className="sb-footer-inline">
-            <button
-              type="button"
+            <a
+              href={getMainSiteUrl('/', site)}
               className="btn s"
-              onClick={() => navigateToMainSite('/', onNavigate, site)}
-              style={{ width: '100%', justifyContent: 'center', gap: '7px' }}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                e.preventDefault();
+                navigateToMainSite('/', onNavigate, site);
+              }}
+              style={{ width: '100%', justifyContent: 'center', gap: '7px', textDecoration: 'none' }}
             >
               <Eye size={15} />
               <span>الموقع العام</span>
-            </button>
+            </a>
             <button
               type="button"
               className="btn s d"
@@ -919,8 +949,8 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-            <button
-              type="button"
+            <a
+              href={getAdminTabPath('account')}
               className={`btn${effectiveTab === 'account' ? ' p' : ' s'}`}
               style={{
                 display: 'inline-flex',
@@ -931,15 +961,20 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                 padding: 0,
                 borderRadius: '999px',
                 cursor: 'pointer',
+                textDecoration: 'none',
               }}
-              onClick={() => setActiveTab('account')}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                e.preventDefault();
+                setActiveTab('account');
+              }}
               title={customAdminLabel('account', 'حسابك')}
               aria-label={customAdminLabel('account', 'حسابك')}
             >
               <User size={17} />
-            </button>
-            <button
-              type="button"
+            </a>
+            <a
+              href={getMainSiteUrl('/', site)}
               className="btn p"
               style={{
                 display: 'inline-flex',
@@ -951,14 +986,19 @@ const AdminViewInner: React.FC<AdminViewProps> = ({
                 fontSize: '12.5px',
                 fontWeight: 700,
                 cursor: 'pointer',
+                textDecoration: 'none',
               }}
-              onClick={() => navigateToMainSite('/', onNavigate, site)}
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                e.preventDefault();
+                navigateToMainSite('/', onNavigate, site);
+              }}
               title="الموقع العام"
               aria-label="الموقع العام"
             >
               <Eye size={15} />
               <span>الموقع العام</span>
-            </button>
+            </a>
           </div>
         </header>
 

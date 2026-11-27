@@ -15,8 +15,9 @@ import {
   DashboardPushPermissionBanner,
   DashboardSidebarInstallButton,
 } from '../../components/DashboardPWAInstallPrompt';
-import { DEFAULT_SITE } from '../../utils/storage';
-import { navigateToMainSite } from '../../utils/businessDefaults';
+import { DEFAULT_SITE, getSlugForRestaurantId } from '../../utils/storage';
+import { getMainSiteUrl, navigateToMainSite, sanitizeSlug } from '../../utils/businessDefaults';
+import { getDashboardTabPath } from '../../utils/router';
 import { dashTabMotion } from '../../utils/dashboardMotion';
 import {
   DashboardProvider,
@@ -154,6 +155,13 @@ const DashboardShell: React.FC = () => {
     activeRid === mainRid
       ? mainRest.branchName?.trim() || mainRest.n
       : rest.branchName?.trim() || rest.n;
+
+  const activeMenuSlugForUrl =
+    getSlugForRestaurantId(activeRid) || sanitizeSlug(rest.slug || rest.subdomain || '');
+  const getTabHref = (tabId: DashboardTab) =>
+    getDashboardTabPath(tabId, activeRid === mainRid ? undefined : activeRid, activeMenuSlugForUrl);
+  const isModifiedLinkEvent = (e: React.MouseEvent<HTMLAnchorElement>) =>
+    e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0;
 
   useEffect(() => {
     document.title = `${activeTabTitle} | ${activeBranchDisplayName || 'Menu Plus'}`;
@@ -304,17 +312,22 @@ const DashboardShell: React.FC = () => {
           <div className="drawer-backdrop" onClick={() => setDrawerOpen(false)} />
           <aside className="drawer-panel" style={{ zIndex: 9999 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 14px 12px', borderBottom: '1px solid var(--line)' }}>
-              <button
-                type="button"
-                onClick={() => {
+              <a
+                href={getMainSiteUrl('/', site)}
+                onClick={(e) => {
+                  if (isModifiedLinkEvent(e)) {
+                    setDrawerOpen(false);
+                    return;
+                  }
+                  e.preventDefault();
                   setDrawerOpen(false);
                   navigateToMainSite('/', onNavigate, site);
                 }}
-                style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                 title="الصفحة الرئيسية للموقع"
               >
                 <AppLogo size={32} />
-              </button>
+              </a>
               <button
                 type="button"
                 onClick={() => setDrawerOpen(false)}
@@ -347,13 +360,18 @@ const DashboardShell: React.FC = () => {
                   const isLocked = isTabLocked(tab.id);
                   const label = customTabLabel(tab.id, tab.label);
                   return (
-                    <button
+                    <a
                       key={tab.id}
-                      type="button"
+                      href={getTabHref(tab.id)}
                       className={isActive ? 'on' : ''}
                       onPointerEnter={() => void TAB_PREFETCHERS[tab.id]?.()}
                       onFocus={() => void TAB_PREFETCHERS[tab.id]?.()}
-                      onClick={() => {
+                      onClick={(e) => {
+                        if (isModifiedLinkEvent(e)) {
+                          setDrawerOpen(false);
+                          return;
+                        }
+                        e.preventDefault();
                         setActiveTab(tab.id);
                         setIsItemEditorOpen(false);
                         setDrawerOpen(false);
@@ -372,7 +390,7 @@ const DashboardShell: React.FC = () => {
                           🔒
                         </span>
                       )}
-                    </button>
+                    </a>
                   );
                 })}
 
@@ -386,14 +404,18 @@ const DashboardShell: React.FC = () => {
       {/* DESKTOP SIDEBAR (Matches Admin Sidebar Design) */}
       <aside className="sb desktop-only">
         <div className="lg">
-          <button
-            type="button"
-            onClick={() => navigateToMainSite('/', onNavigate, site)}
-            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          <a
+            href={getMainSiteUrl('/', site)}
+            onClick={(e) => {
+              if (isModifiedLinkEvent(e)) return;
+              e.preventDefault();
+              navigateToMainSite('/', onNavigate, site);
+            }}
+            style={{ background: 'none', border: 0, padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
             title="العودة للصفحة الرئيسية"
           >
             <AppLogo size={36} />
-          </button>
+          </a>
 
           <div className="mp-sb-header-stack" style={{ marginTop: '10px' }}>
             {renderStoreSummaryCard()}
@@ -407,14 +429,16 @@ const DashboardShell: React.FC = () => {
             const isLocked = isTabLocked(tab.id);
             const label = customTabLabel(tab.id, tab.label);
             return (
-              <button
+              <a
                 key={tab.id}
-                type="button"
+                href={getTabHref(tab.id)}
                 className={isActive ? 'on' : ''}
                 style={isLocked ? { opacity: 0.62 } : undefined}
                 onPointerEnter={() => void TAB_PREFETCHERS[tab.id]?.()}
                 onFocus={() => void TAB_PREFETCHERS[tab.id]?.()}
-                onClick={() => {
+                onClick={(e) => {
+                  if (isModifiedLinkEvent(e)) return;
+                  e.preventDefault();
                   setActiveTab(tab.id);
                   setIsItemEditorOpen(false);
                 }}
@@ -431,7 +455,7 @@ const DashboardShell: React.FC = () => {
                     🔒
                   </span>
                 )}
-              </button>
+              </a>
             );
           })}
 
@@ -478,10 +502,13 @@ const DashboardShell: React.FC = () => {
               <span className="mp-dash-topbar-label">{terms.isStore ? 'مشاركة المتجر' : 'مشاركة المنيو'}</span>
             </button>
 
-            <button
-              type="button"
+            <a
+              href={publicPath}
               className="mp-dash-topbar-btn is-primary"
-              onClick={() => {
+              style={{ textDecoration: 'none' }}
+              onClick={(e) => {
+                if (isModifiedLinkEvent(e)) return;
+                e.preventDefault();
                 void flushPendingAppearanceSave();
                 onNavigate(publicPath);
               }}
@@ -490,7 +517,7 @@ const DashboardShell: React.FC = () => {
             >
               <Eye size={18} />
               <span className="mp-dash-topbar-label">{terms.isStore ? 'معاينة المتجر' : 'معاينة المنيو'}</span>
-            </button>
+            </a>
           </div>
         </header>
 
