@@ -26364,7 +26364,7 @@ html.mp-low-perf .drawer-panel {
 .pm-t6-hero-header {
   position: relative;
   width: 100%;
-  height: 128px;
+  height: 112px;
   margin: 0 auto;
   overflow: hidden;
   background: linear-gradient(180deg, #F5BCB5 0%, #FAD6C7 44%, #FEF3DE 84%, var(--pm-bg) 100%);
@@ -26389,7 +26389,7 @@ html.mp-low-perf .drawer-panel {
   z-index: 2;
   max-width: 560px;
   margin: 0 auto;
-  padding: 18px 16px 0;
+  padding: 14px 16px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -26398,17 +26398,17 @@ html.mp-low-perf .drawer-panel {
 .pm-t6-hero-left-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pm-t6-circle-btn {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 0;
   background: #FFFFFF;
   color: #111111;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -26430,19 +26430,19 @@ html.mp-low-perf .drawer-panel {
 .pm-t6-logo-wrap {
   position: relative;
   z-index: 3;
-  margin-top: -33px;
-  margin-bottom: 10px;
+  margin-top: -26px;
+  margin-bottom: 6px;
   display: flex;
   justify-content: center;
 }
 
 .pm-t6-logo-box {
-  width: 66px;
-  height: 66px;
-  border-radius: 15px;
+  width: 58px;
+  height: 58px;
+  border-radius: 13px;
   background: #FFFFFF;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -26457,23 +26457,23 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-logo-fallback {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
   color: var(--pm-ink);
 }
 
-/* Store Title & Subtitle */
+/* Store Title & Status Chip */
 .pm-t6-identity {
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .pm-t6-title {
-  margin: 0 0 6px;
-  font-size: 20px;
+  margin: 0 0 4px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--pm-ink);
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .pm-t6-subtitle-row {
@@ -26481,8 +26481,8 @@ html.mp-low-perf .drawer-panel {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 13px;
+  gap: 6px;
+  font-size: 12px;
   color: var(--pm-muted);
 }
 
@@ -26495,7 +26495,7 @@ html.mp-low-perf .drawer-panel {
   border: 0;
   border-radius: 6px;
   padding: 2px 10px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   background: linear-gradient(135deg, #E2E8F0 0%, #D8E2F3 100%);
   color: #111827;
@@ -26513,7 +26513,7 @@ html.mp-low-perf .drawer-panel {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: center;
-  margin: 0 0 16px;
+  margin: 0 0 12px;
 }
 
 .pm-t6-metric-cell {
@@ -26522,8 +26522,8 @@ html.mp-low-perf .drawer-panel {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 2px 6px;
+  gap: 1px;
+  padding: 1px 4px;
   border: 0;
   background: transparent;
   text-align: center;
@@ -26537,7 +26537,7 @@ html.mp-low-perf .drawer-panel {
   top: 50%;
   transform: translateY(-50%);
   width: 1px;
-  height: 24px;
+  height: 22px;
   background: var(--pm-line);
 }
 
@@ -26550,7 +26550,7 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-metric-val {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--pm-ink);
   white-space: nowrap;
@@ -26560,7 +26560,7 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-metric-lbl {
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
   color: var(--pm-muted);
   white-space: nowrap;
@@ -26571,10 +26571,10 @@ html.mp-low-perf .drawer-panel {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 13px 14px;
-  margin-bottom: 18px;
-  border-radius: 12px;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
   border: 1px solid var(--pm-line);
   background: var(--pm-card);
   cursor: pointer;
@@ -26583,7 +26583,7 @@ html.mp-low-perf .drawer-panel {
 .pm-t6-branch-right {
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   min-width: 0;
   flex: 1;
 }
@@ -26594,7 +26594,7 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-branch-text {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 600;
   color: var(--pm-ink);
   white-space: nowrap;
@@ -26603,7 +26603,7 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-branch-action {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #DC2626;
   flex-shrink: 0;
@@ -26614,12 +26614,12 @@ html.mp-low-perf .drawer-panel {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 4px 0 12px;
+  margin: 0 0 10px;
 }
 
 .pm-t6-products-heading {
   margin: 0;
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 800;
   color: var(--pm-ink);
 }
@@ -26628,7 +26628,7 @@ html.mp-low-perf .drawer-panel {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 3px;
+  padding: 2.5px;
   border-radius: 999px;
   background: #F3F4F6;
 }
@@ -26638,8 +26638,8 @@ html.mp-low-perf .drawer-panel {
 }
 
 .pm-t6-toggle-btn {
-  width: 40px;
-  height: 28px;
+  width: 36px;
+  height: 26px;
   border-radius: 999px;
   border: 0;
   background: transparent;
@@ -26664,21 +26664,21 @@ html.mp-low-perf .drawer-panel {
 /* Category Row & Horizontal Pills */
 .pm-t6-cat-wrap {
   max-width: 560px;
-  margin: 0 auto 14px;
+  margin: 0 auto 10px;
   padding-inline: 16px;
 }
 
 .pm-t6-cat-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pm-t6-menu-list-btn {
   border: 0;
   background: transparent;
   color: var(--pm-ink);
-  padding: 6px 2px;
+  padding: 4px 2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -26688,7 +26688,7 @@ html.mp-low-perf .drawer-panel {
 
 .pm-t6-cat-sep {
   width: 1px;
-  height: 18px;
+  height: 16px;
   background: var(--pm-line);
   flex-shrink: 0;
 }
@@ -26696,7 +26696,7 @@ html.mp-low-perf .drawer-panel {
 .pm-t6-cat-strip {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -26710,13 +26710,13 @@ html.mp-low-perf .drawer-panel {
 
 .pm-t6-cat-pill {
   flex-shrink: 0;
-  height: 36px;
-  padding: 0 17px;
+  height: 32px;
+  padding: 0 15px;
   border-radius: 999px;
   border: 0;
   background: #F3F4F6;
   color: #111111;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;

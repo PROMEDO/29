@@ -4065,14 +4065,10 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
               </div>
             </div>
 
-            {/* Store Title + Subtitle / Badge */}
+            {/* Store Title + Status Chip (No Long Description) */}
             <div className="pm-t6-identity">
               <h1 className="pm-t6-title">{rest.n}</h1>
               <div className="pm-t6-subtitle-row">
-                <span className="pm-t6-tagline">
-                  {(rest.tagline || '').trim() || 'عربي، وجبات سريعة، أخرى'}
-                </span>
-                <span className="pm-t6-sub-sep" aria-hidden="true">|</span>
                 <button
                   type="button"
                   className="pm-t6-status-chip"
@@ -4170,13 +4166,13 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   aria-label="عرض القائمة"
                   title="عرض القائمة"
                 >
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                     <rect x="2.5" y="4" width="3.5" height="3.5" rx="0.9" fill="currentColor" />
-                    <path d="M8.5 5.75H17.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M8.5 5.75H17.5" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" />
                     <rect x="2.5" y="9" width="3.5" height="3.5" rx="0.9" fill="currentColor" />
-                    <path d="M8.5 10.75H17.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M8.5 10.75H17.5" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" />
                     <rect x="2.5" y="14" width="3.5" height="3.5" rx="0.9" fill="currentColor" />
-                    <path d="M8.5 15.75H17.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M8.5 15.75H17.5" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" />
                   </svg>
                 </button>
                 <button
@@ -4187,10 +4183,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   aria-label="عرض البطاقات الكبيرة"
                   title="عرض البطاقات الكبيرة"
                 >
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                    <rect x="3" y="3.5" width="14" height="7" rx="2" fill="currentColor" />
-                    <path d="M3.5 13.5H16.5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-                    <path d="M3.5 16.8H11.5" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <rect x="3" y="4" width="14" height="8" rx="2" fill="currentColor" />
+                    <path d="M4 15.2H16" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" />
                   </svg>
                 </button>
               </div>
