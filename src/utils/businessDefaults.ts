@@ -96,7 +96,7 @@ export function ensureRestaurantDefaults<T extends Partial<Restaurant>>(r: T): T
     themeShape: resolvedShape,
     ...(isStore ? { color: '#222222', bgColor: undefined } : {}),
     logo: r.logo && String(r.logo).trim() ? r.logo : def.logo,
-    coverImages: isStore ? (existingCovers.length > 0 ? existingCovers : [def.banner]) : [],
+    coverImages: isStore ? (existingCovers.length > 0 ? existingCovers : [def.banner]) : existingCovers,
     tagline: isStore ? cleanedTagline : cleanedTagline || def.tagline,
     aboutText: r.aboutText && String(r.aboutText).trim() ? r.aboutText : def.aboutText,
   };

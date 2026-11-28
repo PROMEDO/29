@@ -3726,9 +3726,10 @@ export function ensureDemoRestaurant() {
       currency: 'د.ع',
       country: 'العراق',
       region: 'بغداد',
+      address: 'بغداد - الكرادة، قرب تقاطع المسبح',
       language: 'ar',
       logo: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80',
-      coverImages: [],
+      coverImages: ['https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80'],
       taxNote: 'الأسعار شاملة الضريبة والتغليف الحراري',
       aboutText:
         'أهلاً بكم في كاب برجر – نُحضر يومياً أشهى وجبات السماش برجر بلحم الأنجوس الطازج، برجر الدجاج الكريسبي المقرمش، والبطاطا بالجبن مع تشكيلة صوصاتنا السرية والمشروبات الباردة.',

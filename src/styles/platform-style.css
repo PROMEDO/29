@@ -3391,6 +3391,14 @@ section.s h2 {
   background-image: none;
 }
 
+.pm-page.pm-mode-snapping,
+.pm-page.pm-mode-snapping *,
+.pm-page.pm-mode-snapping *::before,
+.pm-page.pm-mode-snapping *::after {
+  transition: none !important;
+  animation-duration: 0s !important;
+}
+
 .pm-container {
   max-width: 740px;
   margin: 0 auto;
@@ -14034,6 +14042,118 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   border-color: var(--pm-brand);
 }
 
+/* Toters Hero Banner + Floating Frosted Controls */
+.pm-toters-hero-wrap {
+  width: 100%;
+  margin-inline: auto;
+}
+
+.pm-toters-banner {
+  position: relative;
+  width: 100%;
+  height: 196px;
+  overflow: hidden;
+  background: var(--pm-soft);
+}
+
+.pm-toters-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pm-toters-banner-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--pm-brand) 68%, #0f172a) 0%,
+    color-mix(in srgb, var(--pm-brand) 38%, #020617) 100%
+  );
+}
+
+.pm-toters-banner-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.34) 0%,
+    rgba(0, 0, 0, 0.04) 48%,
+    rgba(0, 0, 0, 0.22) 100%
+  );
+}
+
+.pm-toters-hero-actions {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  z-index: 4;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pm-toters-float-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  color: #0f172a;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.pm-page:not(.pm-light) .pm-toters-float-circle {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.74);
+  color: #f8fafc;
+}
+
+.pm-toters-float-circle:hover {
+  transform: scale(1.06);
+}
+
+.pm-toters-float-circle:active {
+  transform: scale(0.95);
+}
+
+.pm-toters-float-pill {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.pm-page:not(.pm-light) .pm-toters-float-pill {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.78);
+  color: #f8fafc;
+}
+
 /* Toters Store Card */
 .pm-toters-store-card {
   position: relative;
@@ -14047,13 +14167,19 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
 }
 
+.pm-toters-store-card.has-banner {
+  margin-top: -28px;
+  border-radius: 24px 24px 20px 20px;
+  padding: 15px 16px;
+}
+
 .pm-page.pm-light .pm-toters-store-card {
   box-shadow: 0 10px 30px -8px rgba(15, 23, 42, 0.12);
 }
 
 .pm-toters-store-head {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
@@ -14087,6 +14213,29 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   font-weight: 900;
   color: var(--pm-ink);
   line-height: 1.25;
+}
+
+.pm-toters-store-info-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  border: 1px solid var(--pm-line);
+  background: var(--pm-soft);
+  color: var(--pm-ink);
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.14s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pm-toters-store-info-btn:hover {
+  border-color: color-mix(in srgb, var(--pm-brand) 48%, var(--pm-line));
+  background: color-mix(in srgb, var(--pm-brand) 10%, var(--pm-soft));
+}
+
+.pm-toters-store-info-btn:active {
+  transform: scale(0.94);
 }
 
 .pm-toters-status-tag {
@@ -14127,6 +14276,292 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   cursor: pointer;
   text-decoration: none;
   flex-shrink: 0;
+}
+
+/* Store Info Modal Sheet */
+.pm-store-info-sheet {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  background: var(--pm-bg);
+}
+
+.pm-store-info-banner {
+  position: relative;
+  width: 100%;
+  height: 176px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--pm-soft);
+}
+
+.pm-store-info-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pm-store-info-top-actions {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  z-index: 4;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pm-store-info-scroll {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  min-height: 0;
+  margin-top: -26px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 0 18px;
+}
+
+.pm-store-info-card {
+  margin: 0 12px;
+  background: var(--pm-card);
+  border: 1px solid var(--pm-line);
+  border-radius: 22px;
+  padding: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+.pm-page.pm-light .pm-store-info-card {
+  box-shadow: 0 10px 28px -8px rgba(15, 23, 42, 0.14);
+}
+
+.pm-store-info-head {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.pm-store-info-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid var(--pm-card);
+  background: var(--pm-brand);
+  color: var(--pm-on-brand, #ffffff);
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.pm-store-info-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pm-store-info-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--pm-ink);
+  line-height: 1.3;
+}
+
+.pm-store-info-bio {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--pm-muted);
+}
+
+.pm-store-info-divider {
+  height: 1px;
+  background: var(--pm-line);
+  margin: 12px 0;
+}
+
+.pm-store-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--pm-ink);
+  text-decoration: none;
+  text-align: start;
+}
+
+.pm-store-info-row.is-btn {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.pm-store-info-row.is-link:hover .pm-store-info-row-start {
+  color: var(--pm-brand);
+}
+
+.pm-store-info-row-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.pm-store-info-ico,
+.pm-store-info-end-ico {
+  color: var(--pm-muted);
+  flex-shrink: 0;
+}
+
+.pm-store-info-hours-list {
+  margin-top: 8px;
+  padding-inline-start: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.pm-store-info-hour-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--pm-muted);
+}
+
+.pm-store-info-hour-line.is-today {
+  color: var(--pm-ink);
+  font-weight: 900;
+}
+
+.pm-store-info-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pm-store-info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--pm-line);
+  background: var(--pm-soft);
+  color: var(--pm-ink);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.pm-store-info-chip.is-accent {
+  background: color-mix(in srgb, var(--pm-brand) 14%, var(--pm-soft));
+  border-color: color-mix(in srgb, var(--pm-brand) 36%, var(--pm-line));
+}
+
+.pm-store-info-reviews-sec {
+  margin-top: 16px;
+  padding: 0 12px;
+}
+
+.pm-store-info-reviews-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--pm-ink);
+}
+
+.pm-store-info-reviews-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.pm-store-info-reviews-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.pm-store-info-review-card {
+  flex: 0 0 220px;
+  background: var(--pm-card);
+  border: 1px solid var(--pm-line);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.pm-store-info-review-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  color: var(--pm-ink);
+}
+
+.pm-store-info-review-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--pm-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pm-store-info-footer {
+  flex-shrink: 0;
+  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: var(--pm-card);
+  border-top: 1px solid var(--pm-line);
+}
+
+.pm-store-info-cta {
+  width: 100%;
+  height: 46px;
+  border: 0;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.15s ease, transform 0.12s ease;
+}
+
+.pm-store-info-cta:hover {
+  filter: brightness(1.05);
+}
+
+.pm-store-info-cta:active {
+  transform: scale(0.985);
 }
 
 .pm-toters-metrics {
@@ -14184,10 +14619,10 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 .mp-promo-strip {
   display: flex;
   align-items: stretch;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 6px 2px 12px;
+  padding: 4px 2px 10px;
   margin: 4px 0 6px;
 }
 
@@ -14197,19 +14632,19 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 
 .mp-promo-ticket {
   --mp-ticket-bg: #ffffff;
-  --mp-ticket-border: rgba(15, 23, 42, 0.08);
-  --mp-ticket-ink: #111827;
+  --mp-ticket-border: rgba(15, 23, 42, 0.1);
+  --mp-ticket-ink: #0f172a;
   --mp-ticket-muted: #7b8491;
-  --mp-ticket-divider: rgba(148, 163, 184, 0.42);
+  --mp-ticket-divider: rgba(148, 163, 184, 0.38);
   --mp-ticket-notch: var(--pm-bg, #f8fafc);
   position: relative;
   overflow: hidden;
-  flex: 0 0 156px;
-  min-width: 156px;
-  max-width: 184px;
-  min-height: 124px;
-  padding: 12px 12px 10px;
-  border-radius: 16px;
+  flex: 0 0 125px;
+  min-width: 125px;
+  max-width: 147px;
+  min-height: 99px;
+  padding: 9px 10px 8px;
+  border-radius: 13px;
   border: 1px solid var(--mp-ticket-border);
   background: var(--mp-ticket-bg);
   text-align: center;
@@ -14217,21 +14652,21 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 3px;
+  gap: 2px;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 3px 14px rgba(15, 23, 42, 0.06);
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 
 .mp-promo-ticket.is-dark {
   --mp-ticket-bg: var(--pm-card, #141720);
-  --mp-ticket-border: var(--pm-line, rgba(255, 255, 255, 0.12));
+  --mp-ticket-border: var(--pm-line, rgba(255, 255, 255, 0.14));
   --mp-ticket-ink: var(--pm-ink, #f8fafc);
   --mp-ticket-muted: var(--pm-muted, #94a3b8);
   --mp-ticket-divider: rgba(255, 255, 255, 0.16);
   --mp-ticket-notch: var(--pm-bg, #0d0f14);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
 }
 
 .mp-promo-ticket:hover {
@@ -14249,17 +14684,50 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   flex-shrink: 0;
+}
+
+.mp-promo-ticket-badge svg {
+  width: 22px;
+  height: 22px;
+}
+
+.mp-promo-ticket-badge.is-png {
+  margin-bottom: 1px;
+}
+
+.mp-promo-discount-png {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
+  pointer-events: none;
+}
+
+.mp-promo-ticket.is-discount {
+  padding-top: 6px;
+}
+
+.mp-promo-ticket.is-discount .mp-promo-ticket-title {
+  font-size: 12.5px;
+}
+
+.mp-promo-ticket.is-discount .mp-promo-ticket-footer {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mp-promo-ticket-eyebrow {
   position: relative;
   z-index: 2;
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: 500;
   color: var(--mp-ticket-muted);
-  line-height: 1.35;
+  line-height: 1.3;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -14269,10 +14737,10 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 .mp-promo-ticket-title {
   position: relative;
   z-index: 2;
-  font-size: 14px;
+  font-size: 11.5px;
   font-weight: 900;
   color: var(--mp-ticket-ink);
-  line-height: 1.3;
+  line-height: 1.25;
   letter-spacing: -0.01em;
 }
 
@@ -14282,7 +14750,7 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   width: 100%;
   height: 1px;
   border-top: 1px dashed var(--mp-ticket-divider);
-  margin: auto 0 4px;
+  margin: auto 0 3px;
   padding-top: 2px;
 }
 
@@ -14290,29 +14758,29 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 .mp-promo-ticket-divider::after {
   content: '';
   position: absolute;
-  top: -7.5px;
-  width: 13px;
-  height: 13px;
+  top: -5.5px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--mp-ticket-notch);
   border: 1px solid var(--mp-ticket-border);
 }
 
 .mp-promo-ticket-divider::before {
-  inset-inline-start: -19px;
+  inset-inline-start: -15.5px;
 }
 
 .mp-promo-ticket-divider::after {
-  inset-inline-end: -19px;
+  inset-inline-end: -15.5px;
 }
 
 .mp-promo-ticket-footer {
   position: relative;
   z-index: 2;
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: 600;
   color: var(--mp-ticket-muted);
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 .mp-promo-ticket-footer.is-unlocked {
@@ -14321,13 +14789,13 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket.is-loyalty {
-  background: linear-gradient(180deg, #f8fdfb 0%, #effaf6 100%);
-  border-color: rgba(0, 182, 122, 0.14);
+  background: var(--mp-ticket-bg);
+  border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-ticket.is-dark.is-loyalty {
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.09) 0%, rgba(16, 185, 129, 0.16) 100%);
-  border-color: rgba(52, 211, 153, 0.22);
+  background: var(--mp-ticket-bg);
+  border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-loyalty-wave {
@@ -14335,23 +14803,23 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   inset-inline: 0;
   bottom: 0;
   width: 100%;
-  height: 36px;
-  color: #e4f6ef;
+  height: 28px;
+  color: rgba(16, 185, 129, 0.08);
   pointer-events: none;
   z-index: 0;
 }
 
 .mp-promo-ticket.is-dark .mp-promo-loyalty-wave {
-  color: rgba(16, 185, 129, 0.15);
+  color: rgba(16, 185, 129, 0.12);
 }
 
 .mp-promo-loyalty-ornament {
   position: absolute;
-  inset-inline-end: 6px;
+  inset-inline-end: 4px;
   bottom: -4px;
-  width: 48px;
-  height: 44px;
-  opacity: 0.9;
+  width: 38px;
+  height: 35px;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 1;
 }
@@ -14742,13 +15210,13 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket.is-location {
-  background: linear-gradient(180deg, #f8fbff 0%, #eff6ff 100%);
-  border-color: rgba(14, 165, 233, 0.18);
+  background: var(--mp-ticket-bg);
+  border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-ticket.is-dark.is-location {
-  background: linear-gradient(180deg, rgba(14, 165, 233, 0.09) 0%, rgba(14, 165, 233, 0.16) 100%);
-  border-color: rgba(56, 189, 248, 0.24);
+  background: var(--mp-ticket-bg);
+  border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-location-actions {
@@ -14757,21 +15225,21 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   width: 100%;
 }
 
 .mp-promo-loc-btn {
   flex: 1 1 0;
   min-width: 0;
-  height: 26px;
-  padding: 0 6px;
-  border-radius: 9px;
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 7px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 3px;
+  font-size: 9.5px;
   font-weight: 800;
   text-decoration: none;
   white-space: nowrap;
@@ -27221,6 +27689,7 @@ html.mp-low-perf .drawer-panel {
   .pm-page:not(.pm-estore-page) .pm-topbar-inner,
   .pm-page:not(.pm-estore-page) .pm-toters-topbar,
   .pm-page:not(.pm-estore-page) .pm-toters-topbar-inner,
+  .pm-page:not(.pm-estore-page) .pm-toters-hero-wrap,
   .pm-page:not(.pm-estore-page) .pm-t1-header,
   .pm-page:not(.pm-estore-page) .pm-t1-header-inner,
   .pm-page:not(.pm-estore-page) .pm-t2-header,
@@ -27252,6 +27721,7 @@ html.mp-low-perf .drawer-panel {
 
   .pm-page:not(.pm-estore-page) .pm-topbar,
   .pm-page:not(.pm-estore-page) .pm-toters-topbar,
+  .pm-page:not(.pm-estore-page) .pm-toters-hero-wrap,
   .pm-page:not(.pm-estore-page) .pm-t1-header,
   .pm-page:not(.pm-estore-page) .pm-t2-header,
   .pm-page:not(.pm-estore-page) .pm-t4-header,
@@ -27279,6 +27749,7 @@ html.mp-low-perf .drawer-panel {
   }
 
   .pm-page:not(.pm-estore-page) .pm-sheet,
+  .pm-page:not(.pm-estore-page) .pm-store-info-sheet,
   .pm-page:not(.pm-estore-page) .pm-t6-sheet,
   .pm-page:not(.pm-estore-page) .mp-promo-sheet {
     max-width: 430px !important;
@@ -27612,6 +28083,7 @@ html.mp-low-perf .drawer-panel {
   .pm-page:not(.pm-estore-page) .pm-topbar-inner,
   .pm-page:not(.pm-estore-page) .pm-toters-topbar,
   .pm-page:not(.pm-estore-page) .pm-toters-topbar-inner,
+  .pm-page:not(.pm-estore-page) .pm-toters-hero-wrap,
   .pm-page:not(.pm-estore-page) .pm-t1-header,
   .pm-page:not(.pm-estore-page) .pm-t1-header-inner,
   .pm-page:not(.pm-estore-page) .pm-t2-header,
@@ -27634,9 +28106,14 @@ html.mp-low-perf .drawer-panel {
   .pm-page:not(.pm-estore-page) .pm-floating-dock,
   .pm-page:not(.pm-estore-page) .pm-t1-mobile-tabs,
   .pm-page:not(.pm-estore-page) .pm-sheet,
+  .pm-page:not(.pm-estore-page) .pm-store-info-sheet,
   .pm-page:not(.pm-estore-page) .pm-t6-sheet,
   .pm-page:not(.pm-estore-page) .mp-promo-sheet {
     max-width: 602px !important;
+  }
+
+  .pm-page:not(.pm-estore-page) .pm-toters-banner {
+    height: 232px;
   }
 
   .pm-page:not(.pm-estore-page) .pm-floating-actions {

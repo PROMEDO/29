@@ -412,12 +412,12 @@ export const AddonsPage: React.FC = () => {
                       {addon.key === 'dineInDiscount' ? `خصم ${formatNumber(Number(cfg.discountPercent ?? 10))}%` : ''}
                       {addon.key === 'dineInDiscount' && (Number(cfg.minOrderAmount ?? 0) > 0 || Number(cfg.maxDiscountAmount ?? 0) > 0) ? ' · ' : ''}
                       {Number(cfg.minOrderAmount ?? 0) > 0
-                        ? `أدنى طلب: ${formatNumber(Number(cfg.minOrderAmount))} ${currency}`
+                        ? `أدنى تفعيل: ${formatNumber(Number(cfg.minOrderAmount))} ${currency}`
                         : addon.key === 'dineInDiscount'
                         ? ''
                         : 'بدون حد أدنى'}
                       {Number(cfg.maxDiscountAmount ?? 0) > 0
-                        ? ` · أعلى خصم: ${formatNumber(Number(cfg.maxDiscountAmount))} ${currency}`
+                        ? ` · أعلى توفير: ${formatNumber(Number(cfg.maxDiscountAmount))} ${currency}`
                         : ''}
                     </div>
                   )}
@@ -915,7 +915,7 @@ export const AddonsPage: React.FC = () => {
                     </div>
                     <div className="mp-addon-two-col">
                       <label className="f">
-                        {`الحد الأدنى للطلب (${currency})`}
+                        {`الحد الأدنى لتفعيل الخصم (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -926,12 +926,12 @@ export const AddonsPage: React.FC = () => {
                               minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أدنى"
+                          placeholder="0 = بدون حد أدنى"
                           className="mp-addon-modal-input"
                         />
                       </label>
                       <label className="f">
-                        {`الحد الأعلى للخصم (${currency})`}
+                        {`الحد الأعلى للتوفير (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -942,7 +942,7 @@ export const AddonsPage: React.FC = () => {
                               maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أعلى"
+                          placeholder="0 = توفير بدون حد أقصى"
                           className="mp-addon-modal-input"
                         />
                       </label>
@@ -1101,7 +1101,7 @@ export const AddonsPage: React.FC = () => {
                     </label>
                     <div className="mp-addon-two-col">
                       <label className="f">
-                        {`الحد الأدنى للطلب (${currency})`}
+                        {`الحد الأدنى لتفعيل الخصم (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1112,12 +1112,12 @@ export const AddonsPage: React.FC = () => {
                               minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أدنى"
+                          placeholder="0 = بدون حد أدنى"
                           className="mp-addon-modal-input"
                         />
                       </label>
                       <label className="f">
-                        {`الحد الأعلى للخصم (${currency})`}
+                        {`الحد الأعلى للتوفير (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1128,7 +1128,7 @@ export const AddonsPage: React.FC = () => {
                               maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أعلى"
+                          placeholder="0 = توفير بدون حد أقصى"
                           className="mp-addon-modal-input"
                         />
                       </label>
@@ -1516,7 +1516,7 @@ export const AddonsPage: React.FC = () => {
                     </label>
                     <div className="mp-addon-two-col">
                       <label className="f">
-                        {`الحد الأدنى للطلب (${currency})`}
+                        {`الحد الأدنى لتفعيل الخصم (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1527,12 +1527,12 @@ export const AddonsPage: React.FC = () => {
                               minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أدنى"
+                          placeholder="0 = بدون حد أدنى"
                           className="mp-addon-modal-input"
                         />
                       </label>
                       <label className="f">
-                        {`الحد الأعلى للخصم (${currency})`}
+                        {`الحد الأعلى للتوفير (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1543,7 +1543,7 @@ export const AddonsPage: React.FC = () => {
                               maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أعلى"
+                          placeholder="0 = توفير بدون حد أقصى"
                           className="mp-addon-modal-input"
                         />
                       </label>
@@ -1679,7 +1679,7 @@ export const AddonsPage: React.FC = () => {
                     </label>
                     <div className="mp-addon-two-col">
                       <label className="f">
-                        {`الحد الأدنى للطلب (${currency})`}
+                        {`الحد الأدنى لتفعيل الخصم (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1690,12 +1690,12 @@ export const AddonsPage: React.FC = () => {
                               minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أدنى"
+                          placeholder="0 = بدون حد أدنى"
                           className="mp-addon-modal-input"
                         />
                       </label>
                       <label className="f">
-                        {`الحد الأعلى للخصم (${currency})`}
+                        {`الحد الأعلى للتوفير (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1706,7 +1706,7 @@ export const AddonsPage: React.FC = () => {
                               maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أعلى"
+                          placeholder="0 = توفير بدون حد أقصى"
                           className="mp-addon-modal-input"
                         />
                       </label>
@@ -1748,7 +1748,7 @@ export const AddonsPage: React.FC = () => {
 
                       <div className="mp-addon-two-col">
                         <label className="f">
-                          {`الحد الأدنى للطلب (${currency})`}
+                          {`الحد الأدنى لتفعيل الخصم (${currency})`}
                           <input
                             type="number"
                             min={0}
@@ -1759,12 +1759,12 @@ export const AddonsPage: React.FC = () => {
                                 minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                               }))
                             }
-                            placeholder="0 = لا يوجد حد أدنى"
+                            placeholder="0 = بدون حد أدنى"
                             className="mp-addon-modal-input"
                           />
                         </label>
                         <label className="f">
-                          {`الحد الأعلى للخصم (${currency})`}
+                          {`الحد الأعلى للتوفير (${currency})`}
                           <input
                             type="number"
                             min={0}
@@ -1775,7 +1775,7 @@ export const AddonsPage: React.FC = () => {
                                 maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                               }))
                             }
-                            placeholder="0 = لا يوجد حد أعلى"
+                            placeholder="0 = توفير بدون حد أقصى"
                             className="mp-addon-modal-input"
                           />
                         </label>
@@ -1824,7 +1824,7 @@ export const AddonsPage: React.FC = () => {
 
                       <div className="mp-addon-info-note">
                         <div>
-                          يُطبق الخصم تلقائياً على أسعار القائمة وينتهي بعد انتهاء المدة المختارة دون عرض أي عدّاد أو تاريخ انتهاء للزبائن.
+                          يُطبق الخصم عند بلوغ الحد الأدنى لتفعيل الخصم، ولن يتجاوز المبلغ المُوفَّر قيمة «الحد الأعلى للتوفير» مهما زاد إجمالي الطلب (بدون إظهار عدّاد انتهاء للزبائن).
                         </div>
                         <div className="mp-addon-endday-badge">
                           {isUsingExistingWindow
@@ -1914,7 +1914,7 @@ export const AddonsPage: React.FC = () => {
                     </label>
                     <div className="mp-addon-two-col">
                       <label className="f">
-                        {`الحد الأدنى للطلب (${currency})`}
+                        {`الحد الأدنى لتفعيل الخصم (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1925,12 +1925,12 @@ export const AddonsPage: React.FC = () => {
                               minOrderAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أدنى"
+                          placeholder="0 = بدون حد أدنى"
                           className="mp-addon-modal-input"
                         />
                       </label>
                       <label className="f">
-                        {`الحد الأعلى للخصم (${currency})`}
+                        {`الحد الأعلى للتوفير (${currency})`}
                         <input
                           type="number"
                           min={0}
@@ -1941,7 +1941,7 @@ export const AddonsPage: React.FC = () => {
                               maxDiscountAmount: e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)),
                             }))
                           }
-                          placeholder="0 = لا يوجد حد أعلى"
+                          placeholder="0 = توفير بدون حد أقصى"
                           className="mp-addon-modal-input"
                         />
                       </label>

@@ -245,14 +245,15 @@ export function buildMenuPromoTickets({
 const SCALLOP_SEAL_PATH =
   'M14 1.2L16.7 3.1L19.9 2.4L21.3 5.4L24.5 6.3L24.4 9.6L26.8 11.9L25.2 14.8L26.2 18L23.4 19.7L22.8 23L19.5 23.3L17.4 25.9L14.3 24.6L11.2 26L9.1 23.4L5.8 23.1L5.2 19.8L2.4 18.1L3.4 14.9L1.8 12L4.2 9.7L4.1 6.4L7.3 5.5L8.7 2.5L11.9 3.2L14 1.2Z';
 
-function ScallopedRedPercentBadge() {
+function PromoDiscountPngBadge() {
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <path d={SCALLOP_SEAL_PATH} fill="#E12D39" />
-      <circle cx="11.2" cy="11.2" r="1.45" stroke="#FFFFFF" strokeWidth="1.5" />
-      <circle cx="16.8" cy="16.8" r="1.45" stroke="#FFFFFF" strokeWidth="1.5" />
-      <path d="M17.2 10.6L10.8 17.4" stroke="#FFFFFF" strokeWidth="1.75" strokeLinecap="round" />
-    </svg>
+    <img
+      src="/assets/promo-discount-badge.png"
+      alt=""
+      aria-hidden="true"
+      className="mp-promo-discount-png"
+      decoding="async"
+    />
   );
 }
 
@@ -684,11 +685,12 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
             );
           }
 
+          const isDiscount = tk.kind === 'discount';
           return (
             <button
               key={tk.id}
               type="button"
-              className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'}`}
+              className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'} ${isDiscount ? 'is-discount' : ''}`}
               onClick={() => setActiveTicket(tk)}
             >
               {isLoyalty && (
@@ -705,22 +707,22 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                 </>
               )}
 
-              <span className="mp-promo-ticket-badge">
+              <span className={`mp-promo-ticket-badge ${isDiscount ? 'is-png' : ''}`}>
                 {tk.kind === 'loyalty' ? (
                   <MintPlusSealBadge />
                 ) : tk.kind === 'free_delivery' ? (
                   <ScallopedRedDeliveryBadge />
                 ) : (
-                  <ScallopedRedPercentBadge />
+                  <PromoDiscountPngBadge />
                 )}
               </span>
 
-              <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>
+              {!isDiscount && <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>}
               <strong className="mp-promo-ticket-title tabular-nums">{tk.title}</strong>
 
               <span className="mp-promo-ticket-divider" aria-hidden="true" />
               <span className={`mp-promo-ticket-footer ${tk.isUnlocked ? 'is-unlocked' : ''}`}>
-                {tk.footer}
+                {isDiscount ? tk.eyebrow : tk.footer}
               </span>
             </button>
           );
@@ -883,13 +885,15 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
               <div className={`mp-promo-sheet-ticket-box ${modeClass}`}>
                 <div className="mp-promo-sheet-ticket-grid">
                   <div className="mp-promo-sheet-ticket-cell">
-                    <span className="mp-promo-sheet-cell-label">الحد الأدنى للطلب</span>
+                    <span className="mp-promo-sheet-cell-label">
+                      {liveActiveTicket.kind === 'free_delivery' ? 'الحد الأدنى للطلب' : 'الحد الأدنى لتفعيل الخصم'}
+                    </span>
                     <strong className="mp-promo-sheet-cell-val tabular-nums">
                       {liveActiveTicket.minOrderText || 'لا يوجد حد أدنى'}
                     </strong>
                   </div>
                   <div className="mp-promo-sheet-ticket-cell">
-                    <span className="mp-promo-sheet-cell-label">الحد الأقصى للخصم</span>
+                    <span className="mp-promo-sheet-cell-label">الحد الأعلى للتوفير</span>
                     <strong className="mp-promo-sheet-cell-val tabular-nums">
                       {liveActiveTicket.maxDiscountText || 'لا يوجد حد أقصى'}
                     </strong>

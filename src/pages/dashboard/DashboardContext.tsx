@@ -3674,7 +3674,7 @@ function useDashboardController({
       wazeUrl: restWazeUrl.trim(),
       googleReviewUrl: restGoogleReviewUrl.trim(),
       logo: logoUrlInput.trim() || undefined,
-      coverImages: restProjectType === 'store' && coverUrlInput.trim() ? [coverUrlInput.trim()] : [],
+      coverImages: coverUrlInput.trim() ? [coverUrlInput.trim()] : [],
       h: {
         m: workMode,
         f: firstOpenDay?.from || workFrom,

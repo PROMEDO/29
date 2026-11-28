@@ -1159,94 +1159,92 @@ export const SettingsPage: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Cover Banner (Stores only) */}
-                  {terms.isStore && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)' }}>الغلاف</span>
-                      </div>
+                  {/* Cover Banner */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--ink)' }}>الغلاف</span>
+                    </div>
 
-                      <div
-                        style={{
-                          width: '100%',
-                          height: '92px',
-                          borderRadius: '16px',
-                          border: '1px solid var(--set-glass-border, var(--line))',
-                          background: 'var(--set-glass-control, rgba(255, 255, 255, 0.05))',
-                          overflow: 'hidden',
-                          display: 'grid',
-                          placeItems: 'center',
-                        }}
-                      >
-                        {coverUrlInput ? (
-                          <img
-                            src={coverUrlInput}
-                            alt="بانر المتجر"
-                            loading="lazy"
-                            decoding="async"
-                            referrerPolicy="no-referrer"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          />
-                        ) : (
-                          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: 'var(--muted)' }}>
-                            <ImageIcon size={20} />
-                            <span style={{ fontSize: '11.5px' }}>لم يتم اختيار صورة غلاف</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
-                        <button
-                          type="button"
-                          onClick={() => setMediaPickerTarget('cover')}
-                          className="btn p s"
-                          style={{ fontWeight: 800 }}
-                        >
-                          <ImageIcon size={14} />
-                          <span>مكتبة الصور</span>
-                        </button>
-                        <button
-                          type="button"
-                          className="btn s"
-                          onClick={() => setShowBannerUrlField((v) => !v)}
-                          style={{ minHeight: '34px', padding: '5px 10px', fontSize: '11.5px' }}
-                        >
-                          <Link2 size={12} />
-                          <span>{showBannerUrlField ? 'إخفاء الرابط' : 'رابط مباشر'}</span>
-                        </button>
-                        {coverUrlInput && (
-                          <button
-                            type="button"
-                            onClick={() => setCoverUrlInput('')}
-                            style={{
-                              background: 'rgba(239, 68, 68, 0.1)',
-                              border: '1px solid rgba(239, 68, 68, 0.25)',
-                              color: '#ef4444',
-                              borderRadius: '999px',
-                              padding: '6px 10px',
-                              fontSize: '11.5px',
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                            }}
-                          >
-                            إزالة
-                          </button>
-                        )}
-                      </div>
-
-                      {showBannerUrlField && (
-                        <input
-                          type="text"
-                          dir="ltr"
-                          value={coverUrlInput}
-                          onChange={(e) => setCoverUrlInput(e.target.value)}
-                          placeholder="https://example.com/banner.jpg"
-                          className="mp-themed-input"
-                          style={{ textAlign: 'left', fontSize: '12.5px' }}
+                    <div
+                      style={{
+                        width: '100%',
+                        height: '92px',
+                        borderRadius: '16px',
+                        border: '1px solid var(--set-glass-border, var(--line))',
+                        background: 'var(--set-glass-control, rgba(255, 255, 255, 0.05))',
+                        overflow: 'hidden',
+                        display: 'grid',
+                        placeItems: 'center',
+                      }}
+                    >
+                      {coverUrlInput ? (
+                        <img
+                          src={coverUrlInput}
+                          alt="بانر المتجر"
+                          loading="lazy"
+                          decoding="async"
+                          referrerPolicy="no-referrer"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: 'var(--muted)' }}>
+                          <ImageIcon size={20} />
+                          <span style={{ fontSize: '11.5px' }}>لم يتم اختيار صورة غلاف</span>
+                        </div>
                       )}
                     </div>
-                  )}
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => setMediaPickerTarget('cover')}
+                        className="btn p s"
+                        style={{ fontWeight: 800 }}
+                      >
+                        <ImageIcon size={14} />
+                        <span>مكتبة الصور</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn s"
+                        onClick={() => setShowBannerUrlField((v) => !v)}
+                        style={{ minHeight: '34px', padding: '5px 10px', fontSize: '11.5px' }}
+                      >
+                        <Link2 size={12} />
+                        <span>{showBannerUrlField ? 'إخفاء الرابط' : 'رابط مباشر'}</span>
+                      </button>
+                      {coverUrlInput && (
+                        <button
+                          type="button"
+                          onClick={() => setCoverUrlInput('')}
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.1)',
+                            border: '1px solid rgba(239, 68, 68, 0.25)',
+                            color: '#ef4444',
+                            borderRadius: '999px',
+                            padding: '6px 10px',
+                            fontSize: '11.5px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          إزالة
+                        </button>
+                      )}
+                    </div>
+
+                    {showBannerUrlField && (
+                      <input
+                        type="text"
+                        dir="ltr"
+                        value={coverUrlInput}
+                        onChange={(e) => setCoverUrlInput(e.target.value)}
+                        placeholder="https://example.com/banner.jpg"
+                        className="mp-themed-input"
+                        style={{ textAlign: 'left', fontSize: '12.5px' }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 

@@ -166,6 +166,15 @@ function readDemoViewerAppearance(): DemoViewerOverride | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object' || typeof parsed.id !== 'string') return null;
+    if (parsed.id === 'default' && (parsed.mode === 'light' || parsed.mode === 'dark')) {
+      return {
+        id: 'default',
+        shape: (parsed.shape as MenuThemeShape) || 'toters',
+        preset: typeof parsed.preset === 'string' && parsed.preset ? parsed.preset : 'toters',
+        mode: parsed.mode,
+        lay: parsed.lay,
+      };
+    }
     const matched = DEMO_THEME_OPTIONS.find((opt) => opt.id === parsed.id && opt.id !== 'default');
     if (!matched || !matched.shape || !matched.preset) return null;
     return {
@@ -1300,6 +1309,10 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
 
   // Modals & Popups state
   const [menuDrawerOpen, setMenuDrawerOpen] = useState(false);
+  const [storeInfoOpen, setStoreInfoOpen] = useState(false);
+  const [storeInfoHoursOpen, setStoreInfoHoursOpen] = useState(true);
+  const [instantModeSwitching, setInstantModeSwitching] = useState(false);
+  const instantModeTimerRef = useRef<number | null>(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -2934,7 +2947,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
 
   return (
     <div
-      className={`pm-page ${isLightMenu ? 'pm-light' : ''} ${isEstore ? 'pm-estore-page' : ''}`}
+      className={`pm-page ${isLightMenu ? 'pm-light' : ''} ${isEstore ? 'pm-estore-page' : ''} ${instantModeSwitching ? 'pm-mode-snapping' : ''}`}
       data-shape={activeShape}
       data-mode={isLightMenu ? 'light' : 'dark'}
       data-storefront={isEstore ? 'estore' : undefined}
@@ -3054,7 +3067,11 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
               className="pm-demo-mode-btn"
               title={isLightMenu ? 'تبديل إلى الوضع الليلي' : 'تبديل إلى الوضع النهاري'}
               aria-label={isLightMenu ? 'تبديل إلى الوضع الليلي' : 'تبديل إلى الوضع النهاري'}
-              onClick={() =>
+              onClick={() => {
+                if (instantModeTimerRef.current !== null) {
+                  window.clearTimeout(instantModeTimerRef.current);
+                }
+                setInstantModeSwitching(true);
                 setDemoViewerOverrideState(
                   applyDemoViewerAppearance(
                     demoViewerOverride?.id || 'default',
@@ -3062,27 +3079,16 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                     activeShape,
                     activeTheme.id
                   )
-                )
-              }
+                );
+                instantModeTimerRef.current = window.setTimeout(() => {
+                  instantModeTimerRef.current = null;
+                  setInstantModeSwitching(false);
+                }, 90);
+              }}
             >
               {isLightMenu ? <Moon size={15} /> : <Sun size={15} />}
             </button>
           </div>
-
-          {!isOwner && (
-            <button
-              type="button"
-              className="pm-demo-cta-btn"
-              style={{
-                background: brandColor,
-                color: brandInk,
-                border: '1px solid color-mix(in srgb, var(--pm-brand) 45%, transparent)',
-              }}
-              onClick={() => onNavigate('/signup')}
-            >
-              امتلك منيو
-            </button>
-          )}
         </div>
       )}
 
@@ -3163,82 +3169,103 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
       ) : (
         <>
           {isToters ? (
+        (() => {
+          const totersBannerUrl =
+            (rest.coverImages || []).find((u) => typeof u === 'string' && u.trim()) ||
+            rest.aboutImage ||
+            '';
+          return (
         <>
-          {/* TOTERS CLEAN TOP ACTION BAR (NO BANNER) */}
-          <header className="pm-toters-topbar">
-            <div className="pm-toters-topbar-inner">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  className="pm-toters-circle-btn"
-                  onClick={() => setMenuDrawerOpen(true)}
-                  aria-label="قائمة المطعم"
-                >
-                  <Menu size={19} />
-                </button>
+          {/* TOTERS HERO BANNER + FLOATING OVERLAY ACTIONS + OVERLAPPING STORE HEADER */}
+          <div className="pm-toters-hero-wrap">
+            <div className="pm-toters-banner">
+              {totersBannerUrl ? (
+                <img
+                  src={totersBannerUrl}
+                  alt={rest.n}
+                  className="pm-toters-banner-img"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="pm-toters-banner-fallback" aria-hidden="true" />
+              )}
+              <div className="pm-toters-banner-scrim" aria-hidden="true" />
 
-                {!isCatalogViewOnly && (
+              <header className="pm-toters-hero-actions">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   <button
                     type="button"
-                    className="pm-toters-mode-pill"
-                    onClick={() => {
-                      if (enabledTypes.length > 1) setOrderTypeModalOpen(true);
-                    }}
-                    style={enabledTypes.length <= 1 ? { cursor: 'default' } : undefined}
+                    className="pm-toters-float-circle"
+                    onClick={() => setMenuDrawerOpen(true)}
+                    aria-label="قائمة المطعم"
                   >
-                    <span style={{ color: brandColor, display: 'inline-flex' }}>{ORDER_TYPE_META[orderType].icon}</span>
-                    <span>{ORDER_TYPE_META[orderType].label}</span>
-                    {enabledTypes.length > 1 && <ChevronDown size={13} />}
+                    <Menu size={19} />
                   </button>
-                )}
 
-                {hasMultipleBranches && (
+                  {!isCatalogViewOnly && (
+                    <button
+                      type="button"
+                      className="pm-toters-float-pill"
+                      onClick={() => {
+                        if (enabledTypes.length > 1) setOrderTypeModalOpen(true);
+                      }}
+                      style={enabledTypes.length <= 1 ? { cursor: 'default' } : undefined}
+                    >
+                      <span style={{ color: brandColor, display: 'inline-flex' }}>{ORDER_TYPE_META[orderType].icon}</span>
+                      <span>{ORDER_TYPE_META[orderType].label}</span>
+                      {enabledTypes.length > 1 && <ChevronDown size={13} />}
+                    </button>
+                  )}
+
+                  {hasMultipleBranches && (
+                    <button
+                      type="button"
+                      className="pm-toters-float-pill pm-branch-pill"
+                      onClick={onOpenBranchPicker}
+                      title={`تبديل الفرع — الحالي: ${branchShortLabel}`}
+                      aria-label="تبديل الفرع"
+                    >
+                      <GitBranch size={13} style={{ color: brandColor, flexShrink: 0 }} />
+                      <span className="pm-branch-pill-label">تبديل الفرع</span>
+                      <ChevronDown size={12} />
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <button
                     type="button"
-                    className="pm-toters-mode-pill pm-branch-pill"
-                    onClick={onOpenBranchPicker}
-                    title={`تبديل الفرع — الحالي: ${branchShortLabel}`}
-                    aria-label="تبديل الفرع"
+                    className="pm-toters-float-circle"
+                    onClick={handleShareMenu}
+                    aria-label="مشاركة المنيو"
+                    title="مشاركة المنيو"
                   >
-                    <GitBranch size={13} style={{ color: brandColor, flexShrink: 0 }} />
-                    <span className="pm-branch-pill-label">تبديل الفرع</span>
-                    <ChevronDown size={12} />
+                    <Share2 size={17} />
                   </button>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <button
-                  type="button"
-                  className="pm-toters-circle-btn"
-                  onClick={handleShareMenu}
-                  aria-label="مشاركة المنيو"
-                  title="مشاركة المنيو"
-                >
-                  <Share2 size={17} />
-                </button>
-                <button
-                  type="button"
-                  className="pm-toters-circle-btn"
-                  onClick={() => setSearchOpen(true)}
-                  aria-label="بحث في المنيو"
-                >
-                  <Search size={18} />
-                </button>
-              </div>
+                  <button
+                    type="button"
+                    className="pm-toters-float-circle"
+                    onClick={() => setSearchOpen(true)}
+                    aria-label="بحث في المنيو"
+                  >
+                    <Search size={18} />
+                  </button>
+                </div>
+              </header>
             </div>
-          </header>
+          </div>
 
           <div className="pm-container">
             <SeasonalHeroRibbon shape={activeShape} />
 
-            {/* Toters Store Info Card */}
+            {/* Overlapping Toters Store Header Card (Logo, Name & Store-Info Icon) */}
             <motion.section
-              className="pm-toters-store-card"
+              className="pm-toters-store-card has-banner"
               {...dashHeroMotion(prefersReducedMotion)}
             >
               <div className="pm-toters-store-head">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '11px', minWidth: 0, flex: 1 }}>
                   <div className="pm-toters-logo-badge">
                     {rest.logo ? (
                       <img src={rest.logo} alt={rest.n} decoding="async" referrerPolicy="no-referrer" />
@@ -3257,35 +3284,29 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                         {openNow ? 'مفتوح' : 'مغلق'}
                       </button>
                     </div>
-                    {rest.tagline && (
-                      <p className="pm-toters-store-tagline">{rest.tagline}</p>
-                    )}
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                  {rest.ph && (
-                    <a
-                      href={waLink(rest.ph, `مرحباً ${rest.n}، أود الاستفسار عن المنيو`)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="pm-toters-info-icon"
-                      title="واتساب"
-                      style={{ color: accentText }}
-                    >
-                      <MessageCircle size={18} />
-                    </a>
-                  )}
-                  <button
-                    type="button"
-                    className="pm-toters-info-icon"
-                    onClick={() => setMenuDrawerOpen(true)}
-                    aria-label="معلومات المتجر"
-                    title="معلومات المتجر"
-                  >
-                    <Store size={18} />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="pm-toters-store-info-btn"
+                  onClick={() => {
+                    setStoreInfoHoursOpen(true);
+                    setStoreInfoOpen(true);
+                  }}
+                  aria-label="معلومات المتجر"
+                  title="معلومات المتجر"
+                >
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M3 9.5L4.8 4.5C5.1 3.6 5.9 3 6.8 3H17.2C18.1 3 18.9 3.6 19.2 4.5L21 9.5" />
+                    <path d="M3 9.5C3 11 4.2 12 5.6 12C7 12 8.2 11 8.2 9.5C8.2 11 9.4 12 10.8 12C12.2 12 13.4 11 13.4 9.5C13.4 11 14.6 12 16 12C17.4 12 18.6 11 18.6 9.5C18.6 11 19.8 12 21 12" />
+                    <path d="M5 12V19.2C5 20.2 5.8 21 6.8 21H12" />
+                    <path d="M19 12V13.5" />
+                    <circle cx="17.5" cy="17.5" r="3.6" />
+                    <path d="M17.5 16.9V19" />
+                    <circle cx="17.5" cy="15.4" r="0.3" fill="currentColor" stroke="none" />
+                  </svg>
+                </button>
               </div>
             </motion.section>
 
@@ -3298,6 +3319,8 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
             />
           </div>
         </>
+          );
+        })()
       ) : isTheme1 ? (
         <>
           {/* THEME 1 ("مظهر 1" — Enab Minimalist Storefront Style) */}
@@ -4609,7 +4632,6 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
           return (
             <>
               {reorderItems.length > 0 && renderShelf('اطلب مجدداً', reorderItems.slice(0, 8))}
-              {mostOrderedShelf.length > 0 && renderShelf('الأكثر طلباً', mostOrderedShelf)}
             </>
           );
         })()}
@@ -5501,7 +5523,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                                   unavailable={unavailable}
                                   showUnavailableBadge={showUnavailableBadge}
                                   displayOnly={displayOnly}
-                                  isPopular={popularItemIds.has(it.id)}
+                                  isPopular={false}
                                   accentText={accentText}
                                   brandColor={brandColor}
                                   brandInk={brandInk}
@@ -5803,23 +5825,6 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
             >
               <AppLogo size={22} />
             </button>
-            <span>·</span>
-            <button
-              type="button"
-              onClick={() => navigateToMainSite('/signup', onNavigate, getSite())}
-              style={{
-                background: 'var(--pm-soft)',
-                color: 'var(--pm-ink)',
-                border: '1px solid var(--pm-line)',
-                borderRadius: '99px',
-                padding: '4px 11px',
-                fontSize: '11px',
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
-            >
-              امتلك منيو لمشروعك
-            </button>
           </div>
         </footer>
       </div>
@@ -6109,13 +6114,6 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
             </div>
 
             <div className={isToters ? 'pm-toters-sheet-body' : undefined} style={isToters ? undefined : { padding: '16px 18px 22px' }}>
-              {isToters && popularItemIds.has(activeProduct.id) && (
-                <div style={{ marginBottom: '6px' }}>
-                  <span className="pm-toters-popular-pill">
-                    <Flame size={12} fill="#f97316" color="#f97316" /> الأكثر طلباً
-                  </span>
-                </div>
-              )}
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '6px' }}>
                 <h2 style={{ margin: 0, fontSize: isToters ? '21px' : '20px', fontWeight: 900, color: 'var(--pm-ink)' }}>{activeProduct.n}</h2>
                 {!isToters &&
@@ -8106,6 +8104,366 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
       )}
 
       {/* ================================================================
+          MODAL 3B: STORE INFO SHEET (Banner + Bio + Address + Hours + Reviews)
+          ================================================================ */}
+      {storeInfoOpen && (() => {
+        const infoBannerUrl =
+          (rest.coverImages || []).find((u) => typeof u === 'string' && u.trim()) ||
+          rest.aboutImage ||
+          '';
+        const mapHref = rest.mapUrl || addons.locationLinks?.googleMapsUrl || rest.wazeUrl || addons.locationLinks?.wazeUrl || '';
+        const wazeHref = rest.wazeUrl || addons.locationLinks?.wazeUrl || '';
+        const addressText = (rest.address || rest.region || '').trim() || 'العراق، بغداد';
+        const todayIdx = nowDate.getDay();
+        const dayOrderKeys: WorkDayKey[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        const todayKey = dayOrderKeys[todayIdx];
+        const reviewsList = (restaurantReviews as RestaurantReview[]) || [];
+        const avgRating =
+          reviewsList.length > 0
+            ? (
+                reviewsList.reduce((acc, rv) => acc + Math.max(1, Math.min(5, Number(rv.rate ?? rv.stars ?? 5))), 0) /
+                reviewsList.length
+              ).toFixed(1)
+            : '';
+        const canSubmitFromInfo = reviewsAllowSubmit || restaurantId === 'demo';
+        const whatsappNumber = rest.social?.whatsapp || rest.ph || '';
+
+        return (
+          <div className="pm-modal-backdrop" onClick={() => setStoreInfoOpen(false)}>
+            <div
+              className="pm-sheet pm-store-info-sheet"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top Banner + Floating Back & Share */}
+              <div className="pm-store-info-banner">
+                {infoBannerUrl ? (
+                  <img
+                    src={infoBannerUrl}
+                    alt={rest.n}
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="pm-toters-banner-fallback" aria-hidden="true" />
+                )}
+                <div className="pm-toters-banner-scrim" aria-hidden="true" />
+                <div className="pm-store-info-top-actions">
+                  <button
+                    type="button"
+                    className="pm-toters-float-circle"
+                    onClick={() => setStoreInfoOpen(false)}
+                    aria-label="إغلاق"
+                  >
+                    <ArrowRight size={18} />
+                  </button>
+                  <button
+                    type="button"
+                    className="pm-toters-float-circle"
+                    onClick={() => {
+                      setStoreInfoOpen(false);
+                      handleShareMenu();
+                    }}
+                    aria-label="مشاركة المتجر"
+                  >
+                    <Share2 size={17} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="pm-store-info-scroll">
+                {/* Overlapping White/Dark Store Identity & Details Card */}
+                <div className="pm-store-info-card">
+                  <div className="pm-store-info-head">
+                    <div className="pm-store-info-logo">
+                      {rest.logo ? (
+                        <img src={rest.logo} alt={rest.n} decoding="async" referrerPolicy="no-referrer" />
+                      ) : (
+                        <span>{(rest.n || 'M').slice(0, 2)}</span>
+                      )}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        <h2 className="pm-store-info-title">{rest.n}</h2>
+                        <span className={`pm-toters-status-tag ${openNow ? 'open' : 'closed'}`}>
+                          {openNow ? 'مفتوح' : 'مغلق'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {(rest.aboutText || rest.tagline) && (
+                    <p className="pm-store-info-bio">
+                      {rest.aboutText || rest.tagline}
+                    </p>
+                  )}
+
+                  {/* Address / Map Link Row */}
+                  <div className="pm-store-info-divider" />
+                  {mapHref ? (
+                    <a
+                      href={mapHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-store-info-row is-link"
+                    >
+                      <span className="pm-store-info-row-start">
+                        <MapPin size={18} className="pm-store-info-ico" />
+                        <span>{addressText}</span>
+                      </span>
+                      <ArrowUpRight size={17} className="pm-store-info-end-ico" />
+                    </a>
+                  ) : (
+                    <div className="pm-store-info-row">
+                      <span className="pm-store-info-row-start">
+                        <MapPin size={18} className="pm-store-info-ico" />
+                        <span>{addressText}</span>
+                      </span>
+                    </div>
+                  )}
+
+                  {wazeHref && wazeHref !== mapHref && (
+                    <a
+                      href={wazeHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="pm-store-info-row is-link"
+                      style={{ paddingTop: '4px' }}
+                    >
+                      <span className="pm-store-info-row-start" style={{ fontSize: '12.5px', color: 'var(--pm-muted)' }}>
+                        <MapPin size={15} className="pm-store-info-ico" />
+                        <span>فتح الموقع عبر Waze</span>
+                      </span>
+                      <ArrowUpRight size={15} className="pm-store-info-end-ico" />
+                    </a>
+                  )}
+
+                  {/* Working Hours Expandable Section */}
+                  <div className="pm-store-info-divider" />
+                  <button
+                    type="button"
+                    className="pm-store-info-row is-btn"
+                    onClick={() => setStoreInfoHoursOpen((v) => !v)}
+                    aria-expanded={storeInfoHoursOpen}
+                  >
+                    <span className="pm-store-info-row-start">
+                      <Clock size={18} className="pm-store-info-ico" />
+                      <span style={{ fontWeight: 800 }}>
+                        {openNow
+                          ? rest.h?.m === '24'
+                            ? 'مفتوح 24 ساعة'
+                            : 'مفتوح الآن'
+                          : 'مغلق الآن'}
+                      </span>
+                    </span>
+                    <ChevronDown
+                      size={17}
+                      className="pm-store-info-end-ico"
+                      style={{
+                        transform: storeInfoHoursOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.16s ease',
+                      }}
+                    />
+                  </button>
+
+                  {storeInfoHoursOpen && (
+                    <div className="pm-store-info-hours-list">
+                      {rest.weeklyHours && Object.keys(rest.weeklyHours).length > 0 ? (
+                        DAY_LABELS.map((d) => {
+                          const cfg = rest.weeklyHours?.[d.key];
+                          const isToday = d.key === todayKey;
+                          return (
+                            <div
+                              key={d.key}
+                              className={`pm-store-info-hour-line ${isToday ? 'is-today' : ''}`}
+                            >
+                              <span>{d.label}</span>
+                              {!cfg || !cfg.open ? (
+                                <span style={{ color: '#ef4444' }}>مغلق</span>
+                              ) : (
+                                <span className="tabular-nums" dir="ltr">
+                                  {formatTime12(cfg.from)} - {formatTime12(cfg.to)}
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="pm-store-info-hour-line is-today">
+                          <span>يومياً</span>
+                          <span className="tabular-nums">
+                            {rest.h?.m === '24'
+                              ? '24 ساعة'
+                              : `${formatTime12(rest.h?.f || '09:00')} - ${formatTime12(rest.h?.t || '23:00')}`}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Rating Summary Row */}
+                  {(reviewsList.length > 0 || rest.googleReviewUrl) && (
+                    <>
+                      <div className="pm-store-info-divider" />
+                      {rest.googleReviewUrl ? (
+                        <a
+                          href={rest.googleReviewUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pm-store-info-row is-link"
+                        >
+                          <span className="pm-store-info-row-start">
+                            <Star size={18} fill={brandColor} color={brandColor} />
+                            <span>
+                              {reviewsList.length > 0
+                                ? `${avgRating} (${reviewsList.length} تقييم)`
+                                : 'التقييمات على Google Maps'}
+                            </span>
+                          </span>
+                          <ChevronLeft size={17} className="pm-store-info-end-ico" />
+                        </a>
+                      ) : (
+                        <div className="pm-store-info-row">
+                          <span className="pm-store-info-row-start">
+                            <Star size={18} fill={brandColor} color={brandColor} />
+                            <span>{avgRating} ({reviewsList.length} تقييم)</span>
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  {/* Contact & Social Quick Chips */}
+                  {(whatsappNumber || (rest.social && Object.values(rest.social).some(Boolean))) && (
+                    <>
+                      <div className="pm-store-info-divider" />
+                      <div className="pm-store-info-chips">
+                        {whatsappNumber && (
+                          <a
+                            href={waLink(whatsappNumber, `مرحباً ${rest.n}، أود الاستفسار عن المنيو`)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pm-store-info-chip is-accent"
+                            style={{ color: accentText }}
+                          >
+                            <MessageCircle size={14} />
+                            <span>واتساب</span>
+                          </a>
+                        )}
+                        {rest.social?.instagram && (
+                          <a
+                            href={rest.social.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pm-store-info-chip"
+                          >
+                            <span>انستغرام</span>
+                          </a>
+                        )}
+                        {rest.social?.facebook && (
+                          <a
+                            href={rest.social.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pm-store-info-chip"
+                          >
+                            <span>فيسبوك</span>
+                          </a>
+                        )}
+                        {rest.social?.tiktok && (
+                          <a
+                            href={rest.social.tiktok}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pm-store-info-chip"
+                          >
+                            <span>تيك توك</span>
+                          </a>
+                        )}
+                        {rest.social?.x && (
+                          <a
+                            href={rest.social.x}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="pm-store-info-chip"
+                          >
+                            <span>منصة X</span>
+                          </a>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Reviews Strip ("ما يقوله الناس") */}
+                {(reviewsShowOnMenu || restaurantId === 'demo') && reviewsList.length > 0 && (
+                  <div className="pm-store-info-reviews-sec">
+                    <div className="pm-store-info-reviews-head">
+                      <b>ما يقوله الناس</b>
+                      {rest.googleReviewUrl && (
+                        <a
+                          href={rest.googleReviewUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="عرض جميع المراجعات"
+                          style={{ color: 'var(--pm-ink)', display: 'inline-flex' }}
+                        >
+                          <ArrowRight size={16} />
+                        </a>
+                      )}
+                    </div>
+                    <div className="pm-store-info-reviews-strip">
+                      {reviewsList.slice(0, 8).map((rv) => {
+                        const starsCount = Math.max(1, Math.min(5, Number(rv.rate ?? rv.stars ?? 5)));
+                        return (
+                          <article key={rv.id} className="pm-store-info-review-card">
+                            <div className="pm-store-info-review-top">
+                              <b>{rv.name}</b>
+                              <span style={{ display: 'inline-flex', gap: '2px', color: brandColor }}>
+                                {Array.from({ length: starsCount }).map((_, idx) => (
+                                  <Star key={idx} size={12} fill="currentColor" strokeWidth={0} />
+                                ))}
+                              </span>
+                            </div>
+                            <p>{rv.comment}</p>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Sticky Bottom CTA */}
+              <div className="pm-store-info-footer">
+                {canSubmitFromInfo ? (
+                  <button
+                    type="button"
+                    className="pm-store-info-cta"
+                    style={{ background: brandColor, color: brandInk }}
+                    onClick={() => {
+                      setStoreInfoOpen(false);
+                      setRateModalOpen(true);
+                    }}
+                  >
+                    أضف مراجعة
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="pm-store-info-cta"
+                    style={{ background: brandColor, color: brandInk }}
+                    onClick={() => setStoreInfoOpen(false)}
+                  >
+                    إغلاق
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ================================================================
           MODAL 4: WORKING HOURS POPUP
           ================================================================ */}
       {workModalOpen && (
@@ -8613,7 +8971,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
       {/* ================================================================
           MODAL 10: SERVICE RATING POPUP
           ================================================================ */}
-      {rateModalOpen && reviewsAllowSubmit && (
+      {rateModalOpen && (reviewsAllowSubmit || restaurantId === 'demo') && (
         <div className="pm-modal-backdrop" onClick={() => setRateModalOpen(false)}>
           <div className="pm-sheet" style={{ padding: '20px' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
