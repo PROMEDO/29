@@ -14694,31 +14694,40 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket-badge.is-png {
-  margin-bottom: 1px;
+  margin-bottom: 2px;
 }
 
 .mp-promo-discount-png {
-  width: 44px;
-  height: 44px;
+  width: 31px;
+  height: 31px;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
   pointer-events: none;
 }
 
-.mp-promo-ticket.is-discount {
-  padding-top: 6px;
+.mp-promo-delivery-png {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
+  pointer-events: none;
 }
 
-.mp-promo-ticket.is-discount .mp-promo-ticket-title {
-  font-size: 12.5px;
+.mp-promo-ticket.is-compact-promo {
+  padding-top: 8px;
 }
 
-.mp-promo-ticket.is-discount .mp-promo-ticket-footer {
+.mp-promo-ticket.is-compact-promo .mp-promo-ticket-title {
+  font-size: 12px;
+}
+
+.mp-promo-ticket.is-compact-promo .mp-promo-ticket-footer {
+  font-size: 9px;
+  line-height: 1.25;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .mp-promo-ticket-eyebrow {

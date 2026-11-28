@@ -257,21 +257,15 @@ function PromoDiscountPngBadge() {
   );
 }
 
-function ScallopedRedDeliveryBadge() {
+function PromoDeliveryPngBadge() {
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <path d={SCALLOP_SEAL_PATH} fill="#E12D39" />
-      <circle cx="9.8" cy="17.8" r="2.1" fill="#FFFFFF" />
-      <circle cx="18.3" cy="17.8" r="2.1" fill="#FFFFFF" />
-      <path
-        d="M8.6 16.2H12.2L14.1 11.4H16.6M13.3 13.8H18.2C19 13.8 19.6 14.4 19.8 15.2L20.1 16.5H16.5"
-        stroke="#FFFFFF"
-        strokeWidth="1.55"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <rect x="8.2" y="12.1" width="3.8" height="2.7" rx="0.8" fill="#FFFFFF" />
-    </svg>
+    <img
+      src="/assets/promo-delivery-badge.png"
+      alt=""
+      aria-hidden="true"
+      className="mp-promo-delivery-png"
+      decoding="async"
+    />
   );
 }
 
@@ -685,12 +679,12 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
             );
           }
 
-          const isDiscount = tk.kind === 'discount';
+          const isCompactPromo = tk.kind === 'discount' || tk.kind === 'free_delivery';
           return (
             <button
               key={tk.id}
               type="button"
-              className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'} ${isDiscount ? 'is-discount' : ''}`}
+              className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'} ${isCompactPromo ? 'is-compact-promo' : ''}`}
               onClick={() => setActiveTicket(tk)}
             >
               {isLoyalty && (
@@ -707,22 +701,22 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                 </>
               )}
 
-              <span className={`mp-promo-ticket-badge ${isDiscount ? 'is-png' : ''}`}>
+              <span className={`mp-promo-ticket-badge ${isCompactPromo ? 'is-png' : ''}`}>
                 {tk.kind === 'loyalty' ? (
                   <MintPlusSealBadge />
                 ) : tk.kind === 'free_delivery' ? (
-                  <ScallopedRedDeliveryBadge />
+                  <PromoDeliveryPngBadge />
                 ) : (
                   <PromoDiscountPngBadge />
                 )}
               </span>
 
-              {!isDiscount && <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>}
+              {!isCompactPromo && <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>}
               <strong className="mp-promo-ticket-title tabular-nums">{tk.title}</strong>
 
               <span className="mp-promo-ticket-divider" aria-hidden="true" />
               <span className={`mp-promo-ticket-footer ${tk.isUnlocked ? 'is-unlocked' : ''}`}>
-                {isDiscount ? tk.eyebrow : tk.footer}
+                {isCompactPromo ? tk.eyebrow : tk.footer}
               </span>
             </button>
           );
