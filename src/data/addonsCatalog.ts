@@ -19,7 +19,7 @@ export interface AddonMetaItem {
 }
 
 export const ADDON_CATEGORY_TABS: Array<{ id: AddonCategoryFilter; label: string }> = [
-  { id: 'all', label: 'جميع الميزات (21)' },
+  { id: 'all', label: 'جميع الميزات (20)' },
   { id: 'marketing', label: 'التسويق والعروض' },
   { id: 'sales', label: 'زيادة المبيعات والسلة' },
   { id: 'experience', label: 'تجربة الزبون والتفاعل' },
@@ -29,7 +29,7 @@ export const ADDON_CATEGORY_TABS: Array<{ id: AddonCategoryFilter; label: string
 export function getLocalizedAddonTabs(lang: SupportedLanguage = 'ar'): Array<{ id: AddonCategoryFilter; label: string }> {
   if (lang === 'en') {
     return [
-      { id: 'all', label: 'All Features (21)' },
+      { id: 'all', label: 'All Features (20)' },
       { id: 'marketing', label: 'Marketing & Offers' },
       { id: 'sales', label: 'Sales & Cart Boost' },
       { id: 'experience', label: 'Customer Experience' },
@@ -38,7 +38,7 @@ export function getLocalizedAddonTabs(lang: SupportedLanguage = 'ar'): Array<{ i
   }
   if (lang === 'ku') {
     return [
-      { id: 'all', label: 'هەموو تایبەتمەندییەکان (٢١)' },
+      { id: 'all', label: 'هەموو تایبەتمەندییەکان (٢٠)' },
       { id: 'marketing', label: 'بازرگانی و ئۆفەرەکان' },
       { id: 'sales', label: 'زیادکردنی فرۆش و سەبەتە' },
       { id: 'experience', label: 'ئەزموونی کڕیار و کارلێک' },
@@ -111,13 +111,6 @@ export const ADDON_CATALOG: AddonMetaItem[] = [
     icon: '🍟',
     title: 'مقترحات زيادة السلة (Upsell)',
     desc: 'عرض أطباق ومشروبات مقترحة بضغطة زر داخل سلة الطلبات لرفع قيمة متوسط الفاتورة.',
-  },
-  {
-    key: 'audioBell',
-    category: 'orders',
-    icon: '🔔',
-    title: 'رنين الجرس الصوتي للطلبات',
-    desc: 'تشغيل تنبيه صوتي فوري في لوحة التحكم عند وصول أي طلب جديد.',
   },
   {
     key: 'firstOrderDiscount',

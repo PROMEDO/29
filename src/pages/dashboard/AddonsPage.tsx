@@ -20,7 +20,6 @@ import {
   Trash2,
   UserPlus,
   Users,
-  Volume2,
   X,
 } from 'lucide-react';
 import { LoyaltyCustomer } from '../../types';
@@ -38,7 +37,7 @@ import {
   getAddonRequiredPlanTier,
   isAddonAllowedForPlan,
 } from '../../utils/plans';
-import { playBellTone, useDashboard } from './DashboardContext';
+import { useDashboard } from './DashboardContext';
 import {
   dashCardMotion,
   dashModalMotion,
@@ -1021,33 +1020,6 @@ export const AddonsPage: React.FC = () => {
                   </>
                 )}
 
-
-
-                {editingAddonKey === 'audioBell' && (
-                  <>
-                    <div className="f">
-                      <span>نغمة التنبيه الصوتي للطلبات</span>
-                      <AppSelect
-                        title="نغمة التنبيه الصوتي للطلبات"
-                        value={addonDraft.tone || 'bell'}
-                        onChange={(val) => updateDraft((p) => ({ ...p, tone: val }))}
-                        options={[
-                          { value: 'bell', label: 'جرس الكاشير الكلاسيكي' },
-                          { value: 'chime', label: 'رنين ناعم ثلاثي (Chime)' },
-                          { value: 'alert', label: 'تنبيه سريع' },
-                        ]}
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      className="btn s mp-addon-utility-btn"
-                      onClick={() => playBellTone(addonDraft.tone || 'bell')}
-                    >
-                      <Volume2 size={15} />
-                      <span>اختبار صوت التنبيه الآن</span>
-                    </button>
-                  </>
-                )}
 
 
 

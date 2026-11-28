@@ -927,7 +927,7 @@ export const VIP_ALL_ADDONS_LIST: string[] = [
   'نظام نقاط الولاء ومستشار المزاج والوجبة الذكي',
   'خيار أدوات الطعام والمناديل وتقسيم الفاتورة',
   'الاستلام من السيارة وتقييمات الزبائن',
-  'زر واتساب العائم ورنين الجرس الصوتي للطلبات',
+  'زر واتساب العائم للاستفسار السريع',
   'خصم على طلبات الصالة (مع خرائط كوكل وويز)',
 ];
 
@@ -947,7 +947,7 @@ export const PLAN_FEATURE_TOGGLE_LABELS: Array<{
   { key: 'popupAd', label: 'البوب آب الإعلاني المنبثق' },
   { key: 'happyHourDiscount', label: 'خصم بساعات محددة ومؤقت العروض' },
   { key: 'customColors', label: 'تخصيص الألوان والهوية البصرية بالكامل' },
-  { key: 'allAddons', label: 'تفعيل كافة الإضافات التسويقية (21 إضافة)' },
+  { key: 'allAddons', label: 'تفعيل كافة الإضافات التسويقية (20 إضافة)' },
 ];
 
 export function getLocalizedPlanName(plan: Pick<PricingPlan, 'id' | 'n'>, lang: SupportedLanguage = 'ar'): string {

@@ -36,6 +36,7 @@ import {
   Trash2,
   Truck,
   UtensilsCrossed,
+  Volume2,
   X,
 } from 'lucide-react';
 import { MediaLibraryModal } from '../../components/MediaLibraryModal';
@@ -121,6 +122,9 @@ export const SettingsPage: React.FC = () => {
     telegramEnabled,
     appNotificationsEnabled,
     toggleOrderDeliveryChannel,
+    audioBellEnabled,
+    toggleAudioBell,
+    testAudioBell,
     restPhone,
     setRestPhone,
     restWa,
@@ -662,6 +666,47 @@ export const SettingsPage: React.FC = () => {
                       </div>
                     );
                   })}
+                  {/* Audio Order Bell Toggle */}
+                  <div className="mp-set2-row">
+                    <div className="mp-set2-row-meta">
+                      <div className="mp-set2-mini-ico">
+                        <Volume2 size={19} />
+                      </div>
+                      <div>
+                        <div className="mp-set2-row-label">رنين الجرس الصوتي للطلبات</div>
+                        <div className="mp-set2-row-desc">تنبيه صوتي (3 طرقات متكررة) عند وصول أي طلب جديد</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                      <button
+                        type="button"
+                        className="btn s"
+                        onClick={testAudioBell}
+                        title="اختبار صوت الجرس (3 طرقات)"
+                        aria-label="اختبار صوت الجرس"
+                        style={{
+                          minHeight: '30px',
+                          padding: '4px 9px',
+                          fontSize: '11.5px',
+                          fontWeight: 800,
+                          borderRadius: '999px',
+                        }}
+                      >
+                        <Volume2 size={13} />
+                        <span>اختبار</span>
+                      </button>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={audioBellEnabled}
+                        aria-label="تفعيل رنين الجرس الصوتي للطلبات"
+                        onClick={toggleAudioBell}
+                        className={`ios-switch sm ${audioBellEnabled ? 'on' : 'off'}`}
+                      >
+                        <span className="ios-switch-thumb" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {missingTelegram && (

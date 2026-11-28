@@ -4409,6 +4409,38 @@ function useDashboardController({
         void enableDashboardPushNotifications();
       }
     },
+    audioBellEnabled: Boolean(!addonsState.audioBell?.mutedByUser && addonsState.audioBell?.enabled !== false),
+    audioBellTone: (addonsState.audioBell?.tone || 'bell') as 'chime' | 'bell' | 'alert',
+    toggleAudioBell: () => {
+      const latestAddons = addonsStateRef.current;
+      const current = latestAddons.audioBell || {};
+      const currentlyEnabled = !current.mutedByUser && current.enabled !== false;
+      const nextEnabled = !currentlyEnabled;
+      const tone = (current.tone || 'bell') as 'chime' | 'bell' | 'alert';
+      const nextAddons: RestaurantAddons = {
+        ...latestAddons,
+        audioBell: {
+          ...current,
+          configured: true,
+          enabled: nextEnabled,
+          mutedByUser: !nextEnabled,
+          tone,
+        },
+      };
+      persistAddons(nextAddons);
+      if (nextEnabled) {
+        unlockBellAudio();
+        playBellTone(tone);
+        showToast('تم تشغيل رنين الجرس الصوتي للطلبات');
+      } else {
+        showToast('تم إيقاف رنين الجرس الصوتي للطلبات');
+      }
+    },
+    testAudioBell: () => {
+      const tone = (addonsStateRef.current.audioBell?.tone || 'bell') as 'chime' | 'bell' | 'alert';
+      unlockBellAudio();
+      playBellTone(tone);
+    },
     restPhone,
     setRestPhone,
     restWa,

@@ -29,7 +29,7 @@ export function clearPendingBellTone(): void {
 
 function scheduleBellChime(ctx: AudioContext, tone: 'chime' | 'bell' | 'alert') {
   const nowMs = Date.now();
-  if (nowMs - lastBellTriggeredAt < 450) return;
+  if (nowMs - lastBellTriggeredAt < 900) return;
   lastBellTriggeredAt = nowMs;
 
   const baseNow = ctx.currentTime + 0.02;
@@ -69,37 +69,43 @@ function scheduleBellChime(ctx: AudioContext, tone: 'chime' | 'bell' | 'alert') 
           { freq: 1046.5, delay: 0.22, duration: 0.56, gain: 0.105 * VOLUME_BOOST, shimmer: 2093 },
         ];
 
-  // Single chime per order arrival event (like WhatsApp notification)
-  baseNotes.forEach(({ freq, delay, duration, gain: peakGain, shimmer }) => {
-    const start = baseNow + delay;
-    const osc = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-    osc.type = tone === 'alert' ? 'triangle' : 'sine';
-    osc.frequency.setValueAtTime(freq, start);
+  // Ring 3 consecutive times on each incoming order arrival
+  const REPEAT_COUNT = 3;
+  const REPEAT_INTERVAL_SEC = 0.72;
 
-    gainNode.gain.setValueAtTime(0.0001, start);
-    gainNode.gain.linearRampToValueAtTime(peakGain, start + 0.014);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  for (let rep = 0; rep < REPEAT_COUNT; rep++) {
+    const repOffset = rep * REPEAT_INTERVAL_SEC;
+    baseNotes.forEach(({ freq, delay, duration, gain: peakGain, shimmer }) => {
+      const start = baseNow + repOffset + delay;
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      osc.type = tone === 'alert' ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq, start);
 
-    osc.connect(gainNode);
-    gainNode.connect(outputNode);
-    osc.start(start);
-    osc.stop(start + duration + 0.03);
+      gainNode.gain.setValueAtTime(0.0001, start);
+      gainNode.gain.linearRampToValueAtTime(peakGain, start + 0.014);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, start + duration);
 
-    if (shimmer) {
-      const shimmerOsc = ctx.createOscillator();
-      const shimmerGain = ctx.createGain();
-      shimmerOsc.type = 'sine';
-      shimmerOsc.frequency.setValueAtTime(shimmer, start);
-      shimmerGain.gain.setValueAtTime(0.0001, start);
-      shimmerGain.gain.linearRampToValueAtTime(0.02 * VOLUME_BOOST, start + 0.012);
-      shimmerGain.gain.exponentialRampToValueAtTime(0.0001, start + duration * 0.72);
-      shimmerOsc.connect(shimmerGain);
-      shimmerGain.connect(outputNode);
-      shimmerOsc.start(start);
-      shimmerOsc.stop(start + duration + 0.03);
-    }
-  });
+      osc.connect(gainNode);
+      gainNode.connect(outputNode);
+      osc.start(start);
+      osc.stop(start + duration + 0.03);
+
+      if (shimmer) {
+        const shimmerOsc = ctx.createOscillator();
+        const shimmerGain = ctx.createGain();
+        shimmerOsc.type = 'sine';
+        shimmerOsc.frequency.setValueAtTime(shimmer, start);
+        shimmerGain.gain.setValueAtTime(0.0001, start);
+        shimmerGain.gain.linearRampToValueAtTime(0.02 * VOLUME_BOOST, start + 0.012);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.0001, start + duration * 0.72);
+        shimmerOsc.connect(shimmerGain);
+        shimmerGain.connect(outputNode);
+        shimmerOsc.start(start);
+        shimmerOsc.stop(start + duration + 0.03);
+      }
+    });
+  }
 }
 
 export function unlockBellAudio() {
@@ -312,7 +318,7 @@ export function checkAndNotifyPendingOrders(
 
   try {
     if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-      navigator.vibrate([180, 90, 180]);
+      navigator.vibrate([180, 110, 180, 110, 180]);
     }
   } catch {
     // ignore unsupported vibration API
