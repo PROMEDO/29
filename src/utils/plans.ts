@@ -96,34 +96,16 @@ export const MENU_SHAPES: MenuShapeDefinition[] = [
     badge: '1 · توترز ✨',
   },
   {
-    id: 'theme1',
-    name: '2. ستايل المتجر الأنيق',
-    subtitle: 'تصميم ستور نظيف: شريط علوي متكامل مع بحث سريع، تصنيفات أنيقة، وشبكة بطاقات مربعة',
+    id: 'theme4',
+    name: '2. البوستر الجريء',
+    subtitle: 'تصميم جريء مميز: ترويسة مموجة جريئة، بطاقات بحدود حادة وظل صلب، وأزرار إضافة بارزة',
     badge: '2',
   },
   {
-    id: 'theme2',
-    name: '3. المظهر الليلي الفاخر',
-    subtitle: 'تصميم ليلي احترافي: شعار دائري متناسق، مربعات أقسام، وشريط عائم سفلي',
-    badge: '3',
-  },
-  {
-    id: 'theme3',
-    name: '4. الوجبات السريعة الحيوي',
-    subtitle: 'تصميم مطاعم الوجبات السريعة: هوية جريئة، شريط بحث فوري، وبطاقات شهية عالية الوضوح',
-    badge: '4',
-  },
-  {
-    id: 'theme4',
-    name: '5. البوستر الجريء',
-    subtitle: 'تصميم جريء مميز: ترويسة مموجة جريئة، بطاقات بحدود حادة وظل صلب، وأزرار إضافة بارزة',
-    badge: '5',
-  },
-  {
     id: 'theme5',
-    name: '6. مظهر التوصيل العصري',
+    name: '3. مظهر التوصيل العصري',
     subtitle: 'تصميم تطبيقات التوصيل العصرية: ترويسة منقوشة دافئة، بطاقة فروع، تبديل بين القائمة والبطاقات الكبيرة، وبحث فوري',
-    badge: '6 ✨',
+    badge: '3 ✨',
   },
   {
     id: 'glass',
@@ -410,7 +392,7 @@ export const MENU_THEMES: MenuThemeDefinition[] = [
   },
   {
     id: 'theme4-kudo',
-    name: '5. الكريمي الجريء (البوستر الجريء)',
+    name: '2. الكريمي الجريء (البوستر الجريء)',
     subtitle: 'أحمر كودو والأصفر الحيوي فوق خلفية كريمية دافئة',
     category: 'classic',
     mode: 'light',
@@ -446,7 +428,7 @@ export const MENU_THEMES: MenuThemeDefinition[] = [
   },
   {
     id: 'theme5-shawarmer',
-    name: '6. الأبيض والأحمر الحديث (التوصيل العصري)',
+    name: '3. الأبيض والأحمر الحديث (التوصيل العصري)',
     subtitle: 'تصميم تطبيقات التوصيل النقي بخلفية بيضاء، لمسات حمراء واضحة، وقوائم فروع وتصنيفات احترافية',
     category: 'classic',
     mode: 'light',
@@ -1600,15 +1582,18 @@ export function getAddonRequiredPlanLabel(addonKey: AddonKey | string): string {
 
 const READY_THEME_PRESET_IDS = new Set([
   'toters',
-  'theme1-enab',
-  'theme2-urbanbite',
-  'theme3-menux',
   'theme4-kudo',
   'theme5-shawarmer',
 ]);
 
+const DEPRECATED_THEME_PRESET_IDS = new Set([
+  'theme1-enab',
+  'theme2-urbanbite',
+  'theme3-menux',
+]);
+
 export function getAllowedThemesForPlan(resolved: ResolvedPlanInfo): MenuThemeDefinition[] {
-  const restaurantThemes = MENU_THEMES.filter((t) => !t.storeOnly);
+  const restaurantThemes = MENU_THEMES.filter((t) => !t.storeOnly && !DEPRECATED_THEME_PRESET_IDS.has(t.id));
   if (resolved.maxThemes === -1 || resolved.perms.customColors) {
     return restaurantThemes;
   }

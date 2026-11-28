@@ -28,7 +28,7 @@ import {
 import { dashCardMotion, dashSectionMotion } from '../../utils/dashboardMotion';
 import { useDashboard } from './DashboardContext';
 
-type ReadyAppearanceId = 'toters' | 'theme1' | 'theme2' | 'theme3' | 'theme4' | 'theme5';
+type ReadyAppearanceId = 'toters' | 'theme4' | 'theme5';
 type AppearanceEditMode = ReadyAppearanceId | 'custom' | null;
 
 const READY_APPEARANCES: Array<{
@@ -46,36 +46,15 @@ const READY_APPEARANCES: Array<{
     pairedPresetId: 'toters',
   },
   {
-    id: 'theme1',
-    title: '2. ستايل المتجر الأنيق',
-    icon: '🛍️',
-    desc: 'تصميم ستور نظيف: شريط علوي متكامل مع بحث سريع، تصنيفات واضحة، وشبكة بطاقات مربعة أنيقة.',
-    pairedPresetId: 'theme1-enab',
-  },
-  {
-    id: 'theme2',
-    title: '3. المظهر الليلي الفاخر',
-    icon: '🌙',
-    desc: 'تصميم ليلي احترافي: شعار دائري أنيق، مربعات أقسام، وشريط عائم سفلي.',
-    pairedPresetId: 'theme2-urbanbite',
-  },
-  {
-    id: 'theme3',
-    title: '4. الوجبات السريعة الحيوي',
-    icon: '🔥',
-    desc: 'تصميم مطاعم الوجبات السريعة: واجهة عالية التباين مع بحث فوري وبطاقات شهية واضحة.',
-    pairedPresetId: 'theme3-menux',
-  },
-  {
     id: 'theme4',
-    title: '5. البوستر الجريء',
+    title: '2. البوستر الجريء',
     icon: '⚡',
     desc: 'تصميم جريء مميز: ترويسة مموجة، بطاقات بحدود حادة وظل صلب، وأزرار إضافة بارزة.',
     pairedPresetId: 'theme4-kudo',
   },
   {
     id: 'theme5',
-    title: '6. مظهر التوصيل العصري',
+    title: '3. مظهر التوصيل العصري',
     icon: '🌯',
     desc: 'تصميم تطبيقات التوصيل العصرية: ترويسة منقوشة دافئة، اختيار الفروع، تبديل بين القائمة والبطاقات الكبيرة، وبحث فوري.',
     pairedPresetId: 'theme5-shawarmer',
@@ -83,6 +62,8 @@ const READY_APPEARANCES: Array<{
 ];
 
 const READY_APPEARANCE_ID_SET = new Set<string>(READY_APPEARANCES.map((a) => a.id));
+const HIDDEN_READY_SHAPE_IDS = new Set<string>(['theme1', 'theme2', 'theme3']);
+const HIDDEN_READY_PRESET_IDS = new Set<string>(['theme1-enab', 'theme2-urbanbite', 'theme3-menux']);
 
 interface PhonePreviewProps {
   variant: ReadyAppearanceId | 'custom';
@@ -150,119 +131,6 @@ const ThemePhonePreview: React.FC<PhonePreviewProps> = ({
             ))}
           </div>
           <div className="mp-pm-cta-bar" style={{ background: brand }} />
-        </div>
-      );
-    }
-
-    if (variant === 'theme1') {
-      return (
-        <div className="mp-pm-body" style={{ gap: '5px', padding: '5px' }}>
-          <div className="mp-pm-toprow" style={{ borderBottom: `1px solid ${line}`, paddingBottom: '4px' }}>
-            <span className="mp-pm-thumb-xs" style={{ background: brand }} />
-            <div className="mp-pm-lines">
-              <i style={{ background: text, width: '58%' }} />
-            </div>
-            <span className="mp-pm-dot-btn" style={{ background: soft }} />
-          </div>
-          <div className="mp-pm-chip-row">
-            <span className="mp-pm-chip-pill" style={{ background: text }} />
-            <span className="mp-pm-chip-pill" style={{ background: soft }} />
-            <span className="mp-pm-chip-pill" style={{ background: soft }} />
-          </div>
-          <div className="mp-pm-grid-2">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="mp-pm-grid-card-bare">
-                <div className="mp-pm-grid-img-43" style={{ background: soft, borderColor: line }} />
-                <i style={{ background: text, width: '76%', height: '3px', borderRadius: '99px', display: 'block', marginTop: '3px' }} />
-                <div className="mp-pm-foot-mini">
-                  <i style={{ background: muted, width: '40%', opacity: 0.7 }} />
-                  <span className="mp-pm-tiny-add" style={{ borderColor: line }} />
-                </div>
-              </div>
-            ))}
-          </div>
-          <div className="mp-pm-tabs-bottom" style={{ background: surface, borderTop: `1px solid ${line}` }}>
-            <span style={{ background: brand }} />
-            <span style={{ background: muted, opacity: 0.45 }} />
-            <span style={{ background: muted, opacity: 0.45 }} />
-            <span style={{ background: muted, opacity: 0.45 }} />
-          </div>
-        </div>
-      );
-    }
-
-    if (variant === 'theme2') {
-      return (
-        <div className="mp-pm-body" style={{ gap: '5px', padding: '5px' }}>
-          <div className="mp-pm-toprow">
-            <span className="mp-pm-dot-btn" style={{ background: surface, border: `1px solid ${line}` }} />
-            <span className="mp-pm-dot-btn" style={{ background: surface, border: `1px solid ${line}`, marginInlineStart: 'auto' }} />
-          </div>
-          <div className="mp-pm-center-hero">
-            <span className="mp-pm-avatar-lg" style={{ background: surface, borderColor: brand }} />
-            <i style={{ background: text, width: '56%', height: '4px', borderRadius: '99px', display: 'block' }} />
-          </div>
-          <div className="mp-pm-cat-tiles">
-            {[0, 1, 2, 3].map((i) => (
-              <span
-                key={i}
-                className="mp-pm-cat-tile"
-                style={{
-                  background: surface,
-                  borderColor: i === 0 ? brand : line,
-                }}
-              />
-            ))}
-          </div>
-          <div className="mp-pm-list-stack">
-            {[0, 1].map((i) => (
-              <div key={i} className="mp-pm-list-row" style={{ borderColor: line }}>
-                <div className="mp-pm-lines">
-                  <i style={{ background: text, width: '72%' }} />
-                  <i style={{ background: brand, width: '40%' }} />
-                </div>
-                <span className="mp-pm-thumb-sq" style={{ background: surface, border: `1px solid ${line}` }} />
-              </div>
-            ))}
-          </div>
-          <div className="mp-pm-pill-dock" style={{ background: surface, borderColor: line }}>
-            <span style={{ background: brand }} />
-            <span style={{ background: muted, opacity: 0.45 }} />
-            <span style={{ background: muted, opacity: 0.45 }} />
-          </div>
-        </div>
-      );
-    }
-
-    if (variant === 'theme3') {
-      return (
-        <div className="mp-pm-body" style={{ gap: '5px', padding: '5px' }}>
-          <div className="mp-pm-card-block" style={{ background: surface, borderColor: line }}>
-            <span className="mp-pm-thumb-xs" style={{ background: brand, width: '20px', height: '20px', borderRadius: '6px' }} />
-            <div className="mp-pm-lines">
-              <i style={{ background: text, width: '64%' }} />
-              <i style={{ background: muted, width: '44%', opacity: 0.55 }} />
-            </div>
-          </div>
-          <div className="mp-pm-search-bar" style={{ background: surface, borderColor: line }}>
-            <i style={{ background: muted, width: '45%', opacity: 0.5 }} />
-          </div>
-          <div className="mp-pm-chip-row">
-            <span className="mp-pm-chip-pill" style={{ background: brand }} />
-            <span className="mp-pm-chip-pill" style={{ background: surface, border: `1px solid ${line}` }} />
-            <span className="mp-pm-chip-pill" style={{ background: surface, border: `1px solid ${line}` }} />
-          </div>
-          <div className="mp-pm-grid-2">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="mp-pm-grid-card" style={{ background: surface, borderColor: line }}>
-                <div className="mp-pm-grid-img-43" style={{ background: soft }} />
-                <div className="mp-pm-foot-mini" style={{ padding: '2px 3px' }}>
-                  <i style={{ background: text, width: '50%' }} />
-                  <span className="mp-pm-tiny-add" style={{ background: brand, borderColor: brand }} />
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       );
     }
@@ -589,7 +457,9 @@ export const AppearancePage: React.FC = () => {
     ? 'ألوان مخصصة'
     : activeThemeObj?.name || 'افتراضي';
   const activeLayoutObj = layoutDefinitions.find((l) => l.id === selectedLayout) || layoutDefinitions[0];
-  const customShapes = MENU_SHAPES.filter((s) => !READY_APPEARANCE_ID_SET.has(s.id));
+  const customShapes = MENU_SHAPES.filter(
+    (s) => !READY_APPEARANCE_ID_SET.has(s.id) && !HIDDEN_READY_SHAPE_IDS.has(s.id)
+  );
   const activeCustomShapeObj = customShapes.find((s) => s.id === menuThemeShape) || customShapes[0];
 
   const editingReadyMeta =
@@ -599,6 +469,7 @@ export const AppearancePage: React.FC = () => {
 
   const modalThemesList = MENU_THEMES.filter((t) => {
     if (t.seasonal || t.storeOnly) return false;
+    if (HIDDEN_READY_PRESET_IDS.has(t.id)) return false;
     if (editingMode === 'custom' && READY_APPEARANCES.some((a) => a.pairedPresetId === t.id)) {
       return false;
     }
@@ -1273,11 +1144,7 @@ export const AppearancePage: React.FC = () => {
           {READY_APPEARANCES.map((preset, idx) => {
             const isActive = menuThemeShape === preset.id;
             const pairedObj = MENU_THEMES.find((t) => t.id === preset.pairedPresetId) || MENU_THEMES[0];
-            const cardPaletteMode = isActive
-              ? previewMode
-              : preset.id === 'theme2'
-              ? 'dark'
-              : pairedObj.mode;
+            const cardPaletteMode = isActive ? previewMode : pairedObj.mode;
             const pal = cardPaletteMode === 'dark' ? pairedObj.darkPalette : pairedObj.lightPalette;
             const brandHex = isActive && isCustomSelected ? customBrandHex : isActive && activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.brand : activeThemeObj.lightPalette.brand) : pal.brand;
             const bgHex = isActive && isCustomSelected ? customBgPreview : isActive && activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.bg : activeThemeObj.lightPalette.bg) : pal.bg;
