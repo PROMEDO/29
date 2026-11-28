@@ -322,6 +322,7 @@ export function resolvePublicHomeRecords(allData: Record<string, unknown>): Reco
       currency: clean.currency || 'د.ع',
       done: clean.done ?? 1,
       a: clean.a ?? 1,
+      verifiedPartner: clean.verifiedPartner !== undefined ? Boolean(clean.verifiedPartner) : true,
     };
   }
   return records;

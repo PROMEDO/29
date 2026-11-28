@@ -550,6 +550,7 @@ export interface Restaurant {
   region?: string;
   projectType?: string;
   isPaid?: boolean;
+  verifiedPartner?: boolean;
   color?: string;
   logo?: string;
   coverImages?: string[];

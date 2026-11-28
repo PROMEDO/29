@@ -55,6 +55,7 @@ import { formatNumber, getSite, waLink } from '../../utils/storage';
 import { navigateToMainSite } from '../../utils/businessDefaults';
 import { AppLogo } from '../AppLogo';
 import { AppSelect } from '../AppSelect';
+import { VerifiedPartnerName } from '../VerifiedPartnerName';
 import { MenuPromoTickets, type MenuPromoTicketItem } from '../menu/MenuPromoTickets';
 
 export interface EstorePriceInfo {
@@ -764,7 +765,9 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
                 )}
               </div>
               <div className="mp-bg-brand-meta">
-                <strong>{rest.n}</strong>
+                <strong>
+                  <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={15} truncate />
+                </strong>
               </div>
             </button>
           </div>
@@ -994,7 +997,9 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
                     <span>{(rest.n || 'S').slice(0, 2)}</span>
                   )}
                 </div>
-                <b>{rest.n}</b>
+                <b>
+                  <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={15} />
+                </b>
               </div>
               <button
                 type="button"
@@ -1800,7 +1805,9 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
                     )}
                   </div>
                   <div>
-                    <h2>{rest.n}</h2>
+                    <h2>
+                      <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={18} />
+                    </h2>
                     {cleanStoreTagline && <span>{cleanStoreTagline}</span>}
                   </div>
                 </div>
@@ -1982,7 +1989,9 @@ export const EstoreStorefront: React.FC<EstoreStorefrontProps> = React.memo(({
                 )}
               </div>
               <div>
-                <h3>{rest.n}</h3>
+                <h3>
+                  <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={16} />
+                </h3>
                 {cleanStoreTagline && <span>{cleanStoreTagline}</span>}
               </div>
             </div>

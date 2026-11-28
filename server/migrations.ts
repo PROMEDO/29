@@ -455,6 +455,22 @@ export async function runStartupMigrations(): Promise<void> {
     putData['migrations/platform_phone_07724799679_v1'] = true;
   }
 
+  if (!allData['migrations/demo_verified_partner_v1']) {
+    const curDemo =
+      putData['restaurants/demo'] && typeof putData['restaurants/demo'] === 'object'
+        ? (putData['restaurants/demo'] as Record<string, any>)
+        : allData['restaurants/demo'] && typeof allData['restaurants/demo'] === 'object'
+        ? (allData['restaurants/demo'] as Record<string, any>)
+        : null;
+    if (curDemo) {
+      putData['restaurants/demo'] = {
+        ...curDemo,
+        verifiedPartner: true,
+      };
+    }
+    putData['migrations/demo_verified_partner_v1'] = true;
+  }
+
   if (!allData['migrations/disable_signup_default_v1']) {
     const curSite =
       putData['settings/site'] && typeof putData['settings/site'] === 'object'

@@ -1551,6 +1551,21 @@ export function migrateBrandInStore(store: StoreData, syncRemote = false): void 
     changed = true;
   }
 
+  if (!store['migrations/demo_verified_partner_v1']) {
+    const latestDemo = (store['restaurants/demo'] as Restaurant | undefined) || demoRest;
+    if (latestDemo) {
+      const verifiedDemo: Restaurant = {
+        ...latestDemo,
+        verifiedPartner: true,
+      };
+      store['restaurants/demo'] = verifiedDemo;
+      diffPut['restaurants/demo'] = verifiedDemo;
+    }
+    store['migrations/demo_verified_partner_v1'] = true;
+    diffPut['migrations/demo_verified_partner_v1'] = true;
+    changed = true;
+  }
+
   if (!store['migrations/platform_phone_07724799679_v1']) {
     const curSite =
       store['settings/site'] && typeof store['settings/site'] === 'object'
@@ -3722,6 +3737,7 @@ export function ensureDemoRestaurant() {
       h: { m: 'c', f: '10:00', t: '23:59' },
       ph: '07724799679',
       isPaid: true,
+      verifiedPartner: true,
       color: '#1B5E4A',
       currency: 'د.ع',
       country: 'العراق',

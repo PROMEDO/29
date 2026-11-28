@@ -66,6 +66,7 @@ import {
   Session,
   WorkDayKey,
 } from '../types';
+import { VerifiedPartnerName } from '../components/VerifiedPartnerName';
 import {
   applyPlatformTypography,
   fetchPopularItemsCached,
@@ -3272,7 +3273,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   </div>
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                      <h1 className="pm-toters-store-title">{rest.n}</h1>
+                      <h1 className="pm-toters-store-title">
+                        <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={18} />
+                      </h1>
                       <button
                         type="button"
                         onClick={() => setWorkModalOpen(true)}
@@ -3336,7 +3339,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   )}
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <span className="pm-t1-brand-name">{rest.n}</span>
+                  <span className="pm-t1-brand-name">
+                    <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={15} truncate />
+                  </span>
                   <span className="pm-t1-brand-sub">
                     {rest.tagline || (openNow ? 'مفتوح للطلبات الآن' : 'قائمة الطعام')}
                   </span>
@@ -3563,7 +3568,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
             </div>
 
             <div className="pm-t2-profile-text">
-              <h1 className="pm-t2-profile-title">{rest.n}</h1>
+              <h1 className="pm-t2-profile-title">
+                <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={19} />
+              </h1>
               {rest.tagline && <p className="pm-t2-profile-sub">{rest.tagline}</p>}
               <div
                 style={{
@@ -3704,7 +3711,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   <div style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                       <h1 style={{ margin: 0, fontSize: '18.5px', fontWeight: 900, color: 'var(--pm-ink)' }}>
-                        {rest.n}
+                        <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={18} />
                       </h1>
                       <button
                         type="button"
@@ -3803,7 +3810,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                     <span>{(rest.n || 'M').slice(0, 2)}</span>
                   )}
                 </div>
-                <span className="pm-t4-brand-name">{rest.n}</span>
+                <span className="pm-t4-brand-name">
+                  <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={15} truncate />
+                </span>
               </button>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
@@ -3855,7 +3864,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                 <span className="pm-t4-eyebrow">
                   {openNow ? 'مفتوح الآن للطلبات' : 'القائمة الرقمية'}
                 </span>
-                <h1 className="pm-t4-hero-title">{rest.n}</h1>
+                <h1 className="pm-t4-hero-title">
+                  <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={20} />
+                </h1>
                 {rest.tagline && <p className="pm-t4-hero-sub">{rest.tagline}</p>}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginTop: '14px' }}>
                   {!isCatalogViewOnly && (
@@ -3965,7 +3976,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                   >
                     <ChevronRight size={20} strokeWidth={2.2} />
                   </button>
-                  <span className="pm-t6-sticky-title">{rest.n}</span>
+                  <span className="pm-t6-sticky-title">
+                    <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={16} truncate />
+                  </span>
                   <button
                     type="button"
                     className="pm-t6-circle-btn"
@@ -4067,7 +4080,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
 
             {/* Store Title + Status Chip (No Long Description) */}
             <div className="pm-t6-identity">
-              <h1 className="pm-t6-title">{rest.n}</h1>
+              <h1 className="pm-t6-title">
+                <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={18} />
+              </h1>
               <div className="pm-t6-subtitle-row">
                 <button
                   type="button"
@@ -4280,7 +4295,7 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                   <h1 style={{ margin: 0, fontSize: '17.5px', fontWeight: 800, color: 'var(--pm-ink)' }}>
-                    {rest.n}
+                    <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={17} />
                   </h1>
                   <button
                     type="button"
@@ -7742,7 +7757,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
         <div className="pm-modal-backdrop" onClick={() => setMenuDrawerOpen(false)}>
           <div className="pm-sheet" style={{ padding: '18px' }} onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-              <b style={{ fontSize: '17px', color: 'var(--pm-ink)' }}>{rest.n}</b>
+              <b style={{ fontSize: '17px', color: 'var(--pm-ink)' }}>
+                <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={16} />
+              </b>
               <button
                 type="button"
                 onClick={() => setMenuDrawerOpen(false)}
@@ -8010,7 +8027,9 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                        <h2 className="pm-store-info-title">{rest.n}</h2>
+                        <h2 className="pm-store-info-title">
+                          <VerifiedPartnerName name={rest.n} verified={Boolean(rest.verifiedPartner)} badgeSize={17} />
+                        </h2>
                         <span className={`pm-toters-status-tag ${openNow ? 'open' : 'closed'}`}>
                           {openNow ? 'مفتوح' : 'مغلق'}
                         </span>

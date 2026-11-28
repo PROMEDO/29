@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { PricingPlan, Session } from '../../types';
 import { AppSelect } from '../AppSelect';
+import { VerifiedPartnerName } from '../VerifiedPartnerName';
 import {
   AccountsStats,
   createPartnerApi,
@@ -367,6 +368,31 @@ export const UnifiedPartnersAccountsSection: React.FC<UnifiedPartnersAccountsSec
     }
   };
 
+  const handleToggleVerifyPartner = async () => {
+    if (!actionTarget || !actionTarget.rid || (!canEditPartnerProfile && !canManagePartners)) return;
+    const nextVerified = !actionTarget.verifiedPartner;
+    setIsSavingAction(true);
+    setModalError('');
+    try {
+      const res = await updateAccountApi(actionTarget.id, { verifiedPartner: nextVerified });
+      logActivity(
+        session.phone || session.email || 'المدير',
+        nextVerified ? 'توثيق شريك' : 'إلغاء توثيق شريك',
+        `${actionTarget.projectName || actionTarget.phone}`,
+        'restaurant'
+      );
+      await syncFromServer();
+      await loadData(true);
+      onRefresh();
+      setActionTarget(res.account);
+      showToast(nextVerified ? 'تم توثيق الشريك بنجاح' : 'تم إلغاء توثيق الشريك');
+    } catch (err: unknown) {
+      setModalError(err instanceof Error ? err.message : 'تعذر تحديث حالة توثيق الشريك');
+    } finally {
+      setIsSavingAction(false);
+    }
+  };
+
   const handleConfirmDelete = async () => {
     const isSelfAccount = Boolean(actionTarget?.isCurrentUser || (session.accountId && actionTarget?.id === session.accountId));
     if (!actionTarget || actionTarget.isProtected || isSelfAccount || !canDeletePartner) return;
@@ -669,7 +695,13 @@ export const UnifiedPartnersAccountsSection: React.FC<UnifiedPartnersAccountsSec
               {/* Modal Header */}
               <div className="mp-act-modal-head">
                 <div className="mp-act-modal-title-wrap">
-                  <h3>{actionTarget.projectName || actionTarget.name}</h3>
+                  <h3>
+                    <VerifiedPartnerName
+                      name={actionTarget.projectName || actionTarget.name}
+                      verified={Boolean(actionTarget.verifiedPartner)}
+                      badgeSize={17}
+                    />
+                  </h3>
                   <div className="mp-act-modal-sub">
                     <span className="tabular-nums" dir="ltr">
                       {actionTarget.phone}
@@ -773,6 +805,34 @@ export const UnifiedPartnersAccountsSection: React.FC<UnifiedPartnersAccountsSec
                             <KeyRound size={15} />
                           </span>
                           <span>فتح لوحة تحكم الحساب</span>
+                        </button>
+                      )}
+
+                      {actionTarget.rid && (canEditPartnerProfile || canManagePartners) && (
+                        <button
+                          type="button"
+                          className="mp-act-tile-btn"
+                          disabled={isSavingAction}
+                          onClick={() => void handleToggleVerifyPartner()}
+                          style={
+                            actionTarget.verifiedPartner
+                              ? {
+                                  borderColor: 'rgba(16, 185, 129, 0.45)',
+                                  background: 'rgba(16, 185, 129, 0.1)',
+                                }
+                              : undefined
+                          }
+                        >
+                          <span className="mp-act-tile-btn-ico">
+                            <img
+                              src="/assets/verified-badge.png"
+                              alt="توثيق شريك"
+                              style={{ width: '18px', height: '18px', objectFit: 'contain' }}
+                            />
+                          </span>
+                          <span>
+                            {actionTarget.verifiedPartner ? 'توثيق شريك (موثق ✓ — إلغاء)' : 'توثيق شريك'}
+                          </span>
                         </button>
                       )}
 
@@ -1529,9 +1589,15 @@ export const UnifiedPartnersAccountsSection: React.FC<UnifiedPartnersAccountsSec
 
                     <td>
                       <b style={{ fontSize: '13.5px', display: 'block' }}>
-                        {item.projectName ||
-                          item.restaurantName ||
-                          (item.role === 'admin' ? 'إدارة المنصة' : 'بدون مشروع')}
+                        <VerifiedPartnerName
+                          name={
+                            item.projectName ||
+                            item.restaurantName ||
+                            (item.role === 'admin' ? 'إدارة المنصة' : 'بدون مشروع')
+                          }
+                          verified={Boolean(item.verifiedPartner)}
+                          badgeSize={15}
+                        />
                       </b>
                       <div className="muted tabular-nums" style={{ fontSize: '11.5px', marginTop: '3px' }}>
                         {item.registrationDate ? `مسجل: ${item.registrationDate}` : ''}
@@ -1619,9 +1685,15 @@ export const UnifiedPartnersAccountsSection: React.FC<UnifiedPartnersAccountsSec
                   <div className="mp-acc-mobile-project">
                     {item.isProtected && <Crown size={14} style={{ color: '#f59e0b', flexShrink: 0 }} />}
                     <b>
-                      {item.projectName ||
-                        item.restaurantName ||
-                        (item.role === 'admin' ? 'إدارة المنصة' : item.name)}
+                      <VerifiedPartnerName
+                        name={
+                          item.projectName ||
+                          item.restaurantName ||
+                          (item.role === 'admin' ? 'إدارة المنصة' : item.name)
+                        }
+                        verified={Boolean(item.verifiedPartner)}
+                        badgeSize={15}
+                      />
                     </b>
                   </div>
                   <div className="mp-acc-owner-meta muted">

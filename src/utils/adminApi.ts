@@ -54,6 +54,7 @@ export interface ManagedAccountRecord {
   planId?: string;
   planName?: string;
   isPaid?: boolean;
+  verifiedPartner?: boolean;
   expiresAt?: string;
   restaurantActive?: boolean;
   telegramLinked: boolean;
@@ -101,6 +102,7 @@ export interface AccountUpdatePayload {
   slug?: string;
   subdomain?: string;
   social?: Record<string, string>;
+  verifiedPartner?: boolean;
 }
 
 export interface CreatePartnerPayload {

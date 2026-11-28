@@ -119,6 +119,7 @@ interface StoredRestaurantRecord {
   a?: number;
   done?: number;
   isPaid?: boolean;
+  verifiedPartner?: boolean;
   projectType?: string;
   slug?: string;
   subdomain?: string;
@@ -460,6 +461,7 @@ function buildAdminAccountsView(
       planId: linkedRest?.planId ? String(linkedRest.planId) : undefined,
       planName: linkedRest?.p ? String(linkedRest.p) : undefined,
       isPaid: Boolean(linkedRest?.isPaid),
+      verifiedPartner: Boolean(linkedRest?.verifiedPartner),
       expiresAt: linkedRest?.e ? String(linkedRest.e) : undefined,
       restaurantActive: linkedRest ? linkedRest.a !== 0 : undefined,
       slug: explicitSlug,
@@ -544,6 +546,7 @@ function buildAdminAccountsView(
         planId: r.planId ? String(r.planId) : undefined,
         planName: r.p ? String(r.p) : 'الباقة الاقتصادية',
         isPaid: Boolean(r.isPaid),
+        verifiedPartner: Boolean(r.verifiedPartner),
         expiresAt: r.e ? String(r.e) : undefined,
         restaurantActive: isActive,
         slug: sanitizeSubdomainValue(String(r.slug || '')) || undefined,
@@ -595,6 +598,7 @@ function buildAdminAccountsView(
         planId: undefined,
         planName: undefined,
         isPaid: false,
+        verifiedPartner: false,
         expiresAt: undefined,
         restaurantActive: undefined,
         telegramLinked: true,
@@ -1081,6 +1085,7 @@ export function createAdminRouter(): Router {
         body.slug !== undefined ||
         body.subdomain !== undefined ||
         body.social !== undefined;
+      const hasVerifiedUpdate = body.verifiedPartner !== undefined;
 
       if (hasPlanUpdate && !perms.canEditPartnerPlan) {
         return res.status(403).json({ success: false, error: 'ليست لديك صلاحية تعديل باقة أو مدة الشريك' });
@@ -1090,6 +1095,9 @@ export function createAdminRouter(): Router {
       }
       if (hasLinkOrSocialUpdate && !perms.canEditPartnerLinks) {
         return res.status(403).json({ success: false, error: 'ليست لديك صلاحية تعديل روابط المنيو أو السوشيال' });
+      }
+      if (hasVerifiedUpdate && !perms.canEditPartnerProfile && !perms.canManageRestaurants) {
+        return res.status(403).json({ success: false, error: 'ليست لديك صلاحية توثيق الشركاء' });
       }
 
       const validateUniqueSlug = (rawSlug: unknown, ownRid?: string): string | null => {
@@ -1204,6 +1212,7 @@ export function createAdminRouter(): Router {
           slug: nextSlug,
           subdomain: nextSubdomain,
           ...(nextSocial !== undefined ? { social: nextSocial } : {}),
+          ...(body.verifiedPartner !== undefined ? { verifiedPartner: Boolean(body.verifiedPartner) } : {}),
           a: planFields ? (body.active !== undefined ? (nextActive ? 1 : 0) : 1) : (nextActive ? 1 : 0),
           ...(planFields
             ? {
@@ -1223,13 +1232,14 @@ export function createAdminRouter(): Router {
           });
         }
 
-        // Propagate active status and plan fields to any child branches
+        // Propagate active status, verification and plan fields to any child branches
         const childBranches = restaurantsRes.items.filter((r) => r.parentRid === rid);
         for (const child of childBranches) {
           await upsertRecordInStore(`restaurants/${child.id}`, {
             ...child,
             id: child.id,
             a: updatedRest.a,
+            verifiedPartner: updatedRest.verifiedPartner,
             planId: updatedRest.planId,
             p: updatedRest.p,
             isPaid: updatedRest.isPaid,
@@ -1404,6 +1414,7 @@ export function createAdminRouter(): Router {
       const shouldUpdateRestaurant =
         hasPlanUpdate ||
         hasLinkOrSocialUpdate ||
+        hasVerifiedUpdate ||
         body.projectName !== undefined ||
         body.projectType !== undefined ||
         body.active !== undefined ||
@@ -1432,6 +1443,7 @@ export function createAdminRouter(): Router {
             planId: planFields.nextPlanId,
             e: planFields.nextExpiresAt,
             isPaid: planFields.nextIsPaid,
+            ...(body.verifiedPartner !== undefined ? { verifiedPartner: Boolean(body.verifiedPartner) } : {}),
             a: nextActive ? 1 : 0,
             o: 0,
             v: 0,
@@ -1485,6 +1497,7 @@ export function createAdminRouter(): Router {
             slug: nextSlug,
             subdomain: nextSubdomain,
             ...(nextSocial !== undefined ? { social: nextSocial } : {}),
+            ...(body.verifiedPartner !== undefined ? { verifiedPartner: Boolean(body.verifiedPartner) } : {}),
             ...(body.active !== undefined
               ? { a: nextActive ? 1 : 0 }
               : hasPlanUpdate
@@ -1507,6 +1520,7 @@ export function createAdminRouter(): Router {
               ...child,
               id: child.id,
               a: nextRest.a,
+              verifiedPartner: nextRest.verifiedPartner,
               planId: nextRest.planId,
               p: nextRest.p,
               isPaid: nextRest.isPaid,
