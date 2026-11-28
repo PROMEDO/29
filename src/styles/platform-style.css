@@ -14639,11 +14639,11 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   --mp-ticket-notch: var(--pm-bg, #f8fafc);
   position: relative;
   overflow: hidden;
-  flex: 0 0 125px;
-  min-width: 125px;
+  flex: 0 0 128px;
+  min-width: 128px;
   max-width: 147px;
-  min-height: 99px;
-  padding: 9px 10px 8px;
+  min-height: 102px;
+  padding: 9px 8px 8px;
   border-radius: 13px;
   border: 1px solid var(--mp-ticket-border);
   background: var(--mp-ticket-bg);
@@ -14681,6 +14681,8 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 .mp-promo-ticket-badge {
   position: relative;
   z-index: 2;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -14689,45 +14691,54 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket-badge svg {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
 }
 
 .mp-promo-ticket-badge.is-png {
-  margin-bottom: 2px;
+  margin-bottom: 0;
 }
 
-.mp-promo-discount-png {
+.mp-promo-discount-png,
+.mp-promo-delivery-png {
   width: 31px;
   height: 31px;
   object-fit: contain;
-  display: block;
-  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
-  pointer-events: none;
-}
-
-.mp-promo-delivery-png {
-  width: 34px;
-  height: 34px;
-  object-fit: contain;
+  object-position: center bottom;
   display: block;
   filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
   pointer-events: none;
 }
 
 .mp-promo-ticket.is-compact-promo {
-  padding-top: 8px;
+  padding: 9px 8px 8px;
 }
 
 .mp-promo-ticket.is-compact-promo .mp-promo-ticket-title {
+  margin-top: 6px;
+  min-height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 12px;
+  line-height: 1.25;
+}
+
+.mp-promo-ticket.is-compact-promo .mp-promo-ticket-divider {
+  margin: 6px 0 4px;
 }
 
 .mp-promo-ticket.is-compact-promo .mp-promo-ticket-footer {
   font-size: 9px;
   line-height: 1.25;
+  min-height: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   max-width: 100%;
-  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mp-promo-ticket-eyebrow {
@@ -14776,11 +14787,11 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket-divider::before {
-  inset-inline-start: -15.5px;
+  inset-inline-start: -13.5px;
 }
 
 .mp-promo-ticket-divider::after {
-  inset-inline-end: -15.5px;
+  inset-inline-end: -13.5px;
 }
 
 .mp-promo-ticket-footer {
