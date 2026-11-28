@@ -5238,147 +5238,93 @@ const PublicMenuContent: React.FC<PublicMenuContentProps> = ({
                       })}
                     </div>
                   ) : isTheme6 ? (
-                    (() => {
-                      const firstNonEmptyCatId = allCategories.find(
-                        (c) => (itemsByCatMap.get(c.id) || []).length > 0
-                      )?.id;
-                      const isFeaturedFirstCat = cat.id === firstNonEmptyCatId;
-                      if (isFeaturedFirstCat) {
-                        return (
-                          <div className="pm-t6-featured-grid">
-                            {catItems.map((it) => {
-                              const priceInfo = getPriceDisplay(it, currency, activeMenuDiscount, resolvedPlan.perms.itemDiscounts);
-                              const itemEval = itemEvalMap.get(it.id) || evaluateItemAvailability(it, cat, nowDate);
-                              const displayOnly = isDisplayOnlyItem(it);
-                              const unavailable = !displayOnly && !itemEval.available;
-                              const formattedBeforePrice = priceInfo.rawBefore > 0 ? fmtMoney(priceInfo.rawBefore) : '';
-                              return (
-                                <article
-                                  key={it.id}
-                                  className={`pm-t6-featured-card ${unavailable ? 'unavailable is-unavailable' : ''}`}
-                                  onClick={() => openProductModal(it)}
-                                >
-                                  <div className="pm-t6-featured-img">
-                                    {it.img ? (
-                                      <img src={it.img} alt={it.n} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
-                                    ) : (
-                                      <div className="pm-t6-img-fallback">
-                                        <Utensils size={28} />
-                                      </div>
-                                    )}
-                                    {unavailable && (
-                                      <>
-                                        <div className="pm-unavailable-wash" aria-hidden="true" />
-                                        <span className="pm-unavailable-pill is-compact">غير متوفر</span>
-                                      </>
-                                    )}
+                    t6ViewMode === 'large' ? (
+                      <div className="pm-t6-large-stack">
+                        {catItems.map((it) => {
+                          const priceInfo = getPriceDisplay(it, currency, activeMenuDiscount, resolvedPlan.perms.itemDiscounts);
+                          const itemEval = itemEvalMap.get(it.id) || evaluateItemAvailability(it, cat, nowDate);
+                          const displayOnly = isDisplayOnlyItem(it);
+                          const unavailable = !displayOnly && !itemEval.available;
+                          const formattedBeforePrice = priceInfo.rawBefore > 0 ? fmtMoney(priceInfo.rawBefore) : '';
+                          return (
+                            <article
+                              key={it.id}
+                              className={`pm-t6-large-card ${unavailable ? 'unavailable is-unavailable' : ''}`}
+                              onClick={() => openProductModal(it)}
+                            >
+                              <div className="pm-t6-large-img">
+                                {it.img ? (
+                                  <img src={it.img} alt={it.n} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+                                ) : (
+                                  <div className="pm-t6-img-fallback">
+                                    <Utensils size={34} />
                                   </div>
-                                  <h3 className="pm-t6-featured-title">{it.n}</h3>
-                                  <div className="pm-t6-price-line">
-                                    <span className="pm-t6-price tabular-nums">{priceInfo.main}</span>
-                                    {priceInfo.rawBefore > 0 && (
-                                      <span className="pm-t6-old-price tabular-nums">{formattedBeforePrice}</span>
-                                    )}
-                                  </div>
-                                </article>
-                              );
-                            })}
-                          </div>
-                        );
-                      }
-
-                      if (t6ViewMode === 'large') {
-                        return (
-                          <div className="pm-t6-large-stack">
-                            {catItems.map((it) => {
-                              const priceInfo = getPriceDisplay(it, currency, activeMenuDiscount, resolvedPlan.perms.itemDiscounts);
-                              const itemEval = itemEvalMap.get(it.id) || evaluateItemAvailability(it, cat, nowDate);
-                              const displayOnly = isDisplayOnlyItem(it);
-                              const unavailable = !displayOnly && !itemEval.available;
-                              const formattedBeforePrice = priceInfo.rawBefore > 0 ? fmtMoney(priceInfo.rawBefore) : '';
-                              return (
-                                <article
-                                  key={it.id}
-                                  className={`pm-t6-large-card ${unavailable ? 'unavailable is-unavailable' : ''}`}
-                                  onClick={() => openProductModal(it)}
-                                >
-                                  <div className="pm-t6-large-img">
-                                    {it.img ? (
-                                      <img src={it.img} alt={it.n} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
-                                    ) : (
-                                      <div className="pm-t6-img-fallback">
-                                        <Utensils size={34} />
-                                      </div>
-                                    )}
-                                    {unavailable && (
-                                      <>
-                                        <div className="pm-unavailable-wash" aria-hidden="true" />
-                                        <span className="pm-unavailable-pill is-compact">غير متوفر</span>
-                                      </>
-                                    )}
-                                  </div>
-                                  <div className="pm-t6-large-head">
-                                    <h3 className="pm-t6-large-title">{it.n}</h3>
-                                    <div className="pm-t6-price-line">
-                                      <span className="pm-t6-price tabular-nums">{priceInfo.main}</span>
-                                      {priceInfo.rawBefore > 0 && (
-                                        <span className="pm-t6-old-price tabular-nums">{formattedBeforePrice}</span>
-                                      )}
-                                    </div>
-                                  </div>
-                                  {it.d && <p className="pm-t6-large-desc">{it.d}</p>}
-                                </article>
-                              );
-                            })}
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <div className="pm-t6-list-stack">
-                          {catItems.map((it) => {
-                            const priceInfo = getPriceDisplay(it, currency, activeMenuDiscount, resolvedPlan.perms.itemDiscounts);
-                            const itemEval = itemEvalMap.get(it.id) || evaluateItemAvailability(it, cat, nowDate);
-                            const displayOnly = isDisplayOnlyItem(it);
-                            const unavailable = !displayOnly && !itemEval.available;
-                            const formattedBeforePrice = priceInfo.rawBefore > 0 ? fmtMoney(priceInfo.rawBefore) : '';
-                            return (
-                              <article
-                                key={it.id}
-                                className={`pm-t6-list-row ${unavailable ? 'unavailable is-unavailable' : ''}`}
-                                onClick={() => openProductModal(it)}
-                              >
-                                <div className="pm-t6-list-info">
-                                  <h3 className="pm-t6-list-title">{it.n}</h3>
-                                  {it.d && <p className="pm-t6-list-desc">{it.d}</p>}
-                                  <div className="pm-t6-price-line">
-                                    <span className="pm-t6-price tabular-nums">{priceInfo.main}</span>
-                                    {priceInfo.rawBefore > 0 && (
-                                      <span className="pm-t6-old-price tabular-nums">{formattedBeforePrice}</span>
-                                    )}
-                                  </div>
-                                </div>
-                                <div className="pm-t6-list-img">
-                                  {it.img ? (
-                                    <img src={it.img} alt={it.n} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
-                                  ) : (
-                                    <div className="pm-t6-img-fallback">
-                                      <Utensils size={24} />
-                                    </div>
-                                  )}
-                                  {unavailable && (
-                                    <>
-                                      <div className="pm-unavailable-wash" aria-hidden="true" />
-                                      <span className="pm-unavailable-pill is-compact">غير متوفر</span>
-                                    </>
+                                )}
+                                {unavailable && (
+                                  <>
+                                    <div className="pm-unavailable-wash" aria-hidden="true" />
+                                    <span className="pm-unavailable-pill is-compact">غير متوفر</span>
+                                  </>
+                                )}
+                              </div>
+                              <div className="pm-t6-large-head">
+                                <h3 className="pm-t6-large-title">{it.n}</h3>
+                                <div className="pm-t6-price-line">
+                                  <span className="pm-t6-price tabular-nums">{priceInfo.main}</span>
+                                  {priceInfo.rawBefore > 0 && (
+                                    <span className="pm-t6-old-price tabular-nums">{formattedBeforePrice}</span>
                                   )}
                                 </div>
-                              </article>
-                            );
-                          })}
-                        </div>
-                      );
-                    })()
+                              </div>
+                              {it.d && <p className="pm-t6-large-desc">{it.d}</p>}
+                            </article>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="pm-t6-list-stack">
+                        {catItems.map((it) => {
+                          const priceInfo = getPriceDisplay(it, currency, activeMenuDiscount, resolvedPlan.perms.itemDiscounts);
+                          const itemEval = itemEvalMap.get(it.id) || evaluateItemAvailability(it, cat, nowDate);
+                          const displayOnly = isDisplayOnlyItem(it);
+                          const unavailable = !displayOnly && !itemEval.available;
+                          const formattedBeforePrice = priceInfo.rawBefore > 0 ? fmtMoney(priceInfo.rawBefore) : '';
+                          return (
+                            <article
+                              key={it.id}
+                              className={`pm-t6-list-row ${unavailable ? 'unavailable is-unavailable' : ''}`}
+                              onClick={() => openProductModal(it)}
+                            >
+                              <div className="pm-t6-list-info">
+                                <h3 className="pm-t6-list-title">{it.n}</h3>
+                                {it.d && <p className="pm-t6-list-desc">{it.d}</p>}
+                                <div className="pm-t6-price-line">
+                                  <span className="pm-t6-price tabular-nums">{priceInfo.main}</span>
+                                  {priceInfo.rawBefore > 0 && (
+                                    <span className="pm-t6-old-price tabular-nums">{formattedBeforePrice}</span>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="pm-t6-list-img">
+                                {it.img ? (
+                                  <img src={it.img} alt={it.n} loading="lazy" decoding="async" referrerPolicy="no-referrer" />
+                                ) : (
+                                  <div className="pm-t6-img-fallback">
+                                    <Utensils size={24} />
+                                  </div>
+                                )}
+                                {unavailable && (
+                                  <>
+                                    <div className="pm-unavailable-wash" aria-hidden="true" />
+                                    <span className="pm-unavailable-pill is-compact">غير متوفر</span>
+                                  </>
+                                )}
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    )
                   ) : (
                     <>
                       {/* 1) CLASSIC HORIZONTAL LIST LAYOUT (or Toters Clean Divider List) */}
