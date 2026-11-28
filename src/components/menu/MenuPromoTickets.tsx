@@ -627,53 +627,54 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
 
           if (isLocation) {
             return (
-              <div
-                key={tk.id}
-                role="button"
-                tabIndex={0}
-                className={`mp-promo-ticket ${modeClass} is-location`}
-                onClick={() => setActiveTicket(tk)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setActiveTicket(tk);
-                  }
-                }}
-              >
-                <span className="mp-promo-ticket-badge">
-                  <LocationPinSealBadge />
-                </span>
+              <div key={tk.id} className={`mp-promo-ticket-wrap ${modeClass}`}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  className={`mp-promo-ticket ${modeClass} is-location`}
+                  onClick={() => setActiveTicket(tk)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveTicket(tk);
+                    }
+                  }}
+                >
+                  <span className="mp-promo-ticket-badge">
+                    <LocationPinSealBadge />
+                  </span>
 
-                <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>
-                <strong className="mp-promo-ticket-title">{tk.title}</strong>
+                  <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>
+                  <strong className="mp-promo-ticket-title">{tk.title}</strong>
 
-                <span className="mp-promo-ticket-divider" aria-hidden="true" />
+                  <span className="mp-promo-ticket-divider" aria-hidden="true" />
 
-                <div className="mp-promo-location-actions" onClick={(e) => e.stopPropagation()}>
-                  {tk.googleMapsUrl && (
-                    <a
-                      href={tk.googleMapsUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mp-promo-loc-btn is-google"
-                      title="فتح في خرائط كوكل"
-                    >
-                      <GoogleMapsMiniIcon />
-                      <span>كوكل</span>
-                    </a>
-                  )}
-                  {tk.wazeUrl && (
-                    <a
-                      href={tk.wazeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mp-promo-loc-btn is-waze"
-                      title="فتح في ويز"
-                    >
-                      <WazeMiniIcon />
-                      <span>ويز</span>
-                    </a>
-                  )}
+                  <div className="mp-promo-location-actions" onClick={(e) => e.stopPropagation()}>
+                    {tk.googleMapsUrl && (
+                      <a
+                        href={tk.googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mp-promo-loc-btn is-google"
+                        title="فتح في خرائط كوكل"
+                      >
+                        <GoogleMapsMiniIcon />
+                        <span>كوكل</span>
+                      </a>
+                    )}
+                    {tk.wazeUrl && (
+                      <a
+                        href={tk.wazeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mp-promo-loc-btn is-waze"
+                        title="فتح في ويز"
+                      >
+                        <WazeMiniIcon />
+                        <span>ويز</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -681,44 +682,45 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
 
           const isCompactPromo = tk.kind === 'discount' || tk.kind === 'free_delivery';
           return (
-            <button
-              key={tk.id}
-              type="button"
-              className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'} ${isCompactPromo ? 'is-compact-promo' : ''}`}
-              onClick={() => setActiveTicket(tk)}
-            >
-              {isLoyalty && (
-                <>
-                  <svg
-                    className="mp-promo-loyalty-wave"
-                    viewBox="0 0 180 42"
-                    preserveAspectRatio="none"
-                    aria-hidden="true"
-                  >
-                    <path d="M0 16C45 4 95 28 180 10V42H0V16Z" fill="currentColor" />
-                  </svg>
-                  <LoyaltyCardCornerOrnament />
-                </>
-              )}
-
-              <span className={`mp-promo-ticket-badge ${isCompactPromo ? 'is-png' : ''}`}>
-                {tk.kind === 'loyalty' ? (
-                  <MintPlusSealBadge />
-                ) : tk.kind === 'free_delivery' ? (
-                  <PromoDeliveryPngBadge />
-                ) : (
-                  <PromoDiscountPngBadge />
+            <div key={tk.id} className={`mp-promo-ticket-wrap ${modeClass}`}>
+              <button
+                type="button"
+                className={`mp-promo-ticket ${modeClass} ${isLoyalty ? 'is-loyalty' : 'is-coupon'} ${isCompactPromo ? 'is-compact-promo' : ''}`}
+                onClick={() => setActiveTicket(tk)}
+              >
+                {isLoyalty && (
+                  <>
+                    <svg
+                      className="mp-promo-loyalty-wave"
+                      viewBox="0 0 180 42"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path d="M0 16C45 4 95 28 180 10V42H0V16Z" fill="currentColor" />
+                    </svg>
+                    <LoyaltyCardCornerOrnament />
+                  </>
                 )}
-              </span>
 
-              {!isCompactPromo && <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>}
-              <strong className="mp-promo-ticket-title tabular-nums">{tk.title}</strong>
+                <span className={`mp-promo-ticket-badge ${isCompactPromo ? 'is-png' : ''}`}>
+                  {tk.kind === 'loyalty' ? (
+                    <MintPlusSealBadge />
+                  ) : tk.kind === 'free_delivery' ? (
+                    <PromoDeliveryPngBadge />
+                  ) : (
+                    <PromoDiscountPngBadge />
+                  )}
+                </span>
 
-              <span className="mp-promo-ticket-divider" aria-hidden="true" />
-              <span className={`mp-promo-ticket-footer ${tk.isUnlocked ? 'is-unlocked' : ''}`}>
-                {isCompactPromo ? tk.eyebrow : tk.footer}
-              </span>
-            </button>
+                {!isCompactPromo && <span className="mp-promo-ticket-eyebrow">{tk.eyebrow}</span>}
+                <strong className="mp-promo-ticket-title tabular-nums">{tk.title}</strong>
+
+                <span className="mp-promo-ticket-divider" aria-hidden="true" />
+                <span className={`mp-promo-ticket-footer ${tk.isUnlocked ? 'is-unlocked' : ''}`}>
+                  {isCompactPromo ? tk.eyebrow : tk.footer}
+                </span>
+              </button>
+            </div>
           );
         })}
       </div>
@@ -742,11 +744,23 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
               {liveActiveTicket.kind === 'loyalty' ? (
                 <LoyaltyMedal3DIllustration />
               ) : liveActiveTicket.kind === 'free_delivery' ? (
-                <DeliveryScooter3DIllustration />
+                <img
+                  src="/assets/promo-delivery-badge.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="mp-promo-sheet-hero-png"
+                  decoding="async"
+                />
               ) : liveActiveTicket.kind === 'location' ? (
                 <LocationMap3DIllustration />
               ) : (
-                <DiscountTags3DIllustration />
+                <img
+                  src="/assets/promo-discount-badge.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="mp-promo-sheet-hero-png"
+                  decoding="async"
+                />
               )}
             </div>
 
@@ -755,7 +769,7 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
             </h2>
 
             {liveActiveTicket.kind === 'location' ? (
-              <div className={`mp-promo-sheet-ticket-box ${modeClass}`}>
+              <div className={`mp-promo-sheet-ticket-box is-plain ${modeClass}`}>
                 <p className="mp-promo-sheet-loyalty-note" style={{ marginBottom: '14px' }}>
                   اختر تطبيق الخرائط المفضل للوصول إلى {liveActiveTicket.restaurantName || 'الموقع'} مباشرة
                 </p>
@@ -876,8 +890,9 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                 )}
               </div>
             ) : (
-              <div className={`mp-promo-sheet-ticket-box ${modeClass}`}>
-                <div className="mp-promo-sheet-ticket-grid">
+              <div className={`mp-promo-sheet-ticket-wrap ${modeClass}`}>
+                <div className={`mp-promo-sheet-ticket-box ${modeClass}`}>
+                  <div className="mp-promo-sheet-ticket-grid">
                   <div className="mp-promo-sheet-ticket-cell">
                     <span className="mp-promo-sheet-cell-label">
                       {liveActiveTicket.kind === 'free_delivery' ? 'الحد الأدنى للطلب' : 'الحد الأدنى لتفعيل الخصم'}
@@ -939,6 +954,7 @@ export const MenuPromoTickets: React.FC<MenuPromoTicketsProps> = ({
                   }`}
                 >
                   {liveActiveTicket.footer}
+                </div>
                 </div>
               </div>
             )}

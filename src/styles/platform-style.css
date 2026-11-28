@@ -14630,23 +14630,69 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   display: none;
 }
 
-.mp-promo-ticket {
-  --mp-ticket-bg: #ffffff;
-  --mp-ticket-border: rgba(15, 23, 42, 0.1);
-  --mp-ticket-ink: #0f172a;
-  --mp-ticket-muted: #7b8491;
-  --mp-ticket-divider: rgba(148, 163, 184, 0.38);
-  --mp-ticket-notch: var(--pm-bg, #f8fafc);
-  position: relative;
-  overflow: hidden;
+.mp-promo-ticket-wrap {
   flex: 0 0 128px;
   min-width: 128px;
   max-width: 147px;
+  display: flex;
+  align-items: stretch;
+  filter: drop-shadow(0 2px 5px rgba(15, 23, 42, 0.06)) drop-shadow(0 1px 2px rgba(15, 23, 42, 0.04));
+  transition: transform 0.16s ease, filter 0.16s ease;
+}
+
+.mp-promo-ticket-wrap.is-dark {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+}
+
+.mp-promo-ticket-wrap:hover {
+  transform: translateY(-1px);
+}
+
+.mp-promo-ticket-wrap:active {
+  transform: scale(0.985);
+}
+
+.mp-promo-ticket {
+  --mp-ticket-bg: #ffffff;
+  --mp-ticket-border: rgba(15, 23, 42, 0.11);
+  --mp-ticket-ink: #0f172a;
+  --mp-ticket-muted: #7b8491;
+  --mp-ticket-divider: rgba(148, 163, 184, 0.38);
+  --mp-notch-y: calc(100% - 29.5px);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
   min-height: 102px;
   padding: 9px 8px 8px;
   border-radius: 13px;
   border: 1px solid var(--mp-ticket-border);
-  background: var(--mp-ticket-bg);
+  background-color: var(--mp-ticket-bg);
+  background-origin: border-box;
+  background-clip: border-box;
+  background-image:
+    radial-gradient(
+      circle at 0 var(--mp-notch-y),
+      transparent 4.7px,
+      var(--mp-ticket-border) 5.1px,
+      var(--mp-ticket-border) 6.05px,
+      transparent 6.5px
+    ),
+    radial-gradient(
+      circle at 100% var(--mp-notch-y),
+      transparent 4.7px,
+      var(--mp-ticket-border) 5.1px,
+      var(--mp-ticket-border) 6.05px,
+      transparent 6.5px
+    );
+  -webkit-mask-image:
+    radial-gradient(circle at 0 var(--mp-notch-y), transparent 4.8px, #000 5.4px),
+    radial-gradient(circle at 100% var(--mp-notch-y), transparent 4.8px, #000 5.4px);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(circle at 0 var(--mp-notch-y), transparent 4.8px, #000 5.4px),
+    radial-gradient(circle at 100% var(--mp-notch-y), transparent 4.8px, #000 5.4px);
+  mask-composite: intersect;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -14655,8 +14701,7 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   gap: 2px;
   font-family: inherit;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.04);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+  transition: border-color 0.16s ease;
 }
 
 .mp-promo-ticket.is-dark {
@@ -14665,17 +14710,10 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   --mp-ticket-ink: var(--pm-ink, #f8fafc);
   --mp-ticket-muted: var(--pm-muted, #94a3b8);
   --mp-ticket-divider: rgba(255, 255, 255, 0.16);
-  --mp-ticket-notch: var(--pm-bg, #0d0f14);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
 }
 
 .mp-promo-ticket:hover {
-  transform: translateY(-1px);
-  border-color: rgba(0, 182, 122, 0.45);
-}
-
-.mp-promo-ticket:active {
-  transform: scale(0.985);
+  --mp-ticket-border: rgba(0, 182, 122, 0.45);
 }
 
 .mp-promo-ticket-badge {
@@ -14725,20 +14763,11 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket.is-compact-promo .mp-promo-ticket-divider {
-  margin: 6px 0 4px;
+  margin: auto 0 4px;
 }
 
 .mp-promo-ticket.is-compact-promo .mp-promo-ticket-footer {
   font-size: 9px;
-  line-height: 1.25;
-  min-height: 13px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .mp-promo-ticket-eyebrow {
@@ -14770,37 +14799,27 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   width: 100%;
   height: 1px;
   border-top: 1px dashed var(--mp-ticket-divider);
-  margin: auto 0 3px;
-  padding-top: 2px;
-}
-
-.mp-promo-ticket-divider::before,
-.mp-promo-ticket-divider::after {
-  content: '';
-  position: absolute;
-  top: -5.5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--mp-ticket-notch);
-  border: 1px solid var(--mp-ticket-border);
-}
-
-.mp-promo-ticket-divider::before {
-  inset-inline-start: -13.5px;
-}
-
-.mp-promo-ticket-divider::after {
-  inset-inline-end: -13.5px;
+  margin: auto 0 4px;
+  flex-shrink: 0;
 }
 
 .mp-promo-ticket-footer {
   position: relative;
   z-index: 2;
+  width: 100%;
+  height: 14px;
+  line-height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 9.5px;
   font-weight: 600;
   color: var(--mp-ticket-muted);
-  line-height: 1.25;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mp-promo-ticket-footer.is-unlocked {
@@ -14809,12 +14828,12 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket.is-loyalty {
-  background: var(--mp-ticket-bg);
+  background-color: var(--mp-ticket-bg);
   border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-ticket.is-dark.is-loyalty {
-  background: var(--mp-ticket-bg);
+  background-color: var(--mp-ticket-bg);
   border-color: var(--mp-ticket-border);
 }
 
@@ -14900,6 +14919,15 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   margin-bottom: 10px;
 }
 
+.mp-promo-sheet-hero-png {
+  width: 84px;
+  height: 84px;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.14));
+  pointer-events: none;
+}
+
 .mp-promo-sheet-title {
   margin: 0 0 16px;
   font-size: 21px;
@@ -14908,15 +14936,57 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   line-height: 1.3;
 }
 
+.mp-promo-sheet-ticket-wrap {
+  margin-bottom: 18px;
+  filter: drop-shadow(0 4px 12px rgba(15, 23, 42, 0.06));
+}
+
+.mp-promo-sheet-ticket-wrap.is-dark {
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.3));
+}
+
 .mp-promo-sheet-ticket-box {
+  --mp-sheet-notch-y: calc(100% - 42.5px);
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
   border-radius: 18px;
-  background: var(--mp-sheet-card);
+  background-color: var(--mp-sheet-card);
   border: 1px solid var(--mp-sheet-border);
+  padding: 16px 14px 13px;
+  background-origin: border-box;
+  background-clip: border-box;
+  background-image:
+    radial-gradient(
+      circle at 0 var(--mp-sheet-notch-y),
+      transparent 6.4px,
+      var(--mp-sheet-border) 6.8px,
+      var(--mp-sheet-border) 7.7px,
+      transparent 8.1px
+    ),
+    radial-gradient(
+      circle at 100% var(--mp-sheet-notch-y),
+      transparent 6.4px,
+      var(--mp-sheet-border) 6.8px,
+      var(--mp-sheet-border) 7.7px,
+      transparent 8.1px
+    );
+  -webkit-mask-image:
+    radial-gradient(circle at 0 var(--mp-sheet-notch-y), transparent 6.5px, #000 7.1px),
+    radial-gradient(circle at 100% var(--mp-sheet-notch-y), transparent 6.5px, #000 7.1px);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(circle at 0 var(--mp-sheet-notch-y), transparent 6.5px, #000 7.1px),
+    radial-gradient(circle at 100% var(--mp-sheet-notch-y), transparent 6.5px, #000 7.1px);
+  mask-composite: intersect;
+}
+
+.mp-promo-sheet-ticket-box.is-plain {
+  background-image: none;
+  -webkit-mask-image: none;
+  mask-image: none;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
   margin-bottom: 18px;
-  padding: 16px 14px 13px;
 }
 
 .mp-promo-sheet-ticket-grid {
@@ -14964,30 +15034,15 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   width: 100%;
   height: 1px;
   border-top: 1px dashed var(--mp-sheet-divider);
-  margin: 14px 0 11px;
-}
-
-.mp-promo-sheet-ticket-divider::before,
-.mp-promo-sheet-ticket-divider::after {
-  content: '';
-  position: absolute;
-  top: -8px;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: var(--mp-sheet-bg);
-  border: 1px solid var(--mp-sheet-border);
-}
-
-.mp-promo-sheet-ticket-divider::before {
-  inset-inline-start: -22px;
-}
-
-.mp-promo-sheet-ticket-divider::after {
-  inset-inline-end: -22px;
+  margin: 14px 0 10px;
 }
 
 .mp-promo-sheet-ticket-footer {
+  height: 18px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 13px;
   font-weight: 700;
   color: var(--mp-sheet-muted);
@@ -15230,12 +15285,13 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
 }
 
 .mp-promo-ticket.is-location {
-  background: var(--mp-ticket-bg);
+  --mp-notch-y: calc(100% - 37.5px);
+  background-color: var(--mp-ticket-bg);
   border-color: var(--mp-ticket-border);
 }
 
 .mp-promo-ticket.is-dark.is-location {
-  background: var(--mp-ticket-bg);
+  background-color: var(--mp-ticket-bg);
   border-color: var(--mp-ticket-border);
 }
 
@@ -15378,6 +15434,7 @@ html[data-theme] [data-home-theme="dark"] .mp-auth-glass-card select option {
   .mp-promo-sheet {
     animation: none;
   }
+  .mp-promo-ticket-wrap,
   .mp-promo-ticket {
     transition: none;
   }
