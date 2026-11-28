@@ -40,42 +40,42 @@ const READY_APPEARANCES: Array<{
 }> = [
   {
     id: 'toters',
-    title: 'مظهر توترز',
+    title: '1. مظهر توترز',
     icon: '✨',
     desc: 'مظهر جاهز بتصميم توترز الكامل: بطاقة المتجر العائمة، التصنيفات المسطحة، الرفوف الأفقية، والسلة المميزة.',
     pairedPresetId: 'toters',
   },
   {
     id: 'theme1',
-    title: 'مظهر 1',
+    title: '2. ستايل المتجر الأنيق',
     icon: '🛍️',
-    desc: 'تصميم ستور نظيف (ستايل عنب): شريط علوي متكامل مع بحث سريع، تصنيفات واضحة، وشبكة بطاقات مربعة أنيقة.',
+    desc: 'تصميم ستور نظيف: شريط علوي متكامل مع بحث سريع، تصنيفات واضحة، وشبكة بطاقات مربعة أنيقة.',
     pairedPresetId: 'theme1-enab',
   },
   {
     id: 'theme2',
-    title: 'مظهر 2',
+    title: '3. المظهر الليلي الفاخر',
     icon: '🌙',
-    desc: 'تصميم ليلي احترافي (ستايل أوربن بايت): شعار دائري أنيق، مربعات أقسام، وشريط عائم سفلي.',
+    desc: 'تصميم ليلي احترافي: شعار دائري أنيق، مربعات أقسام، وشريط عائم سفلي.',
     pairedPresetId: 'theme2-urbanbite',
   },
   {
     id: 'theme3',
-    title: 'مظهر 3',
+    title: '4. الوجبات السريعة الحيوي',
     icon: '🔥',
-    desc: 'تصميم مطاعم الوجبات السريعة (ستايل سوبر تشكن): واجهة عالية التباين مع بحث فوري وبطاقات شهية واضحة.',
+    desc: 'تصميم مطاعم الوجبات السريعة: واجهة عالية التباين مع بحث فوري وبطاقات شهية واضحة.',
     pairedPresetId: 'theme3-menux',
   },
   {
     id: 'theme4',
-    title: 'مظهر 4',
+    title: '5. البوستر الجريء',
     icon: '⚡',
-    desc: 'تصميم البوستر الجريء (ستايل كودو): ترويسة مموجة، بطاقات بحدود حادة وظل صلب، وأزرار إضافة بارزة.',
+    desc: 'تصميم جريء مميز: ترويسة مموجة، بطاقات بحدود حادة وظل صلب، وأزرار إضافة بارزة.',
     pairedPresetId: 'theme4-kudo',
   },
   {
     id: 'theme5',
-    title: 'مظهر 5',
+    title: '6. مظهر التوصيل العصري',
     icon: '🌯',
     desc: 'تصميم تطبيقات التوصيل العصرية: ترويسة منقوشة دافئة، اختيار الفروع، تبديل بين القائمة والبطاقات الكبيرة، وبحث فوري.',
     pairedPresetId: 'theme5-shawarmer',
@@ -705,7 +705,7 @@ export const AppearancePage: React.FC = () => {
               <h2 className="mp-appearance-section-title" style={{ margin: 0, fontSize: '18px' }}>
                 {editingReadyMeta
                   ? `${editingReadyMeta.icon} تعديل: ${editingReadyMeta.title}`
-                  : '🎨 تعديل: مخصص'}
+                  : '🎨 تعديل: كوستم (مخصص)'}
               </h2>
               <p className="muted" style={{ margin: '2px 0 0', fontSize: '12.5px' }}>
                 {editingReadyMeta
@@ -741,7 +741,7 @@ export const AppearancePage: React.FC = () => {
                   }
                 }}
               >
-                {editingReadyMeta ? `تعيين ${editingReadyMeta.title}` : 'تعيين المظهر المخصص'}
+                {editingReadyMeta ? `تعيين ${editingReadyMeta.title}` : 'تعيين مظهر كوستم'}
               </button>
             ) : (
               <span
@@ -1180,6 +1180,96 @@ export const AppearancePage: React.FC = () => {
         </div>
 
         <div className="mp-appearance-picker-grid">
+          {/* 1st Card: Custom (كوستم) Appearance */}
+          <motion.div
+            className={`mp-appearance-picker-card ${isCustomActive ? 'is-enabled' : ''}`}
+            {...dashCardMotion(prefersReducedMotion, 0, 1, false, 0.05)}
+          >
+            <div className="mp-appearance-picker-head">
+              <div className={`mp-addon-card-icon ${isCustomActive ? 'is-enabled' : ''}`} aria-hidden="true">
+                <span>🎨</span>
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <b className="mp-addon-card-title">كوستم (مخصص)</b>
+                <span
+                  className="mp-appearance-picker-meta"
+                  style={{ color: isCustomActive ? '#10b981' : 'var(--muted)' }}
+                >
+                  {activeLayoutObj?.title || 'شبكة'} · {activeCustomShapeObj?.name || 'عصري ناعم'}
+                </span>
+              </div>
+            </div>
+
+            <ThemePhonePreview
+              variant="custom"
+              brand={customBrandHex}
+              accent={customBrandHex}
+              bg={isCustomSelected ? customBgPreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.bg : activeThemeObj.lightPalette.bg) : customBgPreview)}
+              surface={isCustomSelected ? customSurfacePreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.surface : activeThemeObj.lightPalette.surface) : customSurfacePreview)}
+              soft={activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.surfaceSoft : activeThemeObj.lightPalette.surfaceSoft) : 'rgba(148,163,184,0.14)'}
+              text={isCustomSelected ? customInkPreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.text : activeThemeObj.lightPalette.text) : customInkPreview)}
+              muted={activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.muted : activeThemeObj.lightPalette.muted) : 'rgba(148,163,184,0.75)'}
+              line={isCustomSelected ? customLinePreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.line : activeThemeObj.lightPalette.line) : customLinePreview)}
+              layoutMode={selectedLayout}
+            />
+
+            <p className="mp-appearance-picker-desc">
+              تحكم كامل بلون المنيو، شكل عرض المنتجات (4 أو 3 أو مربعين أو قائمة)، وشكل البطاقات.
+            </p>
+
+            <div className="mp-appearance-picker-actions">
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isCustomActive) {
+                    handleActivateCustomAppearance();
+                  }
+                }}
+                aria-pressed={isCustomActive}
+                className={`mp-addon-btn-toggle ${isCustomActive ? 'is-start' : ''}`}
+                style={
+                  !isCustomActive
+                    ? {
+                        border: '1px solid var(--mp-glass-border)',
+                        background: 'var(--mp-glass-control)',
+                        color: 'var(--ink)',
+                      }
+                    : undefined
+                }
+              >
+                <span
+                  className={`mp-addon-dot ${isCustomActive ? 'is-on' : ''}`}
+                  style={!isCustomActive ? { background: 'var(--muted)' } : undefined}
+                />
+                <span>{isCustomActive ? 'معيّن' : 'تعيين'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openEditPage('custom')}
+                className="mp-addon-btn-edit"
+              >
+                <Edit size={12} />
+                <span>تعديل</span>
+              </button>
+              <button
+                type="button"
+                title="تعيين ومعاينة مظهر كوستم"
+                aria-label="معاينة مظهر كوستم"
+                onClick={async () => {
+                  if (!isCustomActive) {
+                    handleActivateCustomAppearance();
+                  }
+                  await flushPendingAppearanceSave();
+                  onNavigate(publicPath);
+                }}
+                className="mp-appearance-preview-icon-btn"
+              >
+                <Eye size={14} />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* 2nd+ Cards: Numbered Ready Appearances starting with 1. Toters */}
           {READY_APPEARANCES.map((preset, idx) => {
             const isActive = menuThemeShape === preset.id;
             const pairedObj = MENU_THEMES.find((t) => t.id === preset.pairedPresetId) || MENU_THEMES[0];
@@ -1201,7 +1291,7 @@ export const AppearancePage: React.FC = () => {
               <motion.div
                 key={preset.id}
                 className={`mp-appearance-picker-card ${isActive ? 'is-enabled' : ''}`}
-                {...dashCardMotion(prefersReducedMotion, idx, 1, false, 0.05)}
+                {...dashCardMotion(prefersReducedMotion, idx + 1, 1, false, 0.05)}
               >
                 <div className="mp-appearance-picker-head">
                   <div className={`mp-addon-card-icon ${isActive ? 'is-enabled' : ''}`} aria-hidden="true">
@@ -1285,95 +1375,6 @@ export const AppearancePage: React.FC = () => {
               </motion.div>
             );
           })}
-
-          {/* Custom Appearance */}
-          <motion.div
-            className={`mp-appearance-picker-card ${isCustomActive ? 'is-enabled' : ''}`}
-            {...dashCardMotion(prefersReducedMotion, READY_APPEARANCES.length, 1, false, 0.05)}
-          >
-            <div className="mp-appearance-picker-head">
-              <div className={`mp-addon-card-icon ${isCustomActive ? 'is-enabled' : ''}`} aria-hidden="true">
-                <span>🎨</span>
-              </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <b className="mp-addon-card-title">مخصص</b>
-                <span
-                  className="mp-appearance-picker-meta"
-                  style={{ color: isCustomActive ? '#10b981' : 'var(--muted)' }}
-                >
-                  {activeLayoutObj?.title || 'شبكة'} · {activeCustomShapeObj?.name || 'عصري ناعم'}
-                </span>
-              </div>
-            </div>
-
-            <ThemePhonePreview
-              variant="custom"
-              brand={customBrandHex}
-              accent={customBrandHex}
-              bg={isCustomSelected ? customBgPreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.bg : activeThemeObj.lightPalette.bg) : customBgPreview)}
-              surface={isCustomSelected ? customSurfacePreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.surface : activeThemeObj.lightPalette.surface) : customSurfacePreview)}
-              soft={activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.surfaceSoft : activeThemeObj.lightPalette.surfaceSoft) : 'rgba(148,163,184,0.14)'}
-              text={isCustomSelected ? customInkPreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.text : activeThemeObj.lightPalette.text) : customInkPreview)}
-              muted={activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.muted : activeThemeObj.lightPalette.muted) : 'rgba(148,163,184,0.75)'}
-              line={isCustomSelected ? customLinePreview : (activeThemeObj ? (previewMode === 'dark' ? activeThemeObj.darkPalette.line : activeThemeObj.lightPalette.line) : customLinePreview)}
-              layoutMode={selectedLayout}
-            />
-
-            <p className="mp-appearance-picker-desc">
-              تحكم كامل بلون المنيو، شكل عرض المنتجات (4 أو 3 أو مربعين أو قائمة)، وشكل البطاقات.
-            </p>
-
-            <div className="mp-appearance-picker-actions">
-              <button
-                type="button"
-                onClick={() => {
-                  if (!isCustomActive) {
-                    handleActivateCustomAppearance();
-                  }
-                }}
-                aria-pressed={isCustomActive}
-                className={`mp-addon-btn-toggle ${isCustomActive ? 'is-start' : ''}`}
-                style={
-                  !isCustomActive
-                    ? {
-                        border: '1px solid var(--mp-glass-border)',
-                        background: 'var(--mp-glass-control)',
-                        color: 'var(--ink)',
-                      }
-                    : undefined
-                }
-              >
-                <span
-                  className={`mp-addon-dot ${isCustomActive ? 'is-on' : ''}`}
-                  style={!isCustomActive ? { background: 'var(--muted)' } : undefined}
-                />
-                <span>{isCustomActive ? 'معيّن' : 'تعيين'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => openEditPage('custom')}
-                className="mp-addon-btn-edit"
-              >
-                <Edit size={12} />
-                <span>تعديل</span>
-              </button>
-              <button
-                type="button"
-                title="تعيين ومعاينة المظهر المخصص"
-                aria-label="معاينة المظهر المخصص"
-                onClick={async () => {
-                  if (!isCustomActive) {
-                    handleActivateCustomAppearance();
-                  }
-                  await flushPendingAppearanceSave();
-                  onNavigate(publicPath);
-                }}
-                className="mp-appearance-preview-icon-btn"
-              >
-                <Eye size={14} />
-              </button>
-            </div>
-          </motion.div>
         </div>
       </motion.section>
     </div>

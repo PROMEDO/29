@@ -150,12 +150,12 @@ const DEMO_VIEWER_STORAGE_KEY = 'mp_demo_viewer_appearance';
 
 const DEMO_THEME_OPTIONS: DemoViewerOption[] = [
   { id: 'default', label: 'الافتراضي', sub: 'الإعداد المحفوظ في المنصة' },
-  { id: 'toters', label: 'مظهر توترز', sub: 'بطاقة عائمة وقوائم توصيل', shape: 'toters', preset: 'toters', mode: 'light', lay: 'list' },
-  { id: 'theme1', label: 'مظهر 1', sub: 'متجر أنيق وبسيط (Enab)', shape: 'theme1', preset: 'theme1-enab', mode: 'light', lay: 'grid4' },
-  { id: 'theme2', label: 'مظهر 2', sub: 'هوية ليلية (UrbanBite)', shape: 'theme2', preset: 'theme2-urbanbite', mode: 'dark', lay: 'list' },
-  { id: 'theme3', label: 'مظهر 3', sub: 'سريع وحيوي (MenuX)', shape: 'theme3', preset: 'theme3-menux', mode: 'light', lay: 'grid3' },
-  { id: 'theme4', label: 'مظهر 4', sub: 'كوميك جريء (Kudo)', shape: 'theme4', preset: 'theme4-kudo', mode: 'light', lay: 'grid' },
-  { id: 'theme5', label: 'مظهر 5', sub: 'تطبيق توصيل دافئ (شاورمر)', shape: 'theme5', preset: 'theme5-shawarmer', mode: 'light', lay: 'list' },
+  { id: 'toters', label: '1. مظهر توترز', sub: 'بطاقة عائمة وقوائم توصيل', shape: 'toters', preset: 'toters', mode: 'light', lay: 'list' },
+  { id: 'theme1', label: '2. ستايل المتجر الأنيق', sub: 'متجر أنيق وبسيط', shape: 'theme1', preset: 'theme1-enab', mode: 'light', lay: 'grid4' },
+  { id: 'theme2', label: '3. المظهر الليلي الفاخر', sub: 'هوية ليلية احترافية', shape: 'theme2', preset: 'theme2-urbanbite', mode: 'dark', lay: 'list' },
+  { id: 'theme3', label: '4. الوجبات السريعة الحيوي', sub: 'سريع وحيوي', shape: 'theme3', preset: 'theme3-menux', mode: 'light', lay: 'grid3' },
+  { id: 'theme4', label: '5. البوستر الجريء', sub: 'ترويسة مموجة وبطاقات بارزة', shape: 'theme4', preset: 'theme4-kudo', mode: 'light', lay: 'grid' },
+  { id: 'theme5', label: '6. مظهر التوصيل العصري', sub: 'تطبيق توصيل دافئ وفروع', shape: 'theme5', preset: 'theme5-shawarmer', mode: 'light', lay: 'list' },
   { id: 'modern-grid', label: 'شبكة عصرية', sub: 'بطاقات شبكية متناسقة', shape: 'modern', preset: 'emerald', mode: 'dark', lay: 'grid' },
 ];
 
